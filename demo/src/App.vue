@@ -1,16 +1,11 @@
 <template>
-  <div>
-    <input
-      type="checkbox"
-      :value="toggleable ? 'checked' : 'unchecked'"
-      @change="toggle"
-    />
-    Current value is: {{ toggleable }}
+  <div class="h-full flex justify-center items-center">
+    <button class="btn">Connect</button>
   </div>
 </template>
 
 <script lang="ts">
-import { useToggle } from '@lib'
+import { useToggle } from 'vue-dapp'
 import { defineComponent } from 'vue'
 
 export default defineComponent({

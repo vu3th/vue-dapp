@@ -1,0 +1,1 @@
+export { testFn } from './test'

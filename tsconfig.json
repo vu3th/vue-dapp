@@ -1,6 +1,6 @@
 {
   "include": [
-    "src/global.d.ts",
+    "src/types/global.d.ts",
     "src/**/*.ts",
     "tests/**/*.ts",
     "demo/**/*.ts",
@@ -42,7 +42,8 @@
       }
     ],
     "paths": {
-      "@lib": ["./src"]
+      "vue-dapp": ["./src/index.ts"],
+      "vue-dapp/*": ["./src/*"]
     }
   }
 }
