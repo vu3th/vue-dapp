@@ -1151,6 +1151,11 @@
     "@vue/compiler-dom" "3.2.4"
     "@vue/shared" "3.2.4"
 
+"@vue/devtools-api@^6.0.0-beta.3":
+  version "6.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.0.0-beta.15.tgz#ad7cb384e062f165bcf9c83732125bffbc2ad83d"
+  integrity sha512-quBx4Jjpexo6KDiNUGFr/zF/2A4srKM9S9v2uHgMXSU//hjgq1eGzqkIFql8T9gfX5ZaVOUzYBP3jIdIR3PKIA==
+
 "@vue/reactivity@3.2.4":
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.2.4.tgz#a020ad7e50f674219a07764b105b5922e61597ea"
@@ -5600,6 +5605,13 @@ vscode-web-custom-data@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/vscode-web-custom-data/-/vscode-web-custom-data-0.3.2.tgz#62a5a924397d8056c5524ff0ff8f14eb815b7066"
   integrity sha512-GGZ99dJbARyh6rv03dXZImGlP5WvNG382A3nIt0yX1uyqBa558L/klHWcgEJzcVkG4t16OQWwPedMR3JkeD2Qg==
+
+vue-composable@^1.0.0-beta.23:
+  version "1.0.0-beta.23"
+  resolved "https://registry.yarnpkg.com/vue-composable/-/vue-composable-1.0.0-beta.23.tgz#1085bcd8360d9ed309ec5c33e8242611790cd5c5"
+  integrity sha512-jtlEHcaLbN6ENHIiqABeBmGbtUuUEKCRaByerHudlpEcHTN4B47P/uRcrg93iL1iuWHl9OQeRqkyFIzjCF3MTQ==
+  dependencies:
+    "@vue/devtools-api" "^6.0.0-beta.3"
 
 vue-demi@^0.7.0:
   version "0.7.0"

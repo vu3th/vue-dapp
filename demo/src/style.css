@@ -19,10 +19,10 @@ html.dark {
 }
 
 .btn {
-  @apply px-6 py-3 rounded inline-block
-    bg-blue-100 text-gray-600 text-xl cursor-pointer
-    hover:bg-blue-200 focus:outline-none
-    disabled:cursor-default disabled:opacity-70 disabled:bg-blue-100;
+  @apply px-6 py-3 rounded-3xl inline-block
+    bg-blue-500 text-gray-200 text-xl cursor-pointer
+    hover:bg-blue-400 focus:outline-none
+    disabled:cursor-default disabled:opacity-70 disabled:bg-blue-400;
 }
 
 .icon-btn {
