@@ -1,12 +1,9 @@
 import { ref } from 'vue-demi'
 
-/**
- * A simple toggler.
- *
- * @param [defaultValue=false]
- */
+const boardOpen = ref(false)
+
 export const useWallet = () => {
-  const boardOpen = ref(false)
+  // feat: Board
   const openBoard = () => {
     boardOpen.value = true
   }

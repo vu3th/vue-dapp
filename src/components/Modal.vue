@@ -2,19 +2,19 @@
 import { defineComponent, onUnmounted, watch, ref } from 'vue'
 import { useOnOutsidePress } from 'vue-composable'
 
-// export const useModal = () => {
-//   const modalOpen = ref(false)
-//   const open = () => {
-//     modalOpen.value = true
-//   }
-//   const close = () => {
-//     modalOpen.value = false
-//   }
-//   return { modalOpen, open, close }
-// }
+export const useModal = () => {
+  const modalOpen = ref(false)
+  const open = () => {
+    modalOpen.value = true
+  }
+  const close = () => {
+    modalOpen.value = false
+  }
+  return { modalOpen, open, close }
+}
 
 export default defineComponent({
-  emits: ['modalClose'],
+  emits: ['close'],
   props: {
     modalOpen: {
       type: Boolean,
@@ -23,7 +23,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const closeModal = () => {
-      emit('modalClose')
+      emit('close')
     }
 
     const clickOutside = ref(null)
@@ -54,39 +54,41 @@ export default defineComponent({
 
 <template>
   <teleport to="body">
-    <div v-if="modalOpen">
-      <div class="modal">
-        <div ref="clickOutside">
-          <div>
-            <div>
-            </div>
-            <!-- slot -->
+    <transition name="modal-animation">
+      <div
+        v-if="modalOpen"
+        class="modal"
+      >
+        <div
+          class="modal-inner"
+          ref="clickOutside"
+        >
+          <div class="modal-content">
+            <!-- Modal Content -->
             <slot />
           </div>
         </div>
       </div>
-    </div>
+    </transition>
   </teleport>
 </template>
 
 <style scoped>
 .modal {
-  @apply flex items-center justify-center fixed left-0 bottom-0 w-full h-full bg-gray-500 bg-opacity-70;
+  @apply flex flex-col space-y-4 min-w-screen h-screen bg-gray-500 bg-opacity-70 fixed
+   left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none;
 }
 
-.modal > div {
-  @apply bg-white rounded-xl w-1/2;
+.modal-inner {
+  @apply flex bg-white shadow-xl rounded-2xl;
 }
 
-.modal > div > div {
-  @apply flex flex-col items-start;
+.modal-animation-enter-active,
+.modal-animation-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
 }
-
-.modal > div > div > div {
-  @apply flex items-center w-full;
-}
-
-.modal svg {
-  @apply ml-auto fill-current text-gray-700 w-6 h-6 cursor-pointer hover:text-gray-500;
+.modal-animation-enter-from,
+.modal-animation-leave-to {
+  opacity: 0;
 }
 </style>

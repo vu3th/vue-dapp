@@ -1,24 +1,21 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useWallet } from 'vue-dapp'
 import Modal from './Modal.vue'
+import WalletConnect from './logos/WalletConnect.vue'
+import MetaMask from './logos/MetaMask.vue'
 
 export default defineComponent({
   components: {
     Modal,
+    WalletConnect,
+    MetaMask,
   },
-  emits: ['boardClose'],
-  props: {
-    boardOpen: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  setup(_, { emit }) {
-    const closeModal = () => {
-      emit('boardClose')
-    }
+  setup() {
+    const { boardOpen, closeBoard } = useWallet()
     return {
-      closeModal,
+      boardOpen,
+      closeBoard,
     }
   },
 })
@@ -27,19 +24,19 @@ export default defineComponent({
 <template>
   <Modal
     :modalOpen="boardOpen"
-    @modalClose="closeModal"
+    @close="closeBoard"
   >
-    <div class="w-full text-center">
-      <div class="wallet-item">
-        <div class="wallet-select">
-          MetaMask
-        </div>
+    <div class="wallet-item">
+      <div class="item">
+        <MetaMask style="width:50px; height:50px;" />
+        <div>MetaMask</div>
       </div>
-      <div class="line"></div>
-      <div class="wallet-item">
-        <div class="wallet-select">
-          WalletConnect
-        </div>
+    </div>
+    <div class="line"></div>
+    <div class="wallet-item wip">
+      <div class="item">
+        <WalletConnect style="width:50px; height:50px;" />
+        <div>WalletConnect</div>
       </div>
     </div>
   </Modal>
@@ -47,12 +44,18 @@ export default defineComponent({
 
 <style scoped>
 .wallet-item {
-  @apply flex justify-center items-center m-2 text-2xl;
+  @apply flex justify-center sm:w-sm py-8 px-10 cursor-pointer hover:bg-gray-100 m-2 rounded-xl;
 }
-.wallet-select {
-  @apply w-full p-3 cursor-pointer hover:bg-gray-100 py-8 px-4 rounded-xl;
+.item {
+  @apply flex flex-col justify-center space-y-4 items-center text-2xl;
 }
+
 .line {
   @apply border-b border-solid;
+}
+
+/* work in process */
+.wip {
+  @apply opacity-50 hover:bg-white cursor-default;
 }
 </style>

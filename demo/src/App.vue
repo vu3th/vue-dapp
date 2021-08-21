@@ -5,31 +5,20 @@
       class="btn"
     >Connect</button>
   </div>
-  <!-- @todo auto inject to App -->
-  <board
-    :boardOpen="boardOpen"
-    @boardClose="closeBoard"
-  />
+  <board />
 </template>
 
 <script lang="ts">
-import { useToggle, useWallet } from 'vue-dapp'
+import { useWallet } from 'vue-dapp'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'App',
   setup() {
-    const [toggleable, toggle] = useToggle()
-    const { boardOpen, openBoard, closeBoard } = useWallet()
+    const { openBoard } = useWallet()
 
     return {
-      toggleable,
-      boardOpen,
       openBoard,
-      closeBoard,
-      toggle,
-      open,
-      close,
     }
   },
 })
