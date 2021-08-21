@@ -2,6 +2,8 @@
 
 Vue Composables for building a Dapp.
 
+[demo](https://vue-dapp.netlify.app/)
+
 ## Features
 - TypeScript by default
 - Vue as peer dependency (minimal bundle size)
