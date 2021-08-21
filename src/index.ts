@@ -8,7 +8,10 @@ import { ref } from 'vue-demi'
 export const useToggle = (defaultValue: boolean = false) => {
   const toggleable = ref(defaultValue)
 
-  const toggle = () => (toggleable.value = !toggleable.value)
+  const toggle = () => {
+    console.log('toggle something')
+    toggleable.value = !toggleable.value
+  }
 
   return [toggleable, toggle] as const
 }
