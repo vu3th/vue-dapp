@@ -4,15 +4,11 @@
   "description": "Vue Composables for building a Dapp",
   "repository": "https://github.com/chnejohnson/vue-dapp",
   "bugs": {
-    "url": "https://github.com/chnejohnson/vue-dapp"
+    "url": "https://github.com/chnejohnson/vue-dapp/issues"
   },
   "homepage": "https://github.com/chnejohnson/vue-dapp#readme",
   "author": "Johnson Chen <chnejohnson@gmail.com>",
   "license": "MIT",
-  "keywords": [
-    "vue",
-    "hook"
-  ],
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm-bundler.js",
   "unpkg": "dist/index.global.js",
@@ -20,7 +16,10 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "dev": "rollup -w -c rollup.config.js",
+    "dev:dist": "rollup -w -c rollup.config.js",
+    "dev": "vite",
+    "build:demo": "vuedx-typecheck . && vite build",
+    "serve:demo": "vite serve demo/dist",
     "lint": "prettier -c --parser typescript \"{src,__tests__,e2e}/**/*.[jt]s?(x)\"",
     "lint:fix": "yarn run lint --write",
     "test:types": "tsc --build tsconfig.json",
@@ -28,10 +27,7 @@
     "test": "yarn run test:types && yarn run test:unit",
     "dev:docs": "vitepress dev docs",
     "build:docs": "vitepress build docs",
-    "serve:docs": "vitepress serve docs",
-    "dev:demo": "vite",
-    "build:demo": "vuedx-typecheck . && vite build",
-    "serve:demo": "vite serve demo/dist"
+    "serve:docs": "vitepress serve docs"
   },
   "files": [
     "dist/**/*",
@@ -87,5 +83,14 @@
     "*.ts?(x)": [
       "prettier --parser=typescript --write"
     ]
-  }
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "dapp",
+    "web3",
+    "ethereum",
+    "hook",
+    "composable"
+  ]
 }

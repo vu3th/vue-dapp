@@ -2,7 +2,8 @@
 
 Vue Composables for building a Dapp.
 
-[demo](https://vue-dapp.netlify.app/)
+👀 [demo](https://vue-dapp-demo.netlify.app/)
+🌏 documentation
 
 ## Features
 - TypeScript by default
@@ -14,10 +15,6 @@ Vue Composables for building a Dapp.
 - Edit variables, implement, test, publish
 
 ## Quick Start
-TBD
-
-
-## Documentation
 TBD
 
 
