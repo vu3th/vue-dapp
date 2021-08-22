@@ -6,6 +6,8 @@ import pascalcase from 'pascalcase'
 import path from 'path'
 import dts from 'rollup-plugin-dts'
 import ts from 'rollup-plugin-typescript2'
+import vue from 'rollup-plugin-vue'
+import WindiCSS from 'rollup-plugin-windicss'
 
 const pkg = require('./package.json')
 const name = pkg.name
@@ -122,6 +124,8 @@ const createConfig = (format, output, plugins = []) => {
       ),
       ...nodePlugins,
       ...plugins,
+      vue(),
+      ...WindiCSS(),
     ],
     output,
   }
