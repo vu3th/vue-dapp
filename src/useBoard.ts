@@ -2,18 +2,17 @@ import { ref } from 'vue-demi'
 
 const boardOpen = ref(false)
 
-export const useWallet = () => {
-  // feat: Board
-  const openBoard = () => {
+export function useBoard() {
+  const open = () => {
     boardOpen.value = true
   }
-  const closeBoard = () => {
+  const close = () => {
     boardOpen.value = false
   }
 
   return {
     boardOpen,
-    openBoard,
-    closeBoard,
+    open,
+    close,
   }
 }

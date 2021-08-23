@@ -14,4 +14,8 @@ export default defineConfig({
       },
     ],
   },
+  // https://github.com/vitejs/vite/issues/2782#issuecomment-810226342
+  define: {
+    global: JSON.stringify({}),
+  },
 })

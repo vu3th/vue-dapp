@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useWallet } from 'vue-dapp'
+import { useBoard } from 'vue-dapp'
 import Modal from './Modal.vue'
 import WalletConnect from './logos/WalletConnect.vue'
 import MetaMask from './logos/MetaMask.vue'
@@ -12,10 +12,10 @@ export default defineComponent({
     MetaMask,
   },
   setup() {
-    const { boardOpen, closeBoard } = useWallet()
+    const { boardOpen, close } = useBoard()
     return {
       boardOpen,
-      closeBoard,
+      close,
     }
   },
 })
@@ -24,16 +24,16 @@ export default defineComponent({
 <template>
   <Modal
     :modalOpen="boardOpen"
-    @close="closeBoard"
+    @close="close"
   >
-    <div class="wallet-item">
+    <div class="wallet-item wip">
       <div class="item">
         <MetaMask style="width:50px; height:50px;" />
         <div>MetaMask</div>
       </div>
     </div>
     <div class="line"></div>
-    <div class="wallet-item wip">
+    <div class="wallet-item">
       <div class="item">
         <WalletConnect style="width:50px; height:50px;" />
         <div>WalletConnect</div>

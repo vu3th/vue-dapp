@@ -1,2 +1,2 @@
-export { useToggle } from './useToggle'
-export { useWallet } from './useWallet'
+export { useMetamask } from './useMetamask'
+export { useWalletconnect } from './useWalletconnect'
