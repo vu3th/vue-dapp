@@ -5,31 +5,28 @@
  */
 module.exports = {
   title: 'vue-dapp',
-  description: '🤹 Vue Composables putting your components in motion',
+  description: 'Vue3 composable and component library for building Dapps.',
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico', type: 'image/png' }],
     ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
-    ['meta', { name: 'author', content: 'Yaël GUILLOUX' }],
-    ['meta', { property: 'og:title', content: '@vueuse/motion' }],
+    ['meta', { name: 'author', content: 'Johnson Chen' }],
+    ['meta', { property: 'og:title', content: 'vue-dapp' }],
     [
       'meta',
       {
         property: 'og:description',
-        content: '🤹 Vue Composables putting your components in motion',
+        content: 'Vue3 composable and component library for building Dapps.',
       },
     ],
     [
       'meta',
       {
         property: 'og:image',
-        content: 'https://motion.vueuse.org/logo.svg',
+        content: '',
       },
     ],
-    ['meta', { name: 'twitter:creator', content: '@yaeeelglx' }],
-    [
-      'meta',
-      { name: 'twitter:image', content: 'https://motion.vueuse.org/logo.svg' },
-    ],
+    ['meta', { name: 'twitter:creator', content: '@Johnson42558425' }],
+    ['meta', { name: 'twitter:image', content: '' }],
   ],
   themeConfig: {
     repo: 'chnejohnson/vue-dapp',
@@ -63,32 +60,12 @@ module.exports = {
         text: 'Features',
         children: [
           {
-            text: 'Presets',
-            link: '/presets',
-          },
-          {
-            text: 'Directive Usage',
-            link: '/directive-usage',
-          },
-          {
             text: 'Composable Usage',
             link: '/composable-usage',
           },
           {
-            text: 'Motion Properties',
-            link: '/motion-properties',
-          },
-          {
-            text: 'Transition Properties',
-            link: '/transition-properties',
-          },
-          {
-            text: 'Variants',
-            link: '/variants',
-          },
-          {
-            text: 'Motion Instance',
-            link: '/motion-instance',
+            text: 'Component Usage',
+            link: '/component-usage',
           },
         ],
       },
@@ -96,44 +73,8 @@ module.exports = {
         text: 'API',
         children: [
           {
-            text: 'useMotion',
-            link: '/api/use-motion',
-          },
-          {
-            text: 'useSpring',
-            link: '/api/use-spring',
-          },
-          {
-            text: 'useMotions',
-            link: '/api/use-motions',
-          },
-          {
-            text: 'useMotionProperties',
-            link: '/api/use-motion-properties',
-          },
-          {
-            text: 'useMotionVariants',
-            link: '/api/use-motion-variants',
-          },
-          {
-            text: 'useMotionTransitions',
-            link: '/api/use-motion-transitions',
-          },
-          {
-            text: 'useMotionControls',
-            link: '/api/use-motion-controls',
-          },
-          {
-            text: 'useMotionFeatures',
-            link: '/api/use-motion-features',
-          },
-          {
-            text: 'useElementStyle',
-            link: '/api/use-element-style',
-          },
-          {
-            text: 'useElementTransform',
-            link: '/api/use-element-transform',
+            text: 'useWallet',
+            link: '/api/use-wallet',
           },
         ],
       },

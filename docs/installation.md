@@ -1,11 +1,11 @@
 # Installation
 
-Install `@vueuse/motion` using your **package manager** of choice.
+Install `vue-dapp` using your **package manager** of choice.
 
 ```bash
-yarn add @vueuse/motion
+yarn add vue-dapp
 ```
-
+<!-- 
 Please note that if you are using **Vue 2** or **Nuxt**, you need to install the [**Composition API**](https://v3.vuejs.org/guide/composition-api-introduction.html).
 
 The **required** packages can be found [**here for Vue 2**](https://github.com/vuejs/composition-api), and [**here for Nuxt**](https://composition-api.nuxtjs.org/).
@@ -101,4 +101,4 @@ To **solve** that problem, you have to **install** this package inside your **ap
 yarn add -D patch-vue-directive-ssr
 ```
 
-This [**patch**](https://github.com/vueuse/patch-vue-directive-ssr) has been written by [**Antfu**](https://github.com/antfu).
+This [**patch**](https://github.com/vueuse/patch-vue-directive-ssr) has been written by [**Antfu**](https://github.com/antfu). -->

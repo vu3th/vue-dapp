@@ -1,42 +1,28 @@
 # Composable Usage
 
-**vueuse/motion** is written using Composition API.
+**vue-dapp** is written using Composition API.
 
-The **composable usage** of this **package** allows you to create **animations** from the `setup` hook of your **components**.
+## Your first useWallet
 
-## Your first useMotion
+```javascript
+import { defineComponent } from 'vue'
+import { useWallet, Wallet } from 'vue-dapp'
 
-useMotion is the **core composable** of this **package**.
+export default defineComponent({
+  name: 'App',
+  setup() {
+    const { connect, address, fixedBalance, isConnected, disconnect } = useWallet()
 
-It is a function that takes **three parameters**.
-
-The **first** parameter is the `target`.
-
-The **target** can be **HTML** or **SVG** elements, or **references** to these types.
-
-The **second** parameter are the `variants`.
-
-The [**Variants Definitions**](/variants) are described in a specific page.
-
-```vue
-<script setup>
-import { useMotion } from '@vueuse/motion'
-
-const target = ref<HTMLElement>()
-
-const motionInstance = useMotion(target, {
-    initial: {
-        opacity: 0,
-        y: 100
-    },
-    enter: {
-        opacity: 1,
-        y: 0
+    const connectMetamask = async () => {
+      await connect(Wallet.metamask)
     }
+
+    return {
+      address,
+      isConnected,
+      fixedBalance,
+      connectMetamask,
+    }
+  },
 })
-</script>
 ```
-
-Once called, the **useMotion** composable will **return** an instance of [**Motion Instance**](/motion-instance).
-
-By using this **motion instance** members, you will be able to **animate** the **element** with **ease**.

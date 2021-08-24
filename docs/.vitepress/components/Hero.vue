@@ -5,19 +5,16 @@
       id="main-title"
       class="title"
     >
-      <span>@vueuse</span>
-      <span>/</span>
-      <span>motion</span>
+      <span>vue-dapp</span>
     </h1>
     <p
       ref="description"
       class="description"
     >
-      <b>Vue Composables</b> putting your <b>components</b> in
-      <b>motion</b>
+      <b>Vue Composables</b> for building <b>Dapps</b>.
     </p>
 
-    <Illustration class="illustration" />
+    <!-- <Illustration class="illustration" /> -->
 
     <div class="actions">
       <div
@@ -31,7 +28,7 @@
         ref="sources"
         class="action alt"
       >
-        <NavLink :item="{ link: 'https://github.com/vueuse/motion', text: 'Sources' }" />
+        <NavLink :item="{ link: 'https://github.com/chnejohnson/vue-dapp', text: 'Sources' }" />
       </div>
     </div>
   </header>
