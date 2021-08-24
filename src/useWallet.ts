@@ -1,9 +1,13 @@
-import { computed, markRaw, reactive, ref } from 'vue-demi'
+import { computed, markRaw, ref } from 'vue-demi'
 import { Web3Provider, Network } from '@ethersproject/providers'
-import { BigNumber, ethers, providers, Signer, utils } from 'ethers'
+import { BigNumber, providers, Signer } from 'ethers'
 import { displayEther } from './utils/format'
 import { Wallet } from './constants'
-import { isDev } from './config'
+import { useMetamask } from './wallet'
+
+export interface WalletSource {
+  getProvider(): Promise<providers.ExternalProvider>
+}
 
 // state:connect
 const isConnected = ref(false)
@@ -11,58 +15,31 @@ const provider = ref<Web3Provider | null>(null)
 const isConnecting = ref(false)
 const connectError = ref('')
 
-// state:setup
+// state:load
 const signer = ref<Signer | null>(null)
 const network = ref<Network | null>()
 const address = ref('')
 const balance = ref<BigNumber>(BigNumber.from(0))
 const isLoading = ref(false)
-const setupError = ref('')
-
-// mutations
-async function setupProvider(wallet: Wallet) {
-  let _provider: Web3Provider | undefined
-
-  switch (wallet) {
-    case Wallet.metamask:
-      isDev && console.log('setup metamask')
-      break
-    case Wallet.walletconnect:
-      isDev && console.log('setup walletconnect')
-      // const { getProvider } = useWalletconnect()
-      // const walletconnect = await getProvider()
-      // _provider = new providers.Web3Provider(walletconnect)
-      break
-  }
-
-  if (_provider) {
-    provider.value = markRaw(_provider)
-  } else {
-    throw new Error('fail to get external provider')
-  }
-}
-
-const setupWallet = (provider: Web3Provider) => {}
-const cleanWallet = () => {
-  isConnected.value = false
-  provider.value = null
-  isConnecting.value = false
-  connectError.value = ''
-
-  cleanSetupState()
-}
-
-const cleanSetupState = () => {
-  signer.value = null
-  network.value = null
-  address.value = ''
-  balance.value = BigNumber.from(0)
-  isLoading.value = false
-  setupError.value = ''
-}
+const loadError = ref('')
 
 export function useWallet() {
-  function connect() {}
+  async function connect(wallet: Wallet) {
+    connectError.value = ''
+    isConnecting.value = true
+    try {
+      await setupProvider(wallet)
+      await setupWallet(provider.value!)
+    } catch (e) {
+      connectError.value = `fail to connect ${Wallet[wallet]}`
+      throw new Error(e)
+    } finally {
+      isConnecting.value = false
+    }
+
+    isConnected.value = true
+  }
+
   function disconnect() {
     cleanWallet()
   }
@@ -77,10 +54,10 @@ export function useWallet() {
   // getters
   const chainId = computed(() => network.value?.chainId)
   const error = computed(() =>
-    connectError ? connectError : setupError ? setupError : '',
+    connectError ? connectError : loadError ? loadError : '',
   )
   // filters
-  const displayBalance = (fixed: number = 2): string => {
+  const fixedBalance = (fixed: number = 2): string => {
     return displayEther(balance.value, fixed)
   }
 
@@ -95,7 +72,7 @@ export function useWallet() {
     address,
     balance,
     isLoading,
-    setupError,
+    loadError,
 
     connect,
     disconnect,
@@ -107,6 +84,55 @@ export function useWallet() {
     chainId,
     error,
 
-    displayBalance,
+    fixedBalance,
   }
+}
+
+// mutations
+async function setupProvider(wallet: Wallet) {
+  let source: WalletSource | null = null
+
+  switch (wallet) {
+    case Wallet.metamask:
+      source = useMetamask()
+      break
+    case Wallet.walletconnect:
+      break
+  }
+
+  if (source) {
+    provider.value = markRaw(new Web3Provider(await source.getProvider()))
+  } else {
+    throw new Error('fail to get wallet source')
+  }
+}
+
+async function setupWallet(provider: Web3Provider) {
+  const _signer = provider.getSigner()
+  const _network = await provider.getNetwork()
+  const _address = await _signer.getAddress()
+  const _balance = await _signer.getBalance()
+
+  signer.value = markRaw(_signer)
+  network.value = _network
+  address.value = _address
+  balance.value = _balance
+}
+
+function cleanWallet() {
+  isConnected.value = false
+  provider.value = null
+  isConnecting.value = false
+  connectError.value = ''
+
+  cleanAccount()
+}
+
+function cleanAccount() {
+  signer.value = null
+  network.value = null
+  address.value = ''
+  balance.value = BigNumber.from(0)
+  isLoading.value = false
+  loadError.value = ''
 }

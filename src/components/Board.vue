@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useBoard } from 'vue-dapp'
+import { useBoard, useWallet, Wallet } from 'vue-dapp'
 import Modal from './Modal.vue'
 import WalletConnect from './logos/WalletConnect.vue'
 import MetaMask from './logos/MetaMask.vue'
@@ -13,9 +13,17 @@ export default defineComponent({
   },
   setup() {
     const { boardOpen, close } = useBoard()
+    const { connect } = useWallet()
+
+    const connectMetamask = async () => {
+      await connect(Wallet.metamask)
+      close()
+    }
+
     return {
       boardOpen,
       close,
+      connectMetamask,
     }
   },
 })
@@ -26,7 +34,10 @@ export default defineComponent({
     :modalOpen="boardOpen"
     @close="close"
   >
-    <div class="wallet-item">
+    <div
+      @click="connectMetamask"
+      class="wallet-item"
+    >
       <div class="item">
         <MetaMask style="width:50px; height:50px;" />
         <div>MetaMask</div>
