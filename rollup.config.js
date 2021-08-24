@@ -10,7 +10,6 @@ import vue from 'rollup-plugin-vue'
 import WindiCSS from 'rollup-plugin-windicss'
 
 const pkg = require('./package.json')
-const name = pkg.name
 
 const getAuthors = (pkg) => {
   const { contributors, author } = pkg

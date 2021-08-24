@@ -1,7 +1,7 @@
 import detectEthereumProvider from '@metamask/detect-provider'
 import { providers } from 'ethers'
 
-export interface MetaMaskProvider {
+export interface MetaMaskProvider extends providers.ExternalProvider {
   isMetaMask: boolean
   isConnected: () => boolean
   request: (request: {
@@ -22,7 +22,7 @@ export function useMetamask() {
       method: 'eth_requestAccounts',
       params: [{ eth_accounts: {} }],
     })
-    return provider as providers.ExternalProvider
+    return provider
   }
 
   return {

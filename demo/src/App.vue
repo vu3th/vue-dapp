@@ -6,35 +6,37 @@
     <div class="m-4">
       <button
         v-if="!isConnected"
-        @click="open"
+        @click="connectMetamask"
         class="btn"
       >Connect</button>
-      <button
+      <!-- <button
         v-if="isConnected"
         @click="disconnect"
         class="btn"
-      >Disconnect</button>
+      >Disconnect</button> -->
     </div>
   </div>
-  <board />
+  <!-- <board /> -->
 </template>
 
 <script lang="ts">
-import { useBoard, useWallet } from 'vue-dapp'
+import { useWallet, Wallet } from 'vue-dapp'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'App',
   setup() {
-    const { open } = useBoard()
-    const { address, fixedBalance, isConnected, disconnect } = useWallet()
+    const { connect, address, fixedBalance, isConnected } = useWallet()
+    const connectMetamask = async () => {
+      await connect(Wallet.metamask)
+    }
 
     return {
       address,
       isConnected,
       open,
       fixedBalance,
-      disconnect,
+      connectMetamask,
     }
   },
 })

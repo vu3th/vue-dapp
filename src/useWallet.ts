@@ -1,9 +1,10 @@
-import { computed, markRaw, ref } from 'vue-demi'
+import { computed, markRaw, ref, Ref } from 'vue-demi'
 import { Web3Provider, Network } from '@ethersproject/providers'
 import { BigNumber, providers, Signer } from 'ethers'
 import { displayEther } from './utils/format'
 import { Wallet } from './constants'
 import { useMetamask } from './wallet'
+import { WalletReturn } from './types'
 
 export interface WalletSource {
   getProvider(): Promise<providers.ExternalProvider>
@@ -12,29 +13,24 @@ export interface WalletSource {
 // state:connect
 const isConnected = ref(false)
 const provider = ref<Web3Provider | null>(null)
-const isConnecting = ref(false)
 const connectError = ref('')
 
 // state:load
 const signer = ref<Signer | null>(null)
-const network = ref<Network | null>()
+const network = ref<Network | null>(null)
 const address = ref('')
 const balance = ref<BigNumber>(BigNumber.from(0))
-const isLoading = ref(false)
 const loadError = ref('')
 
-export function useWallet() {
+export function useWallet(): WalletReturn {
   async function connect(wallet: Wallet) {
     connectError.value = ''
-    isConnecting.value = true
     try {
       await setupProvider(wallet)
-      await setupWallet(provider.value!)
+      await setupWallet(provider.value! as Web3Provider) // for type checking while building
     } catch (e) {
       connectError.value = `fail to connect ${Wallet[wallet]}`
       throw new Error(e)
-    } finally {
-      isConnecting.value = false
     }
 
     isConnected.value = true
@@ -54,7 +50,11 @@ export function useWallet() {
   // getters
   const chainId = computed(() => network.value?.chainId)
   const error = computed(() =>
-    connectError ? connectError : loadError ? loadError : '',
+    connectError.value
+      ? connectError.value
+      : loadError.value
+      ? loadError.value
+      : '',
   )
   // filters
   const fixedBalance = (fixed: number = 2): string => {
@@ -63,15 +63,13 @@ export function useWallet() {
 
   return {
     isConnected,
-    provider,
-    isConnecting,
+    provider: provider as Ref<Web3Provider | null>, // for type checking while building
     connectError,
 
     signer,
     network,
     address,
     balance,
-    isLoading,
     loadError,
 
     connect,
@@ -122,7 +120,6 @@ async function setupWallet(provider: Web3Provider) {
 function cleanWallet() {
   isConnected.value = false
   provider.value = null
-  isConnecting.value = false
   connectError.value = ''
 
   cleanAccount()
@@ -133,6 +130,5 @@ function cleanAccount() {
   network.value = null
   address.value = ''
   balance.value = BigNumber.from(0)
-  isLoading.value = false
   loadError.value = ''
 }
