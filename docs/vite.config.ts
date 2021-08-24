@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: '@vueuse/motion',
+        find: 'vue-dapp',
         replacement: resolve(__dirname, '../src/index.ts'),
       },
     ],
