@@ -1,2 +1,2 @@
 export { useMetamask } from './useMetamask'
-export { useWalletconnect } from './useWalletconnect'
+// export { useWalletconnect } from './useWalletconnect'

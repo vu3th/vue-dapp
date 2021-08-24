@@ -35,7 +35,6 @@
     "README.md"
   ],
   "dependencies": {
-    "@walletconnect/web3-provider": "^1.6.2",
     "ethers": "^5.4.5",
     "vue-composable": "^1.0.0-beta.23",
     "vue-demi": "^0.7.0"

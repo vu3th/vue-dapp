@@ -1,19 +1,19 @@
-import WalletConnectProvider from '@walletconnect/web3-provider'
+// import WalletConnectProvider from '@walletconnect/web3-provider'
 
-export function useWalletconnect() {
-  async function getProvider() {
-    //  Create WalletConnect Provider
-    const provider = new WalletConnectProvider({
-      infuraId: '27e484dcd9e3efcfd25a83a78777cdf1',
-    })
+// export function useWalletconnect() {
+//   async function getProvider() {
+//     //  Create WalletConnect Provider
+//     const provider = new WalletConnectProvider({
+//       infuraId: '27e484dcd9e3efcfd25a83a78777cdf1',
+//     })
 
-    //  Enable session (triggers QR Code modal)
-    await provider.enable()
+//     //  Enable session (triggers QR Code modal)
+//     await provider.enable()
 
-    return provider
-  }
+//     return provider
+//   }
 
-  return {
-    getProvider,
-  }
-}
+//   return {
+//     getProvider,
+//   }
+// }

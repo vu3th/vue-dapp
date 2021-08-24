@@ -3,7 +3,6 @@ import { Web3Provider, Network } from '@ethersproject/providers'
 import { BigNumber, ethers, providers, Signer, utils } from 'ethers'
 import { displayEther } from './utils/format'
 import { Wallet } from './constants'
-import { useWalletconnect } from './wallet'
 import { isDev } from './config'
 
 // state:connect
@@ -30,9 +29,9 @@ async function setupProvider(wallet: Wallet) {
       break
     case Wallet.walletconnect:
       isDev && console.log('setup walletconnect')
-      const { getProvider } = useWalletconnect()
-      const walletconnect = await getProvider()
-      _provider = new providers.Web3Provider(walletconnect)
+      // const { getProvider } = useWalletconnect()
+      // const walletconnect = await getProvider()
+      // _provider = new providers.Web3Provider(walletconnect)
       break
   }
 

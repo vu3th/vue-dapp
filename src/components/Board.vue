@@ -26,14 +26,14 @@ export default defineComponent({
     :modalOpen="boardOpen"
     @close="close"
   >
-    <div class="wallet-item wip">
+    <div class="wallet-item">
       <div class="item">
         <MetaMask style="width:50px; height:50px;" />
         <div>MetaMask</div>
       </div>
     </div>
     <div class="line"></div>
-    <div class="wallet-item">
+    <div class="wallet-item wip">
       <div class="item">
         <WalletConnect style="width:50px; height:50px;" />
         <div>WalletConnect</div>
