@@ -1,9 +1,10 @@
 # (WIP) vue-dapp
 
-Vue Composables for building a Dapp.
+Vue3 composable and component library for building Dapps.
 
-👀 [demo](https://vue-dapp-demo.netlify.app/)
-🌏 documentation
+👀 [Demo](https://vue-dapp-demo.netlify.app/)
+
+🌏 Documentation
 
 ## Features
 - TypeScript by default
@@ -15,8 +16,28 @@ Vue Composables for building a Dapp.
 - Edit variables, implement, test, publish
 
 ## Quick Start
-TBD
+```javascript
+import { defineComponent } from 'vue'
+import { useWallet, Wallet } from 'vue-dapp'
 
+export default defineComponent({
+  name: 'App',
+  setup() {
+    const { connect, address, fixedBalance, isConnected, disconnect } = useWallet()
+
+    const connectMetamask = async () => {
+      await connect(Wallet.metamask)
+    }
+
+    return {
+      address,
+      isConnected,
+      fixedBalance,
+      connectMetamask,
+    }
+  },
+})
+```
 
 ## Contributing
 

@@ -1,42 +1,38 @@
 <template>
   <div class="h-full flex flex-col justify-center items-center">
     <p>{{ address }}</p>
-    <p v-if="isConnected">{{ fixedBalance() }} ETH</p>
+    <p v-if="isConnected">{{ fixedBalance(3) }} ETH</p>
 
     <div class="m-4">
       <button
-        v-if="!isConnected"
-        @click="connectMetamask"
+        @click="isConnected ? disconnect() : open()"
         class="btn"
-      >Connect</button>
-      <!-- <button
-        v-if="isConnected"
-        @click="disconnect"
-        class="btn"
-      >Disconnect</button> -->
+      >{{ isConnected ? "Disconnect" : "Connect" }}</button>
     </div>
   </div>
-  <!-- <board /> -->
+  <board />
 </template>
 
 <script lang="ts">
-import { useWallet, Wallet } from 'vue-dapp'
 import { defineComponent } from 'vue'
+import { useWallet, useBoard } from 'vue-dapp'
+import Board from './components/Board.vue'
 
 export default defineComponent({
   name: 'App',
+  components: {
+    Board,
+  },
   setup() {
-    const { connect, address, fixedBalance, isConnected } = useWallet()
-    const connectMetamask = async () => {
-      await connect(Wallet.metamask)
-    }
+    const { address, fixedBalance, isConnected, disconnect } = useWallet()
+    const { open } = useBoard()
 
     return {
       address,
       isConnected,
-      open,
       fixedBalance,
-      connectMetamask,
+      disconnect,
+      open,
     }
   },
 })
