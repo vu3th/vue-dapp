@@ -1,6 +1,8 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { useBoard, useWallet, Wallet } from 'vue-dapp'
+import { defineComponent } from 'vue-demi'
+import { useWallet } from '../useWallet'
+import { useBoard } from '../useBoard'
+import { Wallet } from '../constants/wallet'
 import Modal from './Modal.vue'
 import WalletConnect from './logos/WalletConnect.vue'
 import MetaMask from './logos/MetaMask.vue'
@@ -39,14 +41,14 @@ export default defineComponent({
       class="wallet-item"
     >
       <div class="item">
-        <MetaMask style="width:50px; height:50px;" />
+        <MetaMask class="logo" />
         <div>MetaMask</div>
       </div>
     </div>
     <div class="line"></div>
     <div class="wallet-item wip">
       <div class="item">
-        <WalletConnect style="width:50px; height:50px;" />
+        <WalletConnect class="logo" />
         <div>WalletConnect</div>
       </div>
     </div>
@@ -55,18 +57,59 @@ export default defineComponent({
 
 <style scoped>
 .wallet-item {
-  @apply flex justify-center sm:w-sm py-8 px-10 cursor-pointer hover:bg-gray-100 m-2 rounded-xl;
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  margin: 0.5rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
 }
+
+.wallet-item:hover {
+  background-color: rgba(243, 244, 246, 0.664);
+}
+
+@media (min-width: 640px) {
+  .wallet-item {
+    width: 24rem;
+  }
+}
+
 .item {
-  @apply flex flex-col justify-center space-y-4 items-center text-2xl;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.item > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .line {
-  @apply border-b border-solid;
+  color: #e5e7eb;
+  border-width: 0px;
+  border-bottom-width: 1px;
+  border-style: solid;
 }
 
-/* work in process */
+.logo {
+  width: 50px;
+  height: 50px;
+}
+
 .wip {
-  @apply opacity-50 hover:bg-white cursor-default;
+  opacity: 0.5;
+}
+
+.wip:hover {
+  background-color: rgba(255, 255, 255, 0.623);
+  cursor: default;
 }
 </style>

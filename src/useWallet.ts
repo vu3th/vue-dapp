@@ -28,7 +28,8 @@ export function useWallet(): WalletReturn {
     try {
       await setupProvider(wallet)
       await setupWallet(provider.value! as Web3Provider) // for type checking while building
-    } catch (e) {
+    } catch (e: any) {
+      // must add type 'any' for building
       connectError.value = `fail to connect ${Wallet[wallet]}`
       throw new Error(e)
     }

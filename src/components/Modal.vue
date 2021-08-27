@@ -1,17 +1,6 @@
 <script lang="ts">
-import { defineComponent, onUnmounted, watch, ref } from 'vue'
+import { defineComponent, onUnmounted, watch, ref } from 'vue-demi'
 import { useOnOutsidePress } from 'vue-composable'
-
-export const useModal = () => {
-  const modalOpen = ref(false)
-  const open = () => {
-    modalOpen.value = true
-  }
-  const close = () => {
-    modalOpen.value = false
-  }
-  return { modalOpen, open, close }
-}
 
 export default defineComponent({
   emits: ['close'],
@@ -75,12 +64,26 @@ export default defineComponent({
 
 <style scoped>
 .modal {
-  @apply flex flex-col space-y-4 min-w-screen h-screen bg-gray-500 bg-opacity-70 fixed
-   left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-width: 100vw;
+  height: 100vh;
+  background-color: rgba(107, 114, 128, 0.7);
+  left: 0px;
+  top: 0px;
+  z-index: 50;
 }
 
 .modal-inner {
-  @apply flex bg-white shadow-xl rounded-2xl;
+  display: flex;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 .modal-animation-enter-active,
