@@ -11,6 +11,13 @@ export interface MetaMaskProvider extends providers.ExternalProvider {
   on: (event: string, callback: (param: any) => void) => void
 }
 
+interface ProviderRpcError extends Error {
+  message: string
+  code: number
+  data?: unknown
+}
+
+// @todo useMetamask add options for adding event callback
 export function useMetamask() {
   async function getProvider() {
     const provider = (await detectEthereumProvider()) as MetaMaskProvider
@@ -22,6 +29,19 @@ export function useMetamask() {
       method: 'eth_requestAccounts',
       params: [{ eth_accounts: {} }],
     })
+
+    provider.on('chainChanged', (chainId) => {
+      window.location.reload()
+    })
+
+    provider.on('accountsChanged', (accounts) => {
+      window.location.reload()
+    })
+
+    provider.on('disconnect', (error: ProviderRpcError) => {
+      window.location.reload()
+    })
+
     return provider
   }
 

@@ -5,7 +5,7 @@ import { useWallet, useBoard } from 'vue-dapp'
 export default defineComponent({
   name: 'App',
   setup() {
-    const { address, fixedBalance, isConnected, disconnect, error } =
+    const { address, fixedBalance, isConnected, disconnect, error, network } =
       useWallet()
     const { open, close } = useBoard()
 
@@ -14,6 +14,7 @@ export default defineComponent({
     })
 
     return {
+      network,
       error,
       address,
       isConnected,
@@ -27,11 +28,13 @@ export default defineComponent({
 
 <template>
   <div class="h-full flex flex-col justify-center items-center">
-    <p>{{ address }}</p>
     <p
       v-if="error"
       class="text-red-500"
     >{{ error }}</p>
+
+    <p>{{ address }}</p>
+    <p v-if="isConnected">Network: {{ network?.name }}</p>
     <p v-if="isConnected">{{ fixedBalance(3) }} ETH</p>
 
     <div class="m-4">

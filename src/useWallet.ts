@@ -3,7 +3,7 @@ import { Web3Provider, Network } from '@ethersproject/providers'
 import { BigNumber, providers, Signer } from 'ethers'
 import { displayEther } from './utils/format'
 import { Wallet } from './constants'
-import { useMetamask } from './wallet'
+import { useMetamask } from './walletsource'
 import { WalletReturn } from './types'
 
 export interface WalletSource {

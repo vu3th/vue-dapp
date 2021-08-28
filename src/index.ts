@@ -1,4 +1,4 @@
-export * from './wallet'
+export * from './walletsource'
 export * from './contract'
 export * from './constants'
 export * from './useBoard'
