@@ -12,6 +12,14 @@ Vue3 composable and component library for building Dapps.
 
 ## Quick Start
 
+Install dependencies:
+
+```bash
+npm install --save ethers vue-dapp
+
+yarn add ethers vue-dapp
+```
+
 Add dependencies to your main.js:
 ```javascript
 import { createApp } from 'vue'
