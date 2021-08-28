@@ -11,24 +11,49 @@ Vue3 composable and component library for building Dapps.
 - Demo ready to be written using [Vite](https://vitejs.dev/)
 
 ## Quick Start
+
+Add dependencies to your main.js:
 ```javascript
-import { defineComponent } from 'vue'
-import { useWallet, Wallet } from 'vue-dapp'
+import { createApp } from 'vue'
+import VueDapp from 'vue-dapp'
+
+const app = createApp({...})
+app.use(VueDapp)
+```
+
+Add the global component to your App.vue:
+
+```vue
+<board />
+```
+
+Use wallet or board from your .vue files:
+
+```javascript
+import { defineComponent, watch } from 'vue'
+import { useWallet, useBoard } from 'vue-dapp'
 
 export default defineComponent({
   name: 'App',
   setup() {
-    const { connect, address, fixedBalance, isConnected, disconnect } = useWallet()
+    const { address, fixedBalance, isConnected, disconnect, error, network } =
+      useWallet()
 
-    const connectMetamask = async () => {
-      await connect(Wallet.metamask)
-    }
+    // open or close the board
+    const { open, close } = useBoard()
+
+    watch(error, (error) => {
+      if (error) close()
+    })
 
     return {
+      network,
+      error,
       address,
       isConnected,
       fixedBalance,
-      connectMetamask,
+      disconnect,
+      open,
     }
   },
 })

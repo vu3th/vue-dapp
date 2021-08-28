@@ -1,6 +1,6 @@
 {
   "name": "vue-dapp",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Vue3 composable and component library for building Dapps.",
   "repository": "https://github.com/chnejohnson/vue-dapp",
   "bugs": {
