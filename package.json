@@ -16,7 +16,7 @@
     "build": "rm -rf dist/ && rollup -c",
     "dev:dist": "rollup -w -c rollup.config.js",
     "dev": "vite",
-    "build:demo": "vuedx-typecheck . && vite build",
+    "build:demo": "vite build",
     "serve:demo": "vite serve demo/dist",
     "lint": "prettier -c --parser typescript \"{src,__tests__,e2e}/**/*.[jt]s?(x)\"",
     "lint:fix": "yarn run lint --write",
