@@ -1,37 +1,30 @@
-import { DeepReadonly, reactive, readonly, ref } from 'vue-demi'
+import { reactive } from 'vue-demi'
 import { Wallet } from './constants'
 
-const appChainId = ref(0)
-
-const defaultConfigs = reactive({
-  supportedChainIds: <number[]>[],
-  supportedWallets: [Wallet.metamask],
-})
-
-let configs: DeepReadonly<Configs>
-
-type Configs = {
-  supportedChainIds: number[]
-  supportedWallets: Wallet[]
+export type DappConfigs = {
+  appChainId?: number
+  supportedChainIds?: number[]
+  supportedWallets?: Wallet[]
+  infuraAPI?: string
 }
 
+const dappConfigs = reactive({
+  appChainId: 0,
+  supportedChainIds: <number[]>[],
+  supportedWallets: [Wallet.metamask],
+  infuraAPI: '',
+})
+
 export function useDappConfig() {
-  function initConfig({ ...options }: Configs) {
-    defaultConfigs.supportedChainIds = options.supportedChainIds
-    defaultConfigs.supportedWallets = options.supportedWallets
-    configs = readonly(defaultConfigs)
+  function setConfig({ ...options }: DappConfigs) {
+    dappConfigs.appChainId = options.appChainId || 0
+    dappConfigs.supportedChainIds = options.supportedChainIds || <number[]>[]
+    dappConfigs.supportedWallets = options.supportedWallets || [Wallet.metamask]
+    dappConfigs.infuraAPI = options.infuraAPI || ''
   }
 
   return {
-    appChainId,
-    configs,
-    initConfig,
-    updateAppChainId,
+    dappConfigs,
+    setConfig,
   }
-}
-
-// mutations
-function updateAppChainId(chainId: number) {
-  appChainId.value = chainId
-  return appChainId
 }

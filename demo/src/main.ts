@@ -6,6 +6,8 @@ import { VueDapp } from 'vue-dapp'
 
 const app = createApp(App)
 
-app.use(VueDapp)
+app.use(VueDapp, {
+  infuraAPI: 'ff6a249a74e048f1b413cba715f98d07',
+})
 
 app.mount('#app')

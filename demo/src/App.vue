@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, watch } from 'vue'
+import { defineComponent } from 'vue'
 import { useWallet, useBoard } from 'vue-dapp'
 
 export default defineComponent({
@@ -7,11 +7,7 @@ export default defineComponent({
   setup() {
     const { address, fixedBalance, isConnected, disconnect, error, network } =
       useWallet()
-    const { open, close } = useBoard()
-
-    watch(error, (error) => {
-      if (error) close()
-    })
+    const { open } = useBoard()
 
     return {
       network,

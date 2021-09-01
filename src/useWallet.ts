@@ -3,7 +3,7 @@ import { Web3Provider, Network } from '@ethersproject/providers'
 import { BigNumber, providers, Signer } from 'ethers'
 import { displayEther } from './utils/format'
 import { Wallet } from './constants'
-import { useMetamask } from './walletsource'
+import { useMetamask, useWalletconnect } from './walletsource'
 import { WalletReturn } from './types'
 
 export interface WalletSource {
@@ -14,6 +14,7 @@ export interface WalletSource {
 const isConnected = ref(false)
 const provider = ref<Web3Provider | null>(null)
 const connectError = ref('')
+const walletType = ref<Wallet.metamask | Wallet.walletconnect | null>(null)
 
 // state:load
 const signer = ref<Signer | null>(null)
@@ -30,14 +31,22 @@ export function useWallet(): WalletReturn {
       await setupWallet(provider.value! as Web3Provider) // for type checking while building
     } catch (e: any) {
       // must add type 'any' for building
-      connectError.value = `fail to connect ${Wallet[wallet]}`
-      throw new Error(e)
+      connectError.value = `Failed to connect ${Wallet[wallet]}`
+      throw new Error(e.message)
     }
 
     isConnected.value = true
   }
 
   function disconnect() {
+    switch (walletType.value) {
+      case Wallet.metamask:
+        break
+      case Wallet.walletconnect:
+        const { disconnect } = useWalletconnect()
+        disconnect()
+        break
+    }
     cleanWallet()
   }
 
@@ -91,18 +100,21 @@ export function useWallet(): WalletReturn {
 async function setupProvider(wallet: Wallet) {
   let source: WalletSource | null = null
 
-  switch (wallet) {
+  walletType.value = wallet
+
+  switch (walletType.value) {
     case Wallet.metamask:
       source = useMetamask()
       break
     case Wallet.walletconnect:
+      source = useWalletconnect()
       break
   }
 
   if (source) {
     provider.value = markRaw(new Web3Provider(await source.getProvider()))
   } else {
-    throw new Error('fail to get wallet source')
+    throw new Error('Failed to get wallet source')
   }
 }
 

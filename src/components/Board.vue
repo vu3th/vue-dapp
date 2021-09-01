@@ -6,7 +6,6 @@ import { Wallet } from '../constants/wallet'
 import Modal from './Modal.vue'
 import WalletConnect from './logos/WalletConnect.vue'
 import MetaMask from './logos/MetaMask.vue'
-import { useWalletconnect } from '../walletsource/useWalletconnect'
 
 export default defineComponent({
   components: {
@@ -17,18 +16,32 @@ export default defineComponent({
   setup() {
     const { boardOpen, close } = useBoard()
     const { connect } = useWallet()
-    const { getProvider } = useWalletconnect()
 
     const connectMetamask = async () => {
-      await connect(Wallet.metamask)
-      close()
+      try {
+        await connect(Wallet.metamask)
+      } catch (e) {
+        console.warn(e)
+      } finally {
+        close()
+      }
+    }
+
+    const connectWalletconnect = async () => {
+      try {
+        await connect(Wallet.walletconnect)
+      } catch (e) {
+        console.warn(e)
+      } finally {
+        close()
+      }
     }
 
     return {
       boardOpen,
       close,
       connectMetamask,
-      getProvider,
+      connectWalletconnect,
     }
   },
 })
@@ -50,7 +63,7 @@ export default defineComponent({
     </div>
     <div class="line"></div>
     <div
-      @click="getProvider"
+      @click="connectWalletconnect"
       class="wallet-item"
     >
       <div class="item">
