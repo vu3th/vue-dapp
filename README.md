@@ -21,12 +21,15 @@ yarn add ethers vue-dapp
 ```
 
 Add dependencies to your main.js:
+
 ```javascript
 import { createApp } from 'vue'
 import VueDapp from 'vue-dapp'
 
 const app = createApp({...})
-app.use(VueDapp)
+app.use(VueDapp, {
+  infuraAPI: <your-infura-api> // to enable WalletConnect
+})
 ```
 
 Add the global component to your App.vue:
@@ -48,11 +51,7 @@ export default defineComponent({
       useWallet()
 
     // open or close the board
-    const { open, close } = useBoard()
-
-    watch(error, (error) => {
-      if (error) close()
-    })
+    const { open } = useBoard()
 
     return {
       network,
@@ -66,6 +65,19 @@ export default defineComponent({
   },
 })
 ```
+
+Add CDN before main.ts for enabling WalletConnect feature:
+
+```html
+<body>
+  <div id="app"></div>
+
+  <!-- this line -->
+  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"></script>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+```
+(More about [issue of walletconnect](https://github.com/chnejohnson/vue-dapp/issues/3))
 
 ## Contributing
 
