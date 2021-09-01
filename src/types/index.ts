@@ -6,6 +6,8 @@ import { Web3Provider, Network } from '@ethersproject/providers'
 import { BigNumber, Signer } from 'ethers'
 import { Wallet } from '../constants'
 
+// export * from './walletconnect'
+
 export interface WalletReturn {
   isConnected: Ref<boolean>
   provider: Ref<Web3Provider | null>
