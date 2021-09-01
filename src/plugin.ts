@@ -1,16 +1,29 @@
 import { Plugin } from 'vue-demi'
-import Test from './components/Test.vue'
 import Board from './components/Board.vue'
-import { DappConfigs, useDappConfig } from './useDappConfig'
+import { Config } from './types/config'
+import { ChainId } from './constants'
+
+const defaultConfig: Config = {
+  pollingInterval: 15000,
+  supportedChains: [
+    ChainId.Mainnet,
+    ChainId.Goerli,
+    ChainId.Kovan,
+    ChainId.Rinkeby,
+    ChainId.Ropsten,
+    ChainId.BSC,
+    ChainId.xDai,
+    ChainId.Localhost,
+    ChainId.Hardhat,
+    ChainId.Polygon,
+    ChainId.Mumbai,
+    ChainId.Harmony,
+  ],
+}
 
 export const VueDapp: Plugin = {
-  install(app, options: DappConfigs) {
-    app.component('test', Test)
+  install(app, options: Partial<Config>) {
     app.component('board', Board)
-
-    if (options) {
-      const { setConfig } = useDappConfig()
-      setConfig(options)
-    }
+    app.provide('dappConfig', { ...defaultConfig, ...options })
   },
 }

@@ -1,44 +1,59 @@
 <script lang="ts">
-import { defineComponent } from 'vue-demi'
-import { useWallet } from '../useWallet'
-import { useBoard } from '../useBoard'
-import { Wallet } from '../constants/wallet'
+import { defineComponent, watchEffect, inject, onMounted, ref } from 'vue-demi'
 import Modal from './Modal.vue'
-import WalletConnect from './logos/WalletConnect.vue'
-import MetaMask from './logos/MetaMask.vue'
+import WalletConnectIcon from './logos/WalletConnect.vue'
+import MetaMaskIcon from './logos/MetaMask.vue'
+import { useBoard } from '../composables/useBoard'
+import { useWallet } from '../composables/useWallet'
+import { Config } from '../types'
+import Metamask from '../wallets/metamask'
+import Walletconnect from '../wallets/walletconnect'
 
 export default defineComponent({
   components: {
     Modal,
-    WalletConnect,
-    MetaMask,
+    MetaMaskIcon,
+    WalletConnectIcon,
   },
+  inject: ['dappConfig'],
   setup() {
     const { boardOpen, close } = useBoard()
-    const { connect } = useWallet()
+    const { connect, status } = useWallet()
 
-    const connectMetamask = async () => {
-      try {
-        await connect(Wallet.metamask)
-      } catch (e) {
-        console.warn(e)
-      } finally {
+    const metamaskDisabled = ref(true)
+    const walletconnectDisabled = ref(true)
+    const config = inject('dappConfig') as Config
+
+    // check metamask and walletconnect available
+    onMounted(async () => {
+      if (await Metamask.check()) {
+        metamaskDisabled.value = false
+      }
+      if (config.infuraId && (await Walletconnect.check(config.infuraId))) {
+        walletconnectDisabled.value = false
+      }
+    })
+
+    watchEffect(() => {
+      if (status.value === 'connecting') {
         close()
       }
+    })
+
+    const connectMetamask = async () => {
+      if (metamaskDisabled.value) return
+      connect('metamask')
     }
 
     const connectWalletconnect = async () => {
-      try {
-        await connect(Wallet.walletconnect)
-      } catch (e) {
-        console.warn(e)
-      } finally {
-        close()
-      }
+      if (walletconnectDisabled.value) return
+      connect('walletconnect', config.infuraId)
     }
 
     return {
       boardOpen,
+      metamaskDisabled,
+      walletconnectDisabled,
       close,
       connectMetamask,
       connectWalletconnect,
@@ -55,9 +70,10 @@ export default defineComponent({
     <div
       @click="connectMetamask"
       class="wallet-item"
+      :class="metamaskDisabled? 'wallet-disabled' : ''"
     >
       <div class="item">
-        <MetaMask class="logo" />
+        <MetaMaskIcon class="logo" />
         <div>MetaMask</div>
       </div>
     </div>
@@ -65,9 +81,10 @@ export default defineComponent({
     <div
       @click="connectWalletconnect"
       class="wallet-item"
+      :class="walletconnectDisabled? 'wallet-disabled' : ''"
     >
       <div class="item">
-        <WalletConnect class="logo" />
+        <WalletConnectIcon class="logo" />
         <div>WalletConnect</div>
       </div>
     </div>
@@ -123,11 +140,11 @@ export default defineComponent({
   height: 50px;
 }
 
-.wip {
+.wallet-disabled {
   opacity: 0.5;
 }
 
-.wip:hover {
+.wallet-disabled:hover {
   background-color: rgba(255, 255, 255, 0.623);
   cursor: default;
 }

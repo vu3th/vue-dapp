@@ -1,20 +1,19 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useWallet, useBoard } from 'vue-dapp'
+import { useBoard, useEthers, useWallet } from 'vue-dapp'
 
 export default defineComponent({
   name: 'App',
+  inject: ['dappConfig'],
   setup() {
-    const { address, fixedBalance, isConnected, disconnect, error, network } =
-      useWallet()
     const { open } = useBoard()
+    const { status, disconnect, error } = useWallet()
+    const { address } = useEthers()
 
     return {
-      network,
-      error,
       address,
-      isConnected,
-      fixedBalance,
+      status,
+      error,
       disconnect,
       open,
     }
@@ -24,22 +23,21 @@ export default defineComponent({
 
 <template>
   <div class="h-full flex flex-col justify-center items-center">
+
     <p
       v-if="error"
       class="text-red-500"
     >{{ error }}</p>
 
     <p>{{ address }}</p>
-    <p v-if="isConnected">Network: {{ network?.name }}</p>
-    <p v-if="isConnected">{{ fixedBalance(3) }} ETH</p>
 
     <div class="m-4">
       <button
-        @click="isConnected ? disconnect() : open()"
+        @click="status === 'connected' ? disconnect() : open()"
         class="btn"
-      >{{ isConnected ? "Disconnect" : "Connect" }}</button>
+        :disabled="status === 'connecting'"
+      >{{ status === 'connected' ? "Disconnect" : status === 'connecting' ? "Connecting..." : "Connect" }}</button>
     </div>
   </div>
-
   <board />
 </template>
