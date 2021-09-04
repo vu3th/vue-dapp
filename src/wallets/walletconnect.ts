@@ -39,7 +39,7 @@ export default class Walletconnect {
         }),
       })
       const data = await res.json()
-      console.log(data)
+      console.log('Infura ID is valid.', data)
     } catch (e) {
       console.warn(
         'Walletconnect unavailable: please check if your infura ID is valid.',

@@ -1,6 +1,5 @@
 <script lang="ts">
-import { defineComponent, onUnmounted, watch, ref } from 'vue-demi'
-import { useOnOutsidePress } from 'vue-composable'
+import { defineComponent, onUnmounted, watch } from 'vue-demi'
 
 export default defineComponent({
   emits: ['close'],
@@ -14,9 +13,6 @@ export default defineComponent({
     const closeModal = () => {
       emit('close')
     }
-
-    const clickOutside = ref(null)
-    useOnOutsidePress(clickOutside, () => closeModal())
 
     watch(
       () => props.modalOpen,
@@ -35,7 +31,6 @@ export default defineComponent({
 
     return {
       closeModal,
-      clickOutside,
     }
   },
 })
@@ -50,7 +45,7 @@ export default defineComponent({
       >
         <div
           class="modal-inner"
-          ref="clickOutside"
+          v-click-outside="closeModal"
         >
           <div class="modal-content">
             <!-- Modal Content -->
