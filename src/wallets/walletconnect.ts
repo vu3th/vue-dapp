@@ -2,6 +2,8 @@ import { IWalletConnectProviderOptions } from '../types/walletconnect/types'
 import { WalletConnectProvider } from '../types/walletconnect'
 
 // Test: https://test.walletconnect.org/
+// Docs: https://docs.walletconnect.org/quick-start/dapps/web3-provider
+// WalletConnectProvider source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
 
 declare global {
   interface Window {

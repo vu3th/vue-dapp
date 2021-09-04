@@ -1,6 +1,9 @@
 import detectEthereumProvider from '@metamask/detect-provider'
 import { providers } from 'ethers'
 
+// Provider Docs: https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents
+// JSON RPC API: https://metamask.github.io/api-playground/api-documentation
+
 export interface MetaMaskProvider extends providers.ExternalProvider {
   isMetaMask: boolean
   isConnected: () => boolean
