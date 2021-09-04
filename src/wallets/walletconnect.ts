@@ -68,7 +68,12 @@ export default class Walletconnect {
           reject(new Error('User rejected the request.'))
         }
       })
-      await provider.enable()
+      try {
+        await provider.enable()
+      } catch (e: any) {
+        reject(new Error(e))
+        return
+      }
       resolve(provider)
     })
   }
