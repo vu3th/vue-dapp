@@ -9,6 +9,11 @@ import {
   IClientMeta,
 } from './types'
 
+export interface RequestArguments {
+  method: string
+  params?: unknown[] | object
+}
+
 export const ProviderEngine: any
 export class WalletConnectProvider extends ProviderEngine {
   bridge: string
@@ -37,7 +42,7 @@ export class WalletConnectProvider extends ProviderEngine {
   get connector(): IConnector
   get walletMeta(): IClientMeta | null
   enable: () => Promise<string[]>
-  request: (payload: any) => Promise<any>
+  request: (payload: RequestArguments) => Promise<any>
   send: (payload: any, callback?: any) => Promise<any>
   onConnect: (callback: any) => void
   triggerConnect: (result: any) => void

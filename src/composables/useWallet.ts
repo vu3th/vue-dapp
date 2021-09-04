@@ -27,6 +27,8 @@ export function useWallet() {
       switch (_walletName) {
         case 'metamask':
           _provider = await Metamask.connect()
+          if (!_provider.isConnected)
+            throw new Error('metamask is not connected')
           break
         case 'walletconnect':
           if (!infuraAPI)
@@ -34,6 +36,8 @@ export function useWallet() {
               'You should provide infuraAPI for connecting WalletConnect',
             )
           _provider = await Walletconnect.connect(infuraAPI)
+          if (!_provider.connected)
+            throw new Error('walletconnect is not connected')
           break
         default:
           throw new Error('Connect Error: wallet name not found')
@@ -55,6 +59,7 @@ export function useWallet() {
   }
 
   async function disconnect() {
+    // note: metamask can't disconnect by provider
     if (walletName.value === 'walletconnect') {
       await (provider.value as WalletConnectProvider).disconnect()
     }
@@ -91,6 +96,8 @@ function subscribeDisconnect() {
       )
       break
     case 'walletconnect':
+      // Q: why it trigger twice when user click disconnect?
+      // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/0871582be273f8c21bb1351315d649ea47ee70b7/packages/providers/web3-provider/src/index.ts#L277
       ;(provider.value as WalletConnectProvider).on(
         'disconnect',
         (code: number, reason: string) => {

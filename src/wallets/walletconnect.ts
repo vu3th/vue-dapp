@@ -11,8 +11,8 @@ declare global {
   }
 }
 
-const WalletConnectProviderDerived: typeof WalletConnectProvider | undefined =
-  window.WalletConnectProvider?.default
+const WalletConnectProviderDerived: typeof WalletConnectProvider | null =
+  window.WalletConnectProvider?.default || null
 
 export default class Walletconnect {
   static async check(infuraId: string) {
@@ -47,6 +47,7 @@ export default class Walletconnect {
 
     return true
   }
+
   static async connect(
     infuraId: string,
     options?: IWalletConnectProviderOptions,
@@ -56,9 +57,17 @@ export default class Walletconnect {
       ...options,
     })
 
-    await provider.enable()
-    provider.qrcodeModal.close()
-
-    return provider
+    // fix: If user reject session, provider.enable() will be stuck and can't be resolved.
+    // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
+    return new Promise<WalletConnectProvider>(async (resolve, reject) => {
+      provider.wc.on('disconnect', (err, payload) => {
+        if (!provider.connected) {
+          console.log(err, payload)
+          reject(new Error('User rejected the request.'))
+        }
+      })
+      await provider.enable()
+      resolve(provider)
+    })
   }
 }
