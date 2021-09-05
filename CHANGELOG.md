@@ -1,11 +1,18 @@
 Changelog
 =========
 
-vue-dapp/v0.3.0 (2021-08-28)
+v0.4.0 (2021-09-05)
 --------------------------------
-  - component library available
-  - useMetamask add provider event
+#### Big Changes
+  - WalletConnect available
+  - Refactor with `useWallet` and `useEthers`
+  - Remove `useMetamask`, using class `MetaMask` and `WalletConnect`
 
-vue-dapp/v0.2.0 (2021-08-24)
+v0.3.0 (2021-08-28)
 --------------------------------
-  - simple metamask available
+  - Component library available
+  - `useMetamask` add provider event
+
+v0.2.0 (2021-08-24)
+--------------------------------
+  - Simple metamask available
