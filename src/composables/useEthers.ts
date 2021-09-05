@@ -1,4 +1,4 @@
-import { computed, markRaw, ref, watchEffect } from 'vue-demi'
+import { computed, markRaw, ref, watchEffect, Ref } from 'vue-demi'
 import {
   Web3Provider,
   Network,
@@ -8,7 +8,7 @@ import { Signer } from 'ethers'
 import { useWallet } from './useWallet'
 
 export function useEthers() {
-  const { status, provider: externalProvider } = useWallet()
+  const { status, provider: walletProvider } = useWallet()
 
   const provider = ref<Web3Provider | null>(null)
   const signer = ref<Signer | null>(null)
@@ -28,9 +28,7 @@ export function useEthers() {
       throw new Error('useEthers: wallet is not connected')
     }
 
-    const _provider = new Web3Provider(
-      externalProvider.value as ExternalProvider,
-    )
+    const _provider = new Web3Provider(walletProvider.value as ExternalProvider)
     const _signer = _provider.getSigner()
     const _network = await _provider.getNetwork()
     const _address = await _signer.getAddress()
@@ -51,7 +49,7 @@ export function useEthers() {
   const chainId = computed(() => network.value?.chainId)
 
   return {
-    provider,
+    provider: provider as Ref<Web3Provider | null>, // for fixing index.d.ts compiled error, see issue/10:
     signer,
     network,
     address,

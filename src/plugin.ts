@@ -23,6 +23,11 @@ const defaultConfig: Config = {
 
 export const VueDapp: Plugin = {
   install(app, options: Partial<Config>) {
+    if (!options?.infuraId) {
+      console.warn(
+        'For enabling WalletConnect, you should provide infura ID in the config like "app.use(VueDapp, { infuraId: <your-infuraId> })"',
+      )
+    }
     app.directive('click-outside', clickOutside)
     app.component('board', Board)
     app.provide('dappConfig', { ...defaultConfig, ...options })

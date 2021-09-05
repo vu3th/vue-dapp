@@ -42,7 +42,7 @@ export default class Walletconnect {
       console.log('Infura ID is valid.', data)
     } catch (e) {
       console.warn(
-        'Walletconnect unavailable: please check if your infura ID is valid.',
+        'Walletconnect unavailable: Failed to connect to infura node, please check if your infura ID is valid.',
       )
       return false
     }

@@ -1,4 +1,4 @@
-import { ref, markRaw } from 'vue-demi'
+import { ref, markRaw, Ref } from 'vue-demi'
 import Metamask, {
   MetaMaskProvider,
   MetaMaskProviderRpcError,
@@ -6,19 +6,19 @@ import Metamask, {
 import { WalletConnectProvider } from '../types/walletconnect'
 import Walletconnect from '../wallets/walletconnect'
 
-export type ExternalProvider = MetaMaskProvider | WalletConnectProvider | null
+export type WalletProvider = MetaMaskProvider | WalletConnectProvider | null
 export type ConnectionState = 'none' | 'connecting' | 'connected'
 export type WalletName = 'none' | 'metamask' | 'walletconnect'
 
 // state
-const provider = ref<ExternalProvider | null>(null)
+const provider = ref<WalletProvider | null>(null)
 const status = ref<ConnectionState>('none')
 const walletName = ref<WalletName>('none')
 const error = ref('')
 
 export function useWallet() {
   async function connect(_walletName: WalletName, infuraAPI?: string) {
-    let _provider: ExternalProvider = null
+    let _provider: WalletProvider = null
 
     cleanState()
 
@@ -69,7 +69,7 @@ export function useWallet() {
   }
 
   return {
-    provider,
+    provider: provider as Ref<WalletProvider | null>,
     status,
     walletName,
     error,
