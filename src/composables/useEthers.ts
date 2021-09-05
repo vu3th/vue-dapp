@@ -1,6 +1,10 @@
 import { computed, markRaw, ref, watchEffect } from 'vue-demi'
-import { Web3Provider, Network } from '@ethersproject/providers'
-import { providers, Signer } from 'ethers'
+import {
+  Web3Provider,
+  Network,
+  ExternalProvider,
+} from '@ethersproject/providers'
+import { Signer } from 'ethers'
 import { useWallet } from './useWallet'
 
 export function useEthers() {
@@ -24,8 +28,8 @@ export function useEthers() {
       throw new Error('useEthers: wallet is not connected')
     }
 
-    const _provider = markRaw(
-      new Web3Provider(externalProvider.value as providers.ExternalProvider),
+    const _provider = new Web3Provider(
+      externalProvider.value as ExternalProvider,
     )
     const _signer = _provider.getSigner()
     const _network = await _provider.getNetwork()

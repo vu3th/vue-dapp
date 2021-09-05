@@ -26,7 +26,7 @@ export function useWallet() {
       status.value = 'connecting'
       switch (_walletName) {
         case 'metamask':
-          _provider = await Metamask.connect()
+          _provider = (await Metamask.connect()) as MetaMaskProvider
           if (!_provider.isConnected)
             throw new Error('metamask is not connected')
           break
@@ -35,7 +35,9 @@ export function useWallet() {
             throw new Error(
               'You should provide infuraAPI for connecting WalletConnect',
             )
-          _provider = await Walletconnect.connect(infuraAPI)
+          _provider = (await Walletconnect.connect(
+            infuraAPI,
+          )) as WalletConnectProvider
           if (!_provider.connected)
             throw new Error('walletconnect is not connected')
           break
