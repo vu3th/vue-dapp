@@ -1,27 +1,22 @@
 # Composable Usage
 
-**vue-dapp** is written using Composition API.
-
-## Your first useWallet
-
 ```javascript
 import { defineComponent } from 'vue'
-import { useWallet, Wallet } from 'vue-dapp'
+import { useBoard, useEthers, useWallet } from 'vue-dapp'
 
 export default defineComponent({
   name: 'App',
   setup() {
-    const { connect, address, fixedBalance, isConnected, disconnect } = useWallet()
-
-    const connectMetamask = async () => {
-      await connect(Wallet.metamask)
-    }
+   const { open } = useBoard()
+    const { status, disconnect, error } = useWallet()
+    const { address } = useEthers()
 
     return {
       address,
-      isConnected,
-      fixedBalance,
-      connectMetamask,
+      status,
+      error,
+      disconnect,
+      open,
     }
   },
 })

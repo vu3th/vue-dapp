@@ -1,6 +1,6 @@
-# (WIP) vue-dapp
+# Vue Dapp
 
-Vue3 composable and component library for building Dapps.
+Vue 3 composable and components library for building Dapps with ethers.js.
 
 👀 [Demo](https://vue-dapp-demo.netlify.app/)
 
@@ -20,16 +20,18 @@ npm install --save ethers vue-dapp
 yarn add ethers vue-dapp
 ```
 
-Add dependencies to your main.js:
+Add dependencies to your main.ts:
 
 ```javascript
-import { createApp } from 'vue'
-import VueDapp from 'vue-dapp'
+import { VueDapp, Config } from 'vue-dapp'
 
-const app = createApp({...})
-app.use(VueDapp, {
-  infuraAPI: <your-infura-api> // to enable WalletConnect
-})
+const app = createApp(App)
+const dappConfig: Partial<Config> = {
+  infuraId: 'your-infura-id', // only for enabling WalletConnect
+}
+
+app.use(VueDapp, dappConfig)
+...
 ```
 
 Add the global component to your App.vue:
@@ -41,24 +43,21 @@ Add the global component to your App.vue:
 Use wallet or board from your .vue files:
 
 ```javascript
-import { defineComponent, watch } from 'vue'
-import { useWallet, useBoard } from 'vue-dapp'
+import { defineComponent } from 'vue'
+import { useBoard, useEthers, useWallet } from 'vue-dapp'
 
 export default defineComponent({
   name: 'App',
+  inject: ['dappConfig'],
   setup() {
-    const { address, fixedBalance, isConnected, disconnect, error, network } =
-      useWallet()
-
-    // open or close the board
     const { open } = useBoard()
+    const { status, disconnect, error } = useWallet()
+    const { address } = useEthers()
 
     return {
-      network,
-      error,
       address,
-      isConnected,
-      fixedBalance,
+      status,
+      error,
       disconnect,
       open,
     }
@@ -66,7 +65,7 @@ export default defineComponent({
 })
 ```
 
-Add CDN before main.ts for enabling WalletConnect feature:
+Add CDN in index.html for enabling WalletConnect:
 
 ```html
 <body>
@@ -89,6 +88,11 @@ If you are making a fix on the project, you can use the `main` branch and send a
 
 If you are adding a new features, please create a new branch with a name describing your feature (`my-new-feature`), push to your branch and then submit a pull request.
 
+## Inspiration
+- [useDapp: Framework for rapid Dapp development.](https://github.com/EthWorks/useDApp)
+- [vue-tailwind-ethereum-template](https://github.com/ScopeLift/vue-tailwind-ethereum-template)
+- [web3Modal: A single Web3 / Ethereum provider solution for all Wallets](https://github.com/Web3Modal/web3modal)
+- [vue3-eth: Vue3 library for building Dapps in an ES module environment](https://github.com/samatechtw/vue3-eth)
 
 ## License
 

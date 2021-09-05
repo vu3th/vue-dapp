@@ -4,8 +4,9 @@
  * @type {import('vitepress').UserConfig}
  */
 module.exports = {
-  title: 'vue-dapp',
-  description: 'Vue3 composable and component library for building Dapps.',
+  title: 'Vue Dapp',
+  description:
+    'Vue 3 composable and components library for building Dapps with ethers.js.',
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico', type: 'image/png' }],
     ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
@@ -15,7 +16,8 @@ module.exports = {
       'meta',
       {
         property: 'og:description',
-        content: 'Vue3 composable and component library for building Dapps.',
+        content:
+          'Vue 3 composable and components library for building Dapps with ethers.js.',
       },
     ],
     [
@@ -47,8 +49,8 @@ module.exports = {
             link: '/quick-start',
           },
           {
-            text: 'Roadmap',
-            link: '/roadmap',
+            text: 'Reference',
+            link: '/reference',
           },
           {
             text: 'Demo',
@@ -75,6 +77,10 @@ module.exports = {
           {
             text: 'useWallet',
             link: '/api/use-wallet',
+          },
+          {
+            text: 'useEthers',
+            link: '/api/use-ethers',
           },
         ],
       },

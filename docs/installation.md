@@ -1,10 +1,19 @@
 # Installation
 
-Install `vue-dapp` using your **package manager** of choice.
+Using your **package manager** of choice.
 
-```bash
-yarn add vue-dapp
+npm
+```sh
+npm install --save ethers vue-dapp
 ```
+
+yarn
+```sh
+yarn add ethers vue-dapp
+```
+
+
+
 <!-- 
 Please note that if you are using **Vue 2** or **Nuxt**, you need to install the [**Composition API**](https://v3.vuejs.org/guide/composition-api-introduction.html).
 
