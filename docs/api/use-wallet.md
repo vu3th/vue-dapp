@@ -22,16 +22,19 @@ type WalletProvider = MetaMaskProvider | WalletConnectProvider | null;
 **MetaMask**
 - For `MetaMaskProvider`, see [MetaMask Docs](https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents)
 - For using `request` like `provider.request({ method: 'eth_chainId' })`, see [MetaMask JSON-RPC API](https://metamask.github.io/api-playground/api-documentation/)
-#### `status: Ref<ConnectionState>;`
 
 **WalletConnect**
 - For testing by web, using [this site](https://test.walletconnect.org/)
 - [WalletConnect Docs](https://docs.walletconnect.org/quick-start/dapps/web3-provider)
 - `WalletConnectProvider` [source code](https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts)
 
+
+#### `status: Ref<ConnectionState>;`
+
 ```ts
 type ConnectionState = 'none' | 'connecting' | 'connected';
 ```
+
 #### `walletName: Ref<WalletName>;`
 ```ts
 type WalletName = 'none' | 'metamask' | 'walletconnect';
