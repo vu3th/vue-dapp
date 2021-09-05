@@ -7,6 +7,7 @@ v0.4.0 (2021-09-05)
   - WalletConnect available
   - Refactor with `useWallet` and `useEthers`
   - Remove `useMetamask`, using class `MetaMask` and `WalletConnect`
+  - Remove vue-composable by custom `v-click-outside` directive
 
 v0.3.0 (2021-08-28)
 --------------------------------
