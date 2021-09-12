@@ -1,4 +1,4 @@
-import { ref, markRaw, Ref } from 'vue-demi'
+import { ref, markRaw, Ref, computed } from 'vue-demi'
 import Metamask, {
   MetaMaskProvider,
   MetaMaskProviderRpcError,
@@ -68,11 +68,17 @@ export function useWallet() {
     cleanState()
   }
 
+  const isConnected = computed(() => {
+    if (status.value === 'connected') return true
+    else return false
+  })
+
   return {
     provider: provider as Ref<WalletProvider | null>,
     status,
     walletName,
     error,
+    isConnected,
     connect,
     disconnect,
   }

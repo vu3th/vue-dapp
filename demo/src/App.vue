@@ -1,5 +1,6 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { formatEther } from '@ethersproject/units'
+import { computed, defineComponent } from 'vue'
 import { useBoard, useEthers, useWallet } from 'vue-dapp'
 
 export default defineComponent({
@@ -8,17 +9,16 @@ export default defineComponent({
   setup() {
     const { open } = useBoard()
     const { status, disconnect, error } = useWallet()
-    const { address, onConnected } = useEthers()
-
-    onConnected(({ provider, address }) => {
-      console.log(provider.getSigner())
-      console.log(address)
-    })
+    const { address, balance, lastBlockNumber, lastBlockTimestamp } =
+      useEthers()
 
     return {
       address,
       status,
       error,
+      displayBalance: computed(() => formatEther(balance.value)),
+      lastBlockNumber,
+      lastBlockTimestamp,
       disconnect,
       open,
     }
@@ -34,7 +34,15 @@ export default defineComponent({
       class="text-red-500"
     >{{ error }}</p>
 
-    <p>{{ address }}</p>
+    <div
+      v-if="address"
+      class="text-center"
+    >
+      <p>{{ address }}</p>
+      <p>{{ displayBalance || ''}} ETH</p>
+      <p>Block Number: {{ lastBlockNumber || '' }}</p>
+      <p>Block Timestamp: {{ lastBlockTimestamp? new Date(lastBlockTimestamp*1000): '' }}</p>
+    </div>
 
     <div class="m-4">
       <button
