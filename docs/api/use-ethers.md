@@ -25,6 +25,21 @@ computed from `network`
 ### Methods
 #### `setup`
 
+#### `onConnected`
+
+`onConnected: (cb: (state: ProviderState) => void) => Promise<void>;`
+
+In this hook, ethers.js setup complete, you can use `ProviderState` to call contract.
+
+```ts
+interface ProviderState {
+    provider: Web3Provider;
+    signer: Signer;
+    network: Network;
+    address: string;
+}
+```
+
 ## Types
 ```typescript
 declare function useEthers(): {
@@ -34,5 +49,6 @@ declare function useEthers(): {
     address: Ref<string>;
     chainId: ComputedRef<number | undefined>;
     setup: () => Promise<void>;
+    onConnected: (cb: (state: ProviderState) => void) => Promise<void>;
 };
 ```

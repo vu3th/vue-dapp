@@ -1,11 +1,18 @@
-import { computed, markRaw, ref, watchEffect, Ref } from 'vue-demi'
+import { computed, markRaw, ref, Ref, onMounted, watch } from 'vue-demi'
 import {
   Web3Provider,
   Network,
   ExternalProvider,
 } from '@ethersproject/providers'
 import { Signer } from 'ethers'
-import { useWallet } from './useWallet'
+import { useWallet, ConnectionState } from './useWallet'
+
+interface ProviderState {
+  provider: Web3Provider
+  signer: Signer
+  network: Network
+  address: string
+}
 
 export function useEthers() {
   const { status, provider: walletProvider } = useWallet()
@@ -15,13 +22,31 @@ export function useEthers() {
   const network = ref<Network | null>(null)
   const address = ref('')
 
-  watchEffect(() => {
+  const onConnectedCallback = ref<(state: ProviderState) => void>(() => {})
+
+  onMounted(async () => {
     if (status.value === 'connected') {
-      setup()
-    } else if (status.value === 'none') {
+      await setup()
+    }
+  })
+
+  watch(status, async (status: ConnectionState) => {
+    if (status === 'connected') {
+      await setup()
+      onConnectedCallback.value({
+        provider: provider.value!,
+        signer: signer.value!,
+        network: network.value!,
+        address: address.value!,
+      })
+    } else if (status === 'none') {
       cleanState()
     }
   })
+
+  async function onConnected(cb: (state: ProviderState) => void) {
+    onConnectedCallback.value = cb
+  }
 
   async function setup() {
     if (status.value !== 'connected') {
@@ -55,5 +80,6 @@ export function useEthers() {
     address,
     chainId,
     setup,
+    onConnected,
   }
 }

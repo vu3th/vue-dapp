@@ -52,7 +52,12 @@ export default defineComponent({
   setup() {
     const { open } = useBoard()
     const { status, disconnect, error } = useWallet()
-    const { address } = useEthers()
+    const { address, onConnected } = useEthers()
+
+    onConnected(({ provider, address }) => {
+      console.log(provider.getSigner())
+      console.log(address)
+    })
 
     return {
       address,
