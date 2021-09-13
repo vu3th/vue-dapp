@@ -5,6 +5,7 @@ import typescript from 'rollup-plugin-typescript2'
 import replace from '@rollup/plugin-replace'
 import dts from 'rollup-plugin-dts'
 import postcss from 'rollup-plugin-postcss'
+import json from '@rollup/plugin-json'
 import path from 'path'
 
 import pkg from './package.json'
@@ -55,6 +56,7 @@ export default [
       postcss(),
       external(), // for reading the dist file
       commonjs(), // for @metamask/detect-provider
+      json(), // for abi .json files
     ],
   },
   {
@@ -68,6 +70,7 @@ export default [
         css: false,
         compileTemplate: true,
       }),
+      json(), // for abi .json files
     ],
   },
 ]
