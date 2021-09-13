@@ -2,17 +2,27 @@
 import { formatEther } from '@ethersproject/units'
 import { computed, defineComponent } from 'vue'
 import { useBoard, useEthers, useWallet } from 'vue-dapp'
+import Token from './components/Token.vue'
 
 export default defineComponent({
   name: 'App',
+  components: {
+    Token,
+  },
   inject: ['dappConfig'],
   setup() {
     const { open } = useBoard()
     const { status, disconnect, error } = useWallet()
-    const { address, balance, lastBlockNumber, lastBlockTimestamp } =
-      useEthers()
+    const {
+      isConnected,
+      address,
+      balance,
+      lastBlockNumber,
+      lastBlockTimestamp,
+    } = useEthers()
 
     return {
+      isConnected,
       address,
       status,
       error,
@@ -51,6 +61,8 @@ export default defineComponent({
         :disabled="status === 'connecting'"
       >{{ status === 'connected' ? "Disconnect" : status === 'connecting' ? "Connecting..." : "Connect" }}</button>
     </div>
+
+    <Token />
   </div>
   <board />
 </template>

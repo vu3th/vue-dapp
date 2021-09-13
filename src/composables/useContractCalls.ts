@@ -41,6 +41,8 @@ export function useContractCalls(
     )
 
     results.value = returnData.map((data, i) => {
+      if (!data.success)
+        console.error(`Failed to call ${contractCalls[i].method}`)
       const iface = getInterface(contractCalls[i].interface)
       return iface.decodeFunctionResult(
         contractCalls[i].method,
