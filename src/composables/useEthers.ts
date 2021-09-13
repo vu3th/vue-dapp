@@ -6,7 +6,10 @@ import {
 } from '@ethersproject/providers'
 import { Signer, BigNumber } from 'ethers'
 import { useWallet, ConnectionState } from './useWallet'
-import { MULTICALL2_ADDRESS, useMulticall } from './useMulticall'
+import { useContractCalls } from './useContractCalls'
+import { MULTICALL2_ABI, MULTICALL2_ADDRESS } from '../constants'
+import { Contract } from '@ethersproject/contracts'
+import { Multicall2 } from '../types/multicall2/Multicall2'
 
 interface OnConntectedCallbackParams {
   provider: Web3Provider
@@ -62,39 +65,36 @@ export function useEthers() {
     const _network = await _provider.getNetwork()
     const _address = await _signer.getAddress()
 
-    // multicall
-    const {
-      multicall,
-      returnData,
-      call,
-      lastBlockNumber: _lastBlockNumber,
-    } = useMulticall(_provider)
+    const multicall = new Contract(
+      MULTICALL2_ADDRESS,
+      MULTICALL2_ABI,
+      _provider,
+    ) as Multicall2
 
-    const calls = [
+    const { call, results, blockNumber } = useContractCalls(_provider, [
       {
-        target: MULTICALL2_ADDRESS,
-        callData: multicall.interface.encodeFunctionData(
-          'getCurrentBlockTimestamp',
-        ),
+        interface: multicall.interface,
+        address: MULTICALL2_ADDRESS,
+        method: 'getCurrentBlockTimestamp',
       },
-      { target: MULTICALL2_ADDRESS, callData: multicall.interface.encodeFunctionData('getEthBalance', [_address]) }, // prettier-ignore
-    ]
+      {
+        interface: multicall.interface,
+        address: MULTICALL2_ADDRESS,
+        method: 'getEthBalance',
+        args: [_address],
+      },
+    ])
 
-    await call(calls)
+    await call()
 
-    const [timestampEncoded, ethBalanceEncoded] = returnData.value
-    const { timestamp: _timestamp } = multicall.interface.decodeFunctionResult('getCurrentBlockTimestamp', timestampEncoded.returnData); // prettier-ignore
-    const { balance: _balance } = multicall.interface.decodeFunctionResult(
-      'getEthBalance',
-      ethBalanceEncoded.returnData,
-    )
+    const [{ timestamp: _timestamp }, { balance: _balance }] = results.value
 
     provider.value = markRaw(_provider)
     signer.value = markRaw(_signer)
     network.value = _network
     address.value = _address
     balance.value = (_balance as BigNumber).toBigInt()
-    lastBlockNumber.value = _lastBlockNumber.value
+    lastBlockNumber.value = blockNumber.value
     lastBlockTimestamp.value = (_timestamp as BigNumber).toNumber()
   }
 
