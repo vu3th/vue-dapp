@@ -1,18 +1,21 @@
-import { ref, markRaw, Ref, computed } from 'vue-demi'
+import { ref, markRaw, computed } from 'vue-demi'
 import Metamask, {
   MetaMaskProvider,
   MetaMaskProviderRpcError,
 } from '../wallets/metamask'
 import { WalletConnectProvider } from '../types/walletconnect'
 import Walletconnect from '../wallets/walletconnect'
+import { useEthers } from './useEthers'
 
-export type WalletProvider = MetaMaskProvider | WalletConnectProvider | null
+export type WalletProvider = MetaMaskProvider | WalletConnectProvider
 export type ConnectionState = 'none' | 'connecting' | 'connected'
 export type WalletName = 'none' | 'metamask' | 'walletconnect'
 export type OnConnectedCallback = (provider: WalletProvider) => void
 export type OnDisconnectCallback = () => void
 export type OnAccountsChangedCallback = (address: string) => void
 export type OnChainChangedCallback = (chainId: number) => void
+
+const { activate, deactivate } = useEthers()
 
 // ========================= state =========================
 
@@ -21,21 +24,26 @@ const status = ref<ConnectionState>('none')
 const walletName = ref<WalletName>('none')
 const error = ref('')
 
+const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
+const onAccountsChangedCallback = ref<OnAccountsChangedCallback | null>(null)
+const onChainChangedCallback = ref<OnChainChangedCallback | null>(null)
+
 const clear = () => {
   provider.value = null
   status.value = 'none'
   walletName.value = 'none'
   error.value = ''
-}
 
-const onConnectedCallback = ref<OnConnectedCallback | null>(null)
-const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
-const onAccountsChangedCallback = ref<OnAccountsChangedCallback | null>(null)
-const onChainChangedCallback = ref<OnChainChangedCallback | null>(null)
+  onDisconnectCallback.value = null
+  onAccountsChangedCallback.value = null
+  onChainChangedCallback.value = null
+
+  deactivate()
+}
 
 export function useWallet() {
   async function connect(_walletName: WalletName, infuraAPI?: string) {
-    let _provider: WalletProvider = null
+    let _provider: WalletProvider | null = null
 
     clear()
 
@@ -70,12 +78,14 @@ export function useWallet() {
     provider.value = markRaw(_provider)
     walletName.value = _walletName
     status.value = 'connected'
-    onConnectedCallback.value && onConnectedCallback.value(provider.value)
 
     // EIP-1193 subscriber
     subscribeDisconnect()
     subscribeAccountsChanged()
     subscribeChainChanged()
+
+    // useEthers
+    await activate(provider.value)
   }
 
   async function disconnect() {
@@ -87,11 +97,7 @@ export function useWallet() {
     onDisconnectCallback.value && onDisconnectCallback.value()
   }
 
-  // ========================= hooks =========================
-
-  function onConnected(callback: OnConnectedCallback) {
-    onConnectedCallback.value = callback
-  }
+  // ========================= callback =========================
 
   function onDisconnect(callback: OnDisconnectCallback) {
     onDisconnectCallback.value = callback
@@ -114,7 +120,7 @@ export function useWallet() {
 
   return {
     // state
-    provider: provider as Ref<WalletProvider | null>,
+    provider,
     status,
     walletName,
     error,
@@ -126,8 +132,7 @@ export function useWallet() {
     connect,
     disconnect,
 
-    // hooks
-    onConnected,
+    // callback
     onDisconnect,
     onAccountsChanged,
     onChainedChanged,
@@ -168,7 +173,8 @@ function subscribeAccountsChanged() {
     case 'metamask':
       ;(provider.value as MetaMaskProvider).on(
         'accountsChanged',
-        (accounts: string[]) => {
+        async (accounts: string[]) => {
+          await activate(provider.value as WalletProvider)
           console.log(`MetaMask accounts changed: ${accounts}`)
           onAccountsChangedCallback.value &&
             onAccountsChangedCallback.value(accounts[0])
@@ -178,7 +184,8 @@ function subscribeAccountsChanged() {
     case 'walletconnect':
       ;(provider.value as WalletConnectProvider).on(
         'accountsChanged',
-        (accounts: string[]) => {
+        async (accounts: string[]) => {
+          await activate(provider.value as WalletProvider)
           console.log(`WalletConnect accounts changed: ${accounts}`)
           onAccountsChangedCallback.value &&
             onAccountsChangedCallback.value(accounts[0])
@@ -193,8 +200,9 @@ function subscribeChainChanged() {
     case 'metamask':
       ;(provider.value as MetaMaskProvider).on(
         'chainChanged',
-        (hexChainId: string) => {
+        async (hexChainId: string) => {
           const chainId = parseInt(hexChainId, 16)
+          await activate(provider.value as WalletProvider)
           console.log(`MetaMask chain changed: ${chainId}`)
           onChainChangedCallback.value && onChainChangedCallback.value(chainId)
         },
@@ -203,8 +211,8 @@ function subscribeChainChanged() {
     case 'walletconnect':
       ;(provider.value as WalletConnectProvider).on(
         'chainChanged',
-        (chainId: number) => {
-          clear()
+        async (chainId: number) => {
+          await activate(provider.value as WalletProvider)
           console.log(`WalletConnect chain changed: ${chainId}`)
           onChainChangedCallback.value && onChainChangedCallback.value(chainId)
         },
