@@ -14,8 +14,9 @@ export type OnConnectedCallback = (provider: WalletProvider) => void
 export type OnDisconnectCallback = () => void
 export type OnAccountsChangedCallback = (address: string) => void
 export type OnChainChangedCallback = (chainId: number) => void
-
-const { activate, deactivate } = useEthers()
+export type UseWalletOptions = {
+  useEthers: boolean
+}
 
 // ========================= state =========================
 
@@ -28,20 +29,22 @@ const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
 const onAccountsChangedCallback = ref<OnAccountsChangedCallback | null>(null)
 const onChainChangedCallback = ref<OnChainChangedCallback | null>(null)
 
-const clear = () => {
-  provider.value = null
-  status.value = 'none'
-  walletName.value = 'none'
-  error.value = ''
+export function useWallet(options: UseWalletOptions = { useEthers: true }) {
+  const { activate, deactivate } = useEthers()
 
-  onDisconnectCallback.value = null
-  onAccountsChangedCallback.value = null
-  onChainChangedCallback.value = null
+  function clear() {
+    provider.value = null
+    status.value = 'none'
+    walletName.value = 'none'
+    error.value = ''
 
-  deactivate()
-}
+    onDisconnectCallback.value = null
+    onAccountsChangedCallback.value = null
+    onChainChangedCallback.value = null
 
-export function useWallet() {
+    options.useEthers && deactivate()
+  }
+
   async function connect(_walletName: WalletName, infuraAPI?: string) {
     let _provider: WalletProvider | null = null
 
@@ -85,7 +88,7 @@ export function useWallet() {
     subscribeChainChanged()
 
     // useEthers
-    await activate(provider.value)
+    options.useEthers && (await activate(provider.value))
   }
 
   async function disconnect() {
@@ -95,6 +98,94 @@ export function useWallet() {
     }
     clear()
     onDisconnectCallback.value && onDisconnectCallback.value()
+  }
+
+  // ========================= EIP-1193 subscriber =========================
+
+  function subscribeDisconnect() {
+    switch (walletName.value) {
+      case 'metamask':
+        ;(provider.value as MetaMaskProvider).on(
+          'disconnect',
+          (err: MetaMaskProviderRpcError) => {
+            clear()
+            console.log(`MetaMask disconnect: ${err.message}`)
+            onDisconnectCallback.value && onDisconnectCallback.value()
+          },
+        )
+        break
+      case 'walletconnect':
+        // Q: why it trigger twice when user click disconnect?
+        // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/0871582be273f8c21bb1351315d649ea47ee70b7/packages/providers/web3-provider/src/index.ts#L277
+        ;(provider.value as WalletConnectProvider).on(
+          'disconnect',
+          (code: number, reason: string) => {
+            clear()
+            console.log(`WalletConnect disconnect: code:${code}: ${reason}`)
+            onDisconnectCallback.value && onDisconnectCallback.value()
+          },
+        )
+        break
+    }
+  }
+
+  function subscribeAccountsChanged() {
+    switch (walletName.value) {
+      case 'metamask':
+        ;(provider.value as MetaMaskProvider).on(
+          'accountsChanged',
+          async (accounts: string[]) => {
+            options.useEthers &&
+              (await activate(provider.value as WalletProvider))
+            console.log(`MetaMask accounts changed: ${accounts}`)
+            onAccountsChangedCallback.value &&
+              onAccountsChangedCallback.value(accounts[0])
+          },
+        )
+        break
+      case 'walletconnect':
+        ;(provider.value as WalletConnectProvider).on(
+          'accountsChanged',
+          async (accounts: string[]) => {
+            options.useEthers &&
+              (await activate(provider.value as WalletProvider))
+            console.log(`WalletConnect accounts changed: ${accounts}`)
+            onAccountsChangedCallback.value &&
+              onAccountsChangedCallback.value(accounts[0])
+          },
+        )
+        break
+    }
+  }
+
+  function subscribeChainChanged() {
+    switch (walletName.value) {
+      case 'metamask':
+        ;(provider.value as MetaMaskProvider).on(
+          'chainChanged',
+          async (hexChainId: string) => {
+            const chainId = parseInt(hexChainId, 16)
+            options.useEthers &&
+              (await activate(provider.value as WalletProvider))
+            console.log(`MetaMask chain changed: ${chainId}`)
+            onChainChangedCallback.value &&
+              onChainChangedCallback.value(chainId)
+          },
+        )
+        break
+      case 'walletconnect':
+        ;(provider.value as WalletConnectProvider).on(
+          'chainChanged',
+          async (chainId: number) => {
+            options.useEthers &&
+              (await activate(provider.value as WalletProvider))
+            console.log(`WalletConnect chain changed: ${chainId}`)
+            onChainChangedCallback.value &&
+              onChainChangedCallback.value(chainId)
+          },
+        )
+        break
+    }
   }
 
   // ========================= callback =========================
@@ -136,87 +227,5 @@ export function useWallet() {
     onDisconnect,
     onAccountsChanged,
     onChainedChanged,
-  }
-}
-
-// ========================= EIP-1193 subscriber =========================
-
-function subscribeDisconnect() {
-  switch (walletName.value) {
-    case 'metamask':
-      ;(provider.value as MetaMaskProvider).on(
-        'disconnect',
-        (err: MetaMaskProviderRpcError) => {
-          clear()
-          console.log(`MetaMask disconnect: ${err.message}`)
-          onDisconnectCallback.value && onDisconnectCallback.value()
-        },
-      )
-      break
-    case 'walletconnect':
-      // Q: why it trigger twice when user click disconnect?
-      // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/0871582be273f8c21bb1351315d649ea47ee70b7/packages/providers/web3-provider/src/index.ts#L277
-      ;(provider.value as WalletConnectProvider).on(
-        'disconnect',
-        (code: number, reason: string) => {
-          clear()
-          console.log(`WalletConnect disconnect: code:${code}: ${reason}`)
-          onDisconnectCallback.value && onDisconnectCallback.value()
-        },
-      )
-      break
-  }
-}
-
-function subscribeAccountsChanged() {
-  switch (walletName.value) {
-    case 'metamask':
-      ;(provider.value as MetaMaskProvider).on(
-        'accountsChanged',
-        async (accounts: string[]) => {
-          await activate(provider.value as WalletProvider)
-          console.log(`MetaMask accounts changed: ${accounts}`)
-          onAccountsChangedCallback.value &&
-            onAccountsChangedCallback.value(accounts[0])
-        },
-      )
-      break
-    case 'walletconnect':
-      ;(provider.value as WalletConnectProvider).on(
-        'accountsChanged',
-        async (accounts: string[]) => {
-          await activate(provider.value as WalletProvider)
-          console.log(`WalletConnect accounts changed: ${accounts}`)
-          onAccountsChangedCallback.value &&
-            onAccountsChangedCallback.value(accounts[0])
-        },
-      )
-      break
-  }
-}
-
-function subscribeChainChanged() {
-  switch (walletName.value) {
-    case 'metamask':
-      ;(provider.value as MetaMaskProvider).on(
-        'chainChanged',
-        async (hexChainId: string) => {
-          const chainId = parseInt(hexChainId, 16)
-          await activate(provider.value as WalletProvider)
-          console.log(`MetaMask chain changed: ${chainId}`)
-          onChainChangedCallback.value && onChainChangedCallback.value(chainId)
-        },
-      )
-      break
-    case 'walletconnect':
-      ;(provider.value as WalletConnectProvider).on(
-        'chainChanged',
-        async (chainId: number) => {
-          await activate(provider.value as WalletProvider)
-          console.log(`WalletConnect chain changed: ${chainId}`)
-          onChainChangedCallback.value && onChainChangedCallback.value(chainId)
-        },
-      )
-      break
   }
 }
