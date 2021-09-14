@@ -6,7 +6,7 @@ import {
 } from '@ethersproject/providers'
 import { Signer, BigNumber } from 'ethers'
 import { useWallet, ConnectionState } from './useWallet'
-import { useContractCalls } from './useContractCalls'
+import { useMulticall } from './useMulticall'
 import { MULTICALL2_ABI, MULTICALL2_ADDRESS } from '../constants'
 import { Contract } from '@ethersproject/contracts'
 import { Multicall2 } from '../types/multicall2/Multicall2'
@@ -34,20 +34,20 @@ export function useEthers() {
 
   onMounted(async () => {
     if (status.value === 'connected') {
-      await setup()
+      await activate()
     }
   })
 
   watch(status, async (status: ConnectionState) => {
     if (status === 'connected') {
-      await setup()
+      await activate()
       onConnectedCallback.value({
         provider: provider.value!,
         signer: signer.value!,
         network: network.value!,
       })
     } else if (status === 'none') {
-      cleanState()
+      clear()
     }
   })
 
@@ -55,7 +55,7 @@ export function useEthers() {
     onConnectedCallback.value = cb
   }
 
-  async function setup() {
+  async function activate() {
     if (status.value !== 'connected') {
       throw new Error('useEthers: wallet is not connected')
     }
@@ -71,7 +71,7 @@ export function useEthers() {
       _provider,
     ) as Multicall2
 
-    const { call, results, blockNumber } = useContractCalls(_provider, [
+    const { call, results, blockNumber } = useMulticall(_provider, [
       {
         interface: multicall.interface,
         address: MULTICALL2_ADDRESS,
@@ -98,7 +98,7 @@ export function useEthers() {
     lastBlockTimestamp.value = (_timestamp as BigNumber).toNumber()
   }
 
-  function cleanState() {
+  function clear() {
     provider.value = null
     signer.value = null
     network.value = null
@@ -120,7 +120,7 @@ export function useEthers() {
     lastBlockTimestamp,
     chainId,
     isConnected,
-    setup,
+    activate,
     onConnected,
   }
 }

@@ -20,7 +20,7 @@ export function useWallet() {
   async function connect(_walletName: WalletName, infuraAPI?: string) {
     let _provider: WalletProvider = null
 
-    cleanState()
+    clear()
 
     try {
       status.value = 'connecting'
@@ -45,7 +45,7 @@ export function useWallet() {
           throw new Error('Connect Error: wallet name not found')
       }
     } catch (err: any) {
-      cleanState()
+      clear()
       error.value = `Failed to connect: ${err.message}`
       return
     }
@@ -65,7 +65,7 @@ export function useWallet() {
     if (walletName.value === 'walletconnect') {
       await (provider.value as WalletConnectProvider).disconnect()
     }
-    cleanState()
+    clear()
   }
 
   const isConnected = computed(() => {
@@ -84,7 +84,7 @@ export function useWallet() {
   }
 }
 
-function cleanState() {
+function clear() {
   provider.value = null
   status.value = 'none'
   walletName.value = 'none'
@@ -98,7 +98,7 @@ function subscribeDisconnect() {
         'disconnect',
         (err: MetaMaskProviderRpcError) => {
           console.log('disconnect')
-          cleanState()
+          clear()
           console.log(`MetaMask disconnect: ${err.message}`)
         },
       )
@@ -109,7 +109,7 @@ function subscribeDisconnect() {
       ;(provider.value as WalletConnectProvider).on(
         'disconnect',
         (code: number, reason: string) => {
-          cleanState()
+          clear()
           console.log(`WalletConnect disconnect: code:${code}: ${reason}`)
         },
       )
@@ -123,7 +123,7 @@ function subscribeAccountsChanged() {
       ;(provider.value as MetaMaskProvider).on(
         'accountsChanged',
         (accounts: string[]) => {
-          cleanState()
+          clear()
           console.log(`MetaMask accounts changed: ${accounts}`)
         },
       )
@@ -132,7 +132,7 @@ function subscribeAccountsChanged() {
       ;(provider.value as WalletConnectProvider).on(
         'accountsChanged',
         (accounts: string[]) => {
-          cleanState()
+          clear()
           console.log(`WalletConnect accounts changed: ${accounts}`)
         },
       )
@@ -146,7 +146,7 @@ function subscribeChainChanged() {
       ;(provider.value as MetaMaskProvider).on(
         'chainChanged',
         (chainId: number) => {
-          cleanState()
+          clear()
           console.log(`MetaMask chain changed: ${chainId}`)
         },
       )
@@ -155,7 +155,7 @@ function subscribeChainChanged() {
       ;(provider.value as WalletConnectProvider).on(
         'chainChanged',
         (chainId: number) => {
-          cleanState()
+          clear()
           console.log(`WalletConnect chain changed: ${chainId}`)
         },
       )

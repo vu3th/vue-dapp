@@ -12,7 +12,7 @@ export interface ContractCall {
   args?: any[]
 }
 
-export function useContractCalls(
+export function useMulticall(
   provider: Web3Provider | JsonRpcProvider,
   contractCalls: ContractCall[],
 ) {

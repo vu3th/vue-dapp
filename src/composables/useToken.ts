@@ -1,6 +1,6 @@
 import { ref } from 'vue-demi'
 import { Web3Provider } from '@ethersproject/providers'
-import { useContractCalls, ContractCall } from './useContractCalls'
+import { useMulticall, ContractCall } from './useMulticall'
 import { ERC20Interface } from '../constants'
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -46,7 +46,7 @@ export function useToken() {
     userAddress: string,
   ) {
     const calls = genCalls(tokenAddress, userAddress)
-    const { call, results } = useContractCalls(provider, calls)
+    const { call, results } = useMulticall(provider, calls)
 
     await call()
 
