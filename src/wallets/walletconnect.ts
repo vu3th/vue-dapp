@@ -17,36 +17,13 @@ const WalletConnectProviderDerived: typeof WalletConnectProvider | null =
   window.WalletConnectProvider?.default || null
 
 export default class Walletconnect {
-  static async check(infuraId: string) {
+  static async check() {
     if (!WalletConnectProviderDerived) {
       console.warn(
         'Walletconnect unavailable: please add below script to enable the feature: <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"></script>',
       )
       return false
     }
-
-    try {
-      const res = await fetch(`https://mainnet.infura.io/v3/${infuraId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          id: 1,
-          method: 'eth_blockNumber',
-          params: [],
-        }),
-      })
-      const data = await res.json()
-      console.log('Infura ID is valid.', data)
-    } catch (e) {
-      console.warn(
-        'Walletconnect unavailable: Failed to connect to infura node, please check if your infura ID is valid.',
-      )
-      return false
-    }
-
     return true
   }
 

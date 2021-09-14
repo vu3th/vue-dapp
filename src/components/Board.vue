@@ -7,7 +7,6 @@ import { useBoard } from '../composables/useBoard'
 import { useWallet } from '../composables/useWallet'
 import { Config } from '../types'
 import Metamask from '../wallets/metamask'
-import Walletconnect from '../wallets/walletconnect'
 
 export default defineComponent({
   components: {
@@ -29,7 +28,7 @@ export default defineComponent({
       if (await Metamask.check()) {
         metamaskDisabled.value = false
       }
-      if (config.infuraId && (await Walletconnect.check(config.infuraId))) {
+      if (config.infuraId) {
         walletconnectDisabled.value = false
       }
     })

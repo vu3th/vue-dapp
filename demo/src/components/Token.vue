@@ -1,17 +1,17 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 import { useEthers, useToken } from 'vue-dapp'
 
 export default defineComponent({
   name: 'Token',
   inject: ['dappConfig'],
   setup() {
-    const { address, onConnected, isConnected } = useEthers()
+    const { address, provider } = useEthers()
     const { call, name, totalSupply, decimals, symbol, balance } = useToken()
 
-    onConnected(({ provider }) => {
+    onMounted(() => {
       call(
-        provider,
+        provider.value!,
         '0xa8d4452ae282fc13521c6a4d91fe58bb49719eb4', // Rinkeby MAT
         address.value,
       )
@@ -19,7 +19,6 @@ export default defineComponent({
     })
 
     return {
-      isConnected,
       address,
       name,
       totalSupply,
@@ -33,7 +32,7 @@ export default defineComponent({
 
 <template>
   <div
-    v-if="isConnected"
+    v-if="name"
     class="flex flex-col justify-center items-center"
   >
     <p>name: {{ name }}</p>

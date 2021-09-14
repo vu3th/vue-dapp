@@ -13,22 +13,15 @@ export default defineComponent({
   setup() {
     const { open } = useBoard()
     const { status, disconnect, error } = useWallet()
-    const {
-      isConnected,
-      address,
-      balance,
-      lastBlockNumber,
-      lastBlockTimestamp,
-    } = useEthers()
+    const { address, balance, chainId, isActivated } = useEthers()
 
     return {
-      isConnected,
+      isActivated,
       address,
       status,
       error,
       displayBalance: computed(() => formatEther(balance.value)),
-      lastBlockNumber,
-      lastBlockTimestamp,
+      chainId,
       disconnect,
       open,
     }
@@ -45,13 +38,12 @@ export default defineComponent({
     >{{ error }}</p>
 
     <div
-      v-if="address"
+      v-if="isActivated"
       class="text-center"
     >
       <p>{{ address }}</p>
       <p>{{ displayBalance || ''}} ETH</p>
-      <p>Block Number: {{ lastBlockNumber || '' }}</p>
-      <p>Block Timestamp: {{ lastBlockTimestamp? new Date(lastBlockTimestamp*1000): '' }}</p>
+      <p>{{ chainId }}</p>
     </div>
 
     <div class="m-4">
@@ -62,7 +54,7 @@ export default defineComponent({
       >{{ status === 'connected' ? "Disconnect" : status === 'connecting' ? "Connecting..." : "Connect" }}</button>
     </div>
 
-    <Token />
+    <Token v-if="isActivated" />
   </div>
   <board />
 </template>

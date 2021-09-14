@@ -1,62 +1,51 @@
-import { computed, markRaw, ref, Ref, onMounted, watch } from 'vue-demi'
+import { computed, markRaw, ref, Ref } from 'vue-demi'
 import {
   Web3Provider,
   Network,
   ExternalProvider,
 } from '@ethersproject/providers'
-import { Signer, BigNumber } from 'ethers'
-import { useWallet, ConnectionState } from './useWallet'
-import { useMulticall } from './useMulticall'
-import { MULTICALL2_ABI, MULTICALL2_ADDRESS } from '../constants'
-import { Contract } from '@ethersproject/contracts'
-import { Multicall2 } from '../types/multicall2/Multicall2'
+import { Signer } from 'ethers'
+import { useWallet } from './useWallet'
 
-interface OnConntectedCallbackParams {
-  provider: Web3Provider
-  signer: Signer
-  network: Network
+const isActivated = ref(false)
+const provider = ref<Web3Provider | null>(null)
+const signer = ref<Signer | null>(null)
+const network = ref<Network | null>(null)
+const address = ref('')
+const balance = ref<bigint>(BigInt(0))
+
+const clear = () => {
+  isActivated.value = false
+  provider.value = null
+  signer.value = null
+  network.value = null
+  address.value = ''
+  balance.value = BigInt(0)
 }
 
 export function useEthers() {
-  const { status, provider: walletProvider, isConnected } = useWallet()
+  const {
+    isConnected,
+    provider: walletProvider,
+    onConnected,
+    onDisconnect,
+    onAccountsChanged,
+    onChainedChanged,
+  } = useWallet()
 
-  const provider = ref<Web3Provider | null>(null)
-  const signer = ref<Signer | null>(null)
-  const network = ref<Network | null>(null)
-  const address = ref('')
-  const balance = ref<bigint>(BigInt(0))
-  const lastBlockNumber = ref(0)
-  const lastBlockTimestamp = ref(0)
-
-  const onConnectedCallback = ref<(params: OnConntectedCallbackParams) => void>(
-    () => {},
-  )
-
-  onMounted(async () => {
-    if (status.value === 'connected') {
-      await activate()
-    }
+  onConnected(async () => await activate())
+  onDisconnect(() => clear())
+  onAccountsChanged(async () => {
+    clear()
+    await activate()
   })
-
-  watch(status, async (status: ConnectionState) => {
-    if (status === 'connected') {
-      await activate()
-      onConnectedCallback.value({
-        provider: provider.value!,
-        signer: signer.value!,
-        network: network.value!,
-      })
-    } else if (status === 'none') {
-      clear()
-    }
+  onChainedChanged(async () => {
+    clear()
+    await activate()
   })
-
-  async function onConnected(cb: (params: OnConntectedCallbackParams) => void) {
-    onConnectedCallback.value = cb
-  }
 
   async function activate() {
-    if (status.value !== 'connected') {
+    if (!isConnected.value) {
       throw new Error('useEthers: wallet is not connected')
     }
 
@@ -64,63 +53,32 @@ export function useEthers() {
     const _signer = _provider.getSigner()
     const _network = await _provider.getNetwork()
     const _address = await _signer.getAddress()
-
-    const multicall = new Contract(
-      MULTICALL2_ADDRESS,
-      MULTICALL2_ABI,
-      _provider,
-    ) as Multicall2
-
-    const { call, results, blockNumber } = useMulticall(_provider, [
-      {
-        interface: multicall.interface,
-        address: MULTICALL2_ADDRESS,
-        method: 'getCurrentBlockTimestamp',
-      },
-      {
-        interface: multicall.interface,
-        address: MULTICALL2_ADDRESS,
-        method: 'getEthBalance',
-        args: [_address],
-      },
-    ])
-
-    await call()
-
-    const [{ timestamp: _timestamp }, { balance: _balance }] = results.value
+    const _balance = await _signer.getBalance()
 
     provider.value = markRaw(_provider)
     signer.value = markRaw(_signer)
     network.value = _network
     address.value = _address
-    balance.value = (_balance as BigNumber).toBigInt()
-    lastBlockNumber.value = blockNumber.value
-    lastBlockTimestamp.value = (_timestamp as BigNumber).toNumber()
-  }
+    balance.value = _balance.toBigInt()
 
-  function clear() {
-    provider.value = null
-    signer.value = null
-    network.value = null
-    address.value = ''
-    balance.value = BigInt(0)
-    lastBlockNumber.value = 0
-    lastBlockTimestamp.value = 0
+    isActivated.value = true
   }
 
   const chainId = computed(() => network.value?.chainId)
 
   return {
+    // state
+    isActivated,
     provider: provider as Ref<Web3Provider | null>, // for fixing index.d.ts compiled error, see issue/10:
     signer,
     network,
     address,
     balance,
-    lastBlockNumber,
-    lastBlockTimestamp,
+
+    // getters
     chainId,
-    isConnected,
+
+    // methods
     activate,
-    onConnected,
   }
 }
