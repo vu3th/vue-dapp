@@ -7,6 +7,8 @@ import {
 import { Signer } from 'ethers'
 import { WalletProvider } from './useWallet'
 
+export type { Web3Provider, Signer, Network }
+
 const isActivated = ref(false)
 const provider = ref<Web3Provider | null>(null)
 const signer = ref<Signer | null>(null)

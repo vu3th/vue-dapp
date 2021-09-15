@@ -15,7 +15,7 @@ export type OnDisconnectCallback = () => void
 export type OnAccountsChangedCallback = (address: string) => void
 export type OnChainChangedCallback = (chainId: number) => void
 export type UseWalletOptions = {
-  useEthers: boolean
+  library: 'ethers' | 'web3'
 }
 
 // ========================= state =========================
@@ -29,7 +29,7 @@ const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
 const onAccountsChangedCallback = ref<OnAccountsChangedCallback | null>(null)
 const onChainChangedCallback = ref<OnChainChangedCallback | null>(null)
 
-export function useWallet(options: UseWalletOptions = { useEthers: true }) {
+export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
   const { activate, deactivate } = useEthers()
 
   function clear() {
@@ -42,7 +42,7 @@ export function useWallet(options: UseWalletOptions = { useEthers: true }) {
     onAccountsChangedCallback.value = null
     onChainChangedCallback.value = null
 
-    options.useEthers && deactivate()
+    options.library === 'ethers' && deactivate()
   }
 
   async function connect(_walletName: WalletName, infuraAPI?: string) {
@@ -87,8 +87,7 @@ export function useWallet(options: UseWalletOptions = { useEthers: true }) {
     subscribeAccountsChanged()
     subscribeChainChanged()
 
-    // useEthers
-    options.useEthers && (await activate(provider.value))
+    options.library === 'ethers' && (await activate(provider.value))
   }
 
   async function disconnect() {
@@ -135,7 +134,7 @@ export function useWallet(options: UseWalletOptions = { useEthers: true }) {
         ;(provider.value as MetaMaskProvider).on(
           'accountsChanged',
           async (accounts: string[]) => {
-            options.useEthers &&
+            options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
             console.log(`MetaMask accounts changed: ${accounts}`)
             onAccountsChangedCallback.value &&
@@ -147,7 +146,7 @@ export function useWallet(options: UseWalletOptions = { useEthers: true }) {
         ;(provider.value as WalletConnectProvider).on(
           'accountsChanged',
           async (accounts: string[]) => {
-            options.useEthers &&
+            options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
             console.log(`WalletConnect accounts changed: ${accounts}`)
             onAccountsChangedCallback.value &&
@@ -165,7 +164,7 @@ export function useWallet(options: UseWalletOptions = { useEthers: true }) {
           'chainChanged',
           async (hexChainId: string) => {
             const chainId = parseInt(hexChainId, 16)
-            options.useEthers &&
+            options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
             console.log(`MetaMask chain changed: ${chainId}`)
             onChainChangedCallback.value &&
@@ -177,7 +176,7 @@ export function useWallet(options: UseWalletOptions = { useEthers: true }) {
         ;(provider.value as WalletConnectProvider).on(
           'chainChanged',
           async (chainId: number) => {
-            options.useEthers &&
+            options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
             console.log(`WalletConnect chain changed: ${chainId}`)
             onChainChangedCallback.value &&

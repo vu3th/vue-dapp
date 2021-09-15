@@ -54,7 +54,7 @@ export default defineComponent({
       >{{ status === 'connected' ? "Disconnect" : status === 'connecting' ? "Connecting..." : "Connect" }}</button>
     </div>
 
-    <Token v-if="isActivated" />
+    <Token />
   </div>
   <board />
 </template>

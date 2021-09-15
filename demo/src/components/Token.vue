@@ -1,24 +1,33 @@
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
-import { useEthers, useToken } from 'vue-dapp'
+import { defineComponent } from 'vue'
+import { useEthers, useToken, useEthersHooks } from 'vue-dapp'
 
 export default defineComponent({
   name: 'Token',
-  inject: ['dappConfig'],
   setup() {
-    const { address, provider } = useEthers()
+    const { address, isActivated } = useEthers()
     const { call, name, totalSupply, decimals, symbol, balance } = useToken()
+    const { onActivated, onDeactivated, onChanged } = useEthersHooks()
 
-    onMounted(() => {
+    onActivated(({ provider, address }) => {
       call(
-        provider.value!,
+        provider,
         '0xa8d4452ae282fc13521c6a4d91fe58bb49719eb4', // Rinkeby MAT
-        address.value,
+        address,
       )
       // try mainnet DAI 0x6B175474E89094C44Da98b954EedeAC495271d0F
     })
 
+    onDeactivated(() => {
+      console.log('deactivated')
+    })
+
+    onChanged(() => {
+      console.log('change')
+    })
+
     return {
+      isActivated,
       address,
       name,
       totalSupply,
@@ -32,7 +41,7 @@ export default defineComponent({
 
 <template>
   <div
-    v-if="name"
+    v-if="isActivated"
     class="flex flex-col justify-center items-center"
   >
     <p>name: {{ name }}</p>
