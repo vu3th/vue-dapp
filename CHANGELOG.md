@@ -1,6 +1,21 @@
 Changelog
 =========
 
+v0.4.1 (2021-09-15)
+--------------------------------
+#### Big Changes
+  - Change <board> with <vdapp-board>
+  - Register component <vdapp-modal> 
+
+#### Features
+  - Add useMulticall
+  - Add useToken
+  - Add useEthersHooks
+
+#### Others
+  - Refactor
+  - improve UX
+
 v0.4.0 (2021-09-05)
 --------------------------------
 #### Big Changes

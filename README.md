@@ -4,7 +4,7 @@ Vue 3 composable and components library for building Dapps with ethers.js.
 
 👀 [Demo](https://vue-dapp-demo.netlify.app/)
 
-🌏 [Documentation](https://vue-dapp-docs.netlify.app/)
+🌏 [Documentation(v0.4.0)](https://vue-dapp-docs.netlify.app/)
 
 ## Features
 - TypeScript by default
@@ -52,12 +52,8 @@ export default defineComponent({
   setup() {
     const { open } = useBoard()
     const { status, disconnect, error } = useWallet()
-    const { address, onConnected } = useEthers()
-
-    onConnected(({ provider, address }) => {
-      console.log(provider.getSigner())
-      console.log(address)
-    })
+    const { address, isActivated } = useEthers()
+    
 
     return {
       address,
