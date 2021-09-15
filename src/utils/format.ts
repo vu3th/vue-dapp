@@ -9,6 +9,9 @@ export const shortenAddress = (address: string): string => {
   }
 }
 
-export const displayEther = (balance: BigNumber, fixed: number) => {
+export const displayEther = (
+  balance: BigNumber | bigint,
+  fixed: number = 2,
+) => {
   return (+formatEther(balance)).toFixed(fixed)
 }
