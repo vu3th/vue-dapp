@@ -1,5 +1,6 @@
 import { Plugin } from 'vue-demi'
 import Board from './components/Board.vue'
+import Modal from './components/Modal.vue'
 import { Config } from './types/config'
 import { ChainId } from './constants'
 
@@ -29,7 +30,8 @@ export const VueDapp: Plugin = {
       )
     }
     app.directive('click-outside', clickOutside)
-    app.component('board', Board)
+    app.component('vdapp-board', Board)
+    app.component('vdapp-modal', Modal)
     app.provide('dappConfig', { ...defaultConfig, ...options })
   },
 }

@@ -37,7 +37,7 @@ app.use(VueDapp, dappConfig)
 Add the global component to your App.vue:
 
 ```vue
-<board />
+<vdapp-board />
 ```
 
 Use wallet or board from your .vue files:

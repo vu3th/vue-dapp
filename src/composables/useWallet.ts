@@ -1,4 +1,4 @@
-import { ref, markRaw, computed } from 'vue-demi'
+import { ref, markRaw, computed, Ref } from 'vue-demi'
 import Metamask, {
   MetaMaskProvider,
   MetaMaskProviderRpcError,
@@ -210,7 +210,7 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
 
   return {
     // state
-    provider,
+    provider: provider as Ref<WalletProvider | null>,
     status,
     walletName,
     error,

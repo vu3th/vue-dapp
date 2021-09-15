@@ -1,6 +1,6 @@
 <script lang="ts">
 import { formatEther } from '@ethersproject/units'
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useBoard, useEthers, useWallet } from 'vue-dapp'
 import Token from './components/Token.vue'
 
@@ -12,8 +12,32 @@ export default defineComponent({
   inject: ['dappConfig'],
   setup() {
     const { open } = useBoard()
-    const { status, disconnect, error } = useWallet()
+    const { status, disconnect, error, provider } = useWallet()
     const { address, balance, chainId, isActivated } = useEthers()
+
+    const modalOpen = ref(false)
+    const openModal = () => {
+      modalOpen.value = true
+    }
+    const closeModal = () => {
+      modalOpen.value = false
+    }
+
+    const personalSign = async () => {
+      openModal()
+
+      try {
+        const signedData = await provider.value!.request({
+          method: 'personal_sign',
+          params: ['Hello World', address.value],
+        })
+        console.log(signedData)
+      } catch (e) {
+        console.error(e.message)
+      } finally {
+        closeModal()
+      }
+    }
 
     return {
       isActivated,
@@ -24,6 +48,10 @@ export default defineComponent({
       chainId,
       disconnect,
       open,
+      modalOpen,
+      openModal,
+      closeModal,
+      personalSign,
     }
   },
 })
@@ -54,7 +82,26 @@ export default defineComponent({
       >{{ status === 'connected' ? "Disconnect" : status === 'connecting' ? "Connecting..." : "Connect" }}</button>
     </div>
 
+    <div v-if="isActivated">
+      <div class="m-4">
+        <button
+          @click="personalSign"
+          class="btn"
+        >personal_sign</button>
+      </div>
+
+      <vdapp-modal
+        :modalOpen="modalOpen"
+        @close="closeModal"
+      >
+        <div class="p-10 text-center">
+          <p class="text-xl">Pending Call Request</p>
+          <p>Approve or reject request using your wallet</p>
+        </div>
+      </vdapp-modal>
+    </div>
+
     <Token />
   </div>
-  <board />
+  <vdapp-board />
 </template>

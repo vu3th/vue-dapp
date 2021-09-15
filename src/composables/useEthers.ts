@@ -48,7 +48,7 @@ export function useEthers() {
     // state
     isActivated,
     provider: provider as Ref<Web3Provider | null>, // for fixing index.d.ts compiled error, see issue/10:
-    signer,
+    signer: signer as Ref<Signer | null>,
     network,
     address,
     balance,

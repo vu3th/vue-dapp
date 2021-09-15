@@ -1,10 +1,10 @@
 <script lang="ts">
-import { defineComponent, watchEffect, inject, onMounted, ref } from 'vue-demi'
+import { defineComponent, inject, onMounted, ref } from 'vue-demi'
 import Modal from './Modal.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
 import { useBoard } from '../composables/useBoard'
-import { useWallet } from '../composables/useWallet'
+import { useWallet, WalletName } from '../composables/useWallet'
 import { Config } from '../types'
 import Metamask from '../wallets/metamask'
 
@@ -33,29 +33,55 @@ export default defineComponent({
       }
     })
 
-    watchEffect(() => {
-      if (status.value === 'connecting') {
-        close()
+    const loadingOpen = ref(false)
+    const openLoading = () => {
+      loadingOpen.value = true
+    }
+    const closeLoading = () => {
+      loadingOpen.value = false
+    }
+
+    const connectWallet = async (wallet: WalletName) => {
+      close()
+      openLoading()
+      try {
+        switch (wallet) {
+          case 'metamask':
+            await connectMetamask()
+            break
+          case 'walletconnect':
+            await connectWalletconnect()
+            break
+        }
+      } catch (e: any) {
+        console.error(e.message)
+      } finally {
+        closeLoading()
       }
-    })
+    }
 
     const connectMetamask = async () => {
       if (metamaskDisabled.value) return
-      connect('metamask')
+      await connect('metamask')
     }
 
     const connectWalletconnect = async () => {
       if (walletconnectDisabled.value) return
-      connect('walletconnect', config.infuraId)
+      await connect('walletconnect', config.infuraId)
     }
 
     return {
+      status,
       boardOpen,
       metamaskDisabled,
       walletconnectDisabled,
       close,
-      connectMetamask,
-      connectWalletconnect,
+      connectWallet,
+
+      // pending modal
+      loadingOpen,
+      openLoading,
+      closeLoading,
     }
   },
 })
@@ -67,7 +93,7 @@ export default defineComponent({
     @close="close"
   >
     <div
-      @click="connectMetamask"
+      @click="connectWallet('metamask')"
       class="wallet-item"
       :class="metamaskDisabled? 'wallet-disabled' : ''"
     >
@@ -78,7 +104,7 @@ export default defineComponent({
     </div>
     <div class="line"></div>
     <div
-      @click="connectWalletconnect"
+      @click="connectWallet('walletconnect')"
       class="wallet-item"
       :class="walletconnectDisabled? 'wallet-disabled' : ''"
     >
@@ -86,6 +112,23 @@ export default defineComponent({
         <WalletConnectIcon class="logo" />
         <div>WalletConnect</div>
       </div>
+    </div>
+  </Modal>
+
+  <Modal :modalOpen="loadingOpen">
+    <div
+      class="loading-modal"
+      v-if="status === 'connecting'"
+    >
+      <p>Pending Call Request</p>
+      <p>Approve or reject request using your wallet</p>
+    </div>
+
+    <div
+      class="loading-modal"
+      v-if="status === 'connected'"
+    >
+      <p>Loading...</p>
     </div>
   </Modal>
 </template>
@@ -146,5 +189,22 @@ export default defineComponent({
 .wallet-disabled:hover {
   background-color: rgba(255, 255, 255, 0.623);
   cursor: default;
+}
+
+.loading-modal {
+  width: 20rem;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.loading-modal > p:first-child {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+@media (min-width: 640px) {
+  .loading-modal {
+    width: auto;
+  }
 }
 </style>
