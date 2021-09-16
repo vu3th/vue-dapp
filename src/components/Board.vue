@@ -41,8 +41,6 @@ export default defineComponent({
     }
 
     const connectWallet = async (wallet: WalletName) => {
-      close()
-      openLoading()
       try {
         switch (wallet) {
           case 'metamask':
@@ -61,11 +59,17 @@ export default defineComponent({
 
     const connectMetamask = async () => {
       if (metamaskDisabled.value) return
+      // Prevent from closing the board while clicking disabled wallet
+      close()
+      openLoading()
       await connect('metamask')
     }
 
     const connectWalletconnect = async () => {
       if (walletconnectDisabled.value) return
+      // Prevent from closing the board while clicking disabled wallet
+      close()
+      openLoading()
       await connect('walletconnect', infuraId)
     }
 

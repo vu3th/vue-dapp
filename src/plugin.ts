@@ -11,14 +11,13 @@ export const VueDapp: Plugin = {
   install(app, options: PluginOptions) {
     if (!options?.infuraId) {
       console.warn(
-        'For enabling WalletConnect, you should provide infura ID in plugin options like "app.use(VueDapp, { infuraId: <your-infuraId> })"',
+        'For enabling WalletConnect, you should provide infura ID in plugin options like "app.use(VueDapp, { infuraId: "<your-id>" })"',
       )
-    } else {
-      app.provide('infuraId', options.infuraId)
     }
 
     app.directive('click-outside', clickOutside)
     app.component('vdapp-board', Board)
     app.component('vdapp-modal', Modal)
+    app.provide('infuraId', options?.infuraId)
   },
 }

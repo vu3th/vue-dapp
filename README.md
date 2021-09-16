@@ -30,7 +30,7 @@ import { VueDapp } from 'vue-dapp'
 const app = createApp(App)
 
 app.use(VueDapp, {
-  infuraId: 'your-infura-id', // for enabling WalletConnect
+  infuraId: '', // for enabling WalletConnect
 })
 ...
 ```
