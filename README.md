@@ -2,13 +2,15 @@
 
 Vue 3 composable and components library for building Dapps with ethers.js.
 
-👀 [Demo](https://vue-dapp-demo.netlify.app/)
+- 👀 [Demo](https://vue-dapp-demo.netlify.app/)
+- 🌏 [Documentation(v0.4.0)](https://vue-dapp-docs.netlify.app/)
 
-🌏 [Documentation(v0.4.0)](https://vue-dapp-docs.netlify.app/)
 
 ## Features
-- TypeScript by default
-- Demo ready to be written using [Vite](https://vitejs.dev/)
+- TypeScript for safe and efficient development.
+- [Ethers](https://docs.ethers.io/v5/) for interacting with Ethereum.
+- [Multicall2](https://github.com/makerdao/multicall) for calling multiple constant function call into one request.
+
 
 ## Quick Start
 

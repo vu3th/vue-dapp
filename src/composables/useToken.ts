@@ -46,9 +46,9 @@ export function useToken() {
     userAddress: string,
   ) {
     const calls = genCalls(tokenAddress, userAddress)
-    const { call, results } = useMulticall(provider, calls)
+    const { call, results } = useMulticall(provider)
 
-    await call()
+    await call(calls)
 
     const [
       [_name],

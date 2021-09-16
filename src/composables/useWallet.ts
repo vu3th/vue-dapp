@@ -48,8 +48,6 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
   async function connect(_walletName: WalletName, infuraAPI?: string) {
     let _provider: WalletProvider | null = null
 
-    clear()
-
     try {
       status.value = 'connecting'
       switch (_walletName) {
@@ -197,7 +195,7 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
     onAccountsChangedCallback.value = callback
   }
 
-  function onChainedChanged(callback: OnChainChangedCallback) {
+  function onChainChanged(callback: OnChainChangedCallback) {
     onChainChangedCallback.value = callback
   }
 
@@ -225,6 +223,6 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
     // callback
     onDisconnect,
     onAccountsChanged,
-    onChainedChanged,
+    onChainChanged,
   }
 }

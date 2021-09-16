@@ -5,17 +5,14 @@ import { Multicall2 } from '../types/multicall2/Multicall2'
 import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { Result, Interface } from '@ethersproject/abi'
 
-export interface ContractCall {
+export type ContractCall = {
   interface: ContractInterface
   address: string
   method: string
   args?: any[]
 }
 
-export function useMulticall(
-  provider: Web3Provider | JsonRpcProvider,
-  contractCalls: ContractCall[],
-) {
+export function useMulticall(provider: Web3Provider | JsonRpcProvider) {
   const results = ref<Result[]>([])
   const blockNumber = ref(0)
 
@@ -28,7 +25,7 @@ export function useMulticall(
     callData: string
   }
 
-  async function call() {
+  async function call(contractCalls: ContractCall[]) {
     const calls: Call[] = contractCalls.map((call) => {
       const iface = getInterface(call.interface)
       return {
