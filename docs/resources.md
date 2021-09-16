@@ -1,6 +1,4 @@
-# Reference
-
-This package is under **active development**, as it still **misses** some **features**.
+# Resources
 
 ## Inspiration
 - [useDapp: Framework for rapid Dapp development.](https://github.com/EthWorks/useDApp)

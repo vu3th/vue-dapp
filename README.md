@@ -1,6 +1,6 @@
 # Vue Dapp
 
-Vue 3 composable and components library for building Dapps with ethers.js.
+Vue 3 library for building Dapps with ethers.js.
 
 - 👀 [Demo](https://vue-dapp-demo.netlify.app/)
 - 🌏 [Documentation(v0.4.0)](https://vue-dapp-docs.netlify.app/)
