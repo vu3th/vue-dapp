@@ -11,8 +11,8 @@ export type WalletProvider = MetaMaskProvider | WalletConnectProvider
 export type ConnectionState = 'none' | 'connecting' | 'connected'
 export type WalletName = 'none' | 'metamask' | 'walletconnect'
 export type OnConnectedCallback = (provider: WalletProvider) => void
-export type OnDisconnectCallback = () => void
-export type OnAccountsChangedCallback = (address: string) => void
+export type OnDisconnectCallback = (msg: string) => void
+export type OnAccountsChangedCallback = (accounts: string[]) => void
 export type OnChainChangedCallback = (chainId: number) => void
 export type UseWalletOptions = {
   library: 'ethers' | 'web3'
@@ -94,7 +94,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
       await (provider.value as WalletConnectProvider).disconnect()
     }
     clear()
-    onDisconnectCallback.value && onDisconnectCallback.value()
+    onDisconnectCallback.value &&
+      onDisconnectCallback.value('Disconnect from Dapp')
   }
 
   // ========================= EIP-1193 subscriber =========================
@@ -106,8 +107,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           'disconnect',
           (err: MetaMaskProviderRpcError) => {
             clear()
-            console.log(`MetaMask disconnect: ${err.message}`)
-            onDisconnectCallback.value && onDisconnectCallback.value()
+            onDisconnectCallback.value &&
+              onDisconnectCallback.value(err.message)
           },
         )
         break
@@ -118,8 +119,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           'disconnect',
           (code: number, reason: string) => {
             clear()
-            console.log(`WalletConnect disconnect: code:${code}: ${reason}`)
-            onDisconnectCallback.value && onDisconnectCallback.value()
+            onDisconnectCallback.value &&
+              onDisconnectCallback.value(`${code}: ${reason}`)
           },
         )
         break
@@ -134,9 +135,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           async (accounts: string[]) => {
             options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
-            console.log(`MetaMask accounts changed: ${accounts}`)
             onAccountsChangedCallback.value &&
-              onAccountsChangedCallback.value(accounts[0])
+              onAccountsChangedCallback.value(accounts)
           },
         )
         break
@@ -146,9 +146,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           async (accounts: string[]) => {
             options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
-            console.log(`WalletConnect accounts changed: ${accounts}`)
             onAccountsChangedCallback.value &&
-              onAccountsChangedCallback.value(accounts[0])
+              onAccountsChangedCallback.value(accounts)
           },
         )
         break
@@ -164,7 +163,6 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
             const chainId = parseInt(hexChainId, 16)
             options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
-            console.log(`MetaMask chain changed: ${chainId}`)
             onChainChangedCallback.value &&
               onChainChangedCallback.value(chainId)
           },
@@ -176,7 +174,6 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           async (chainId: number) => {
             options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
-            console.log(`WalletConnect chain changed: ${chainId}`)
             onChainChangedCallback.value &&
               onChainChangedCallback.value(chainId)
           },
