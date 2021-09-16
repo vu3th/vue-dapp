@@ -5,7 +5,6 @@ import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
 import { useBoard } from '../composables/useBoard'
 import { useWallet, WalletName } from '../composables/useWallet'
-import { Config } from '../types'
 import Metamask from '../wallets/metamask'
 
 export default defineComponent({
@@ -14,21 +13,21 @@ export default defineComponent({
     MetaMaskIcon,
     WalletConnectIcon,
   },
-  inject: ['dappConfig'],
+  inject: ['infuraId'],
   setup() {
     const { boardOpen, close } = useBoard()
     const { connect, status } = useWallet()
 
     const metamaskDisabled = ref(true)
     const walletconnectDisabled = ref(true)
-    const config = inject('dappConfig') as Config
+    const infuraId = inject('infuraId') as string
 
     // check metamask and walletconnect available
     onMounted(async () => {
       if (await Metamask.check()) {
         metamaskDisabled.value = false
       }
-      if (config.infuraId) {
+      if (infuraId) {
         walletconnectDisabled.value = false
       }
     })
@@ -67,7 +66,7 @@ export default defineComponent({
 
     const connectWalletconnect = async () => {
       if (walletconnectDisabled.value) return
-      await connect('walletconnect', config.infuraId)
+      await connect('walletconnect', infuraId)
     }
 
     return {

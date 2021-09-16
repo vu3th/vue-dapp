@@ -9,7 +9,6 @@ export default defineComponent({
   components: {
     Token,
   },
-  inject: ['dappConfig'],
   setup() {
     const { open } = useBoard()
     const { status, disconnect, error, provider } = useWallet()

@@ -1,4 +1,3 @@
-export * from './types'
 export * from './constants'
 export * from './composables'
 export * from './wallets'

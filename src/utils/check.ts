@@ -1,3 +1,5 @@
+import { ChainId } from '../constants'
+
 export async function checkInfuraId(infuraId: string) {
   try {
     const res = await fetch(`https://mainnet.infura.io/v3/${infuraId}`, {
@@ -21,4 +23,11 @@ export async function checkInfuraId(infuraId: string) {
     )
     return false
   }
+}
+
+export function checkChainId(chainId: number) {
+  if (chainId in ChainId) {
+    return true
+  }
+  return false
 }

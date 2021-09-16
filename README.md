@@ -25,14 +25,13 @@ yarn add ethers vue-dapp
 Add dependencies to your main.ts:
 
 ```javascript
-import { VueDapp, Config } from 'vue-dapp'
+import { VueDapp } from 'vue-dapp'
 
 const app = createApp(App)
-const dappConfig: Partial<Config> = {
-  infuraId: 'your-infura-id', // only for enabling WalletConnect
-}
 
-app.use(VueDapp, dappConfig)
+app.use(VueDapp, {
+  infuraId: 'your-infura-id', // for enabling WalletConnect
+})
 ...
 ```
 
@@ -50,7 +49,6 @@ import { useBoard, useEthers, useWallet } from 'vue-dapp'
 
 export default defineComponent({
   name: 'App',
-  inject: ['dappConfig'],
   setup() {
     const { open } = useBoard()
     const { status, disconnect, error } = useWallet()

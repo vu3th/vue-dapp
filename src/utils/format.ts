@@ -1,7 +1,9 @@
 import { BigNumber } from 'ethers'
 import { formatEther, isAddress } from 'ethers/lib/utils'
+import { CHAIN_NAMES } from '../constants'
+import { checkChainId } from './check'
 
-export const shortenAddress = (address: string): string => {
+export function shortenAddress(address: string): string {
   if (isAddress(address)) {
     return address.slice(0, 6) + '...' + address.slice(-4)
   } else {
@@ -9,9 +11,13 @@ export const shortenAddress = (address: string): string => {
   }
 }
 
-export const displayEther = (
-  balance: BigNumber | bigint,
-  fixed: number = 2,
-) => {
+export function displayEther(balance: BigNumber | bigint, fixed: number = 2) {
   return (+formatEther(balance)).toFixed(fixed)
+}
+
+export function displayChainName(chainId: number) {
+  if (!checkChainId(chainId)) {
+    throw new Error('Error: Invalid chainId')
+  }
+  return CHAIN_NAMES[chainId as keyof typeof CHAIN_NAMES].toLowerCase()
 }
