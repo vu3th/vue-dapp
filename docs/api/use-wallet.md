@@ -1,5 +1,7 @@
 # useWallet
 
+[source code](https://github.com/chnejohnson/vue-dapp/blob/main/src/composables/useWallet.ts)
+
 ## Types
 ```typescript
 declare function useWallet(options?: UseWalletOptions): {

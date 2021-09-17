@@ -45,11 +45,11 @@ module.exports = {
         text: 'API Reference',
         children: [
           {
-            text: 'components',
+            text: 'Components',
             link: '/api/components',
           },
           {
-            text: 'utilities',
+            text: 'Utilities',
             link: '/api/utilities',
           },
           {
