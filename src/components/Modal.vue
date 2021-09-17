@@ -43,10 +43,7 @@ export default defineComponent({
         v-if="modalOpen"
         class="modal"
       >
-        <div
-          class="modal-inner"
-          v-click-outside="closeModal"
-        >
+        <div class="modal-inner">
           <div class="modal-content">
             <!-- Modal Content -->
             <slot />

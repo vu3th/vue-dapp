@@ -6,6 +6,7 @@ import MetaMaskIcon from './logos/MetaMask.vue'
 import { useBoard } from '../composables/useBoard'
 import { useWallet, WalletName } from '../composables/useWallet'
 import Metamask from '../wallets/metamask'
+import Walletconnect from '../wallets/walletconnect'
 
 export default defineComponent({
   components: {
@@ -27,7 +28,7 @@ export default defineComponent({
       if (await Metamask.check()) {
         metamaskDisabled.value = false
       }
-      if (infuraId) {
+      if (infuraId && (await Walletconnect.check())) {
         walletconnectDisabled.value = false
       }
     })
@@ -95,25 +96,27 @@ export default defineComponent({
     :modalOpen="boardOpen"
     @close="close"
   >
-    <div
-      @click="connectWallet('metamask')"
-      class="wallet-item"
-      :class="metamaskDisabled? 'wallet-disabled' : ''"
-    >
-      <div class="item">
-        <MetaMaskIcon class="logo" />
-        <div>MetaMask</div>
+    <div v-click-outside="close">
+      <div
+        @click="connectWallet('metamask')"
+        class="wallet-item"
+        :class="metamaskDisabled? 'wallet-disabled' : ''"
+      >
+        <div class="item">
+          <MetaMaskIcon class="logo" />
+          <div>MetaMask</div>
+        </div>
       </div>
-    </div>
-    <div class="line"></div>
-    <div
-      @click="connectWallet('walletconnect')"
-      class="wallet-item"
-      :class="walletconnectDisabled? 'wallet-disabled' : ''"
-    >
-      <div class="item">
-        <WalletConnectIcon class="logo" />
-        <div>WalletConnect</div>
+      <div class="line"></div>
+      <div
+        @click="connectWallet('walletconnect')"
+        class="wallet-item"
+        :class="walletconnectDisabled? 'wallet-disabled' : ''"
+      >
+        <div class="item">
+          <WalletConnectIcon class="logo" />
+          <div>WalletConnect</div>
+        </div>
       </div>
     </div>
   </Modal>
