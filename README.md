@@ -2,14 +2,13 @@
 
 Vue 3 library for building Dapps with ethers.js.
 
-- 👀 [Demo](https://vue-dapp-demo.netlify.app/)
-- 🌏 [Documentation(v0.4.0)](https://vue-dapp-docs.netlify.app/)
+- [Documentation](https://vue-dapp-docs.netlify.app/)
 
 
 ## Features
 - TypeScript for safe and efficient development.
 - [Ethers](https://docs.ethers.io/v5/) for interacting with Ethereum.
-- [Multicall2](https://github.com/makerdao/multicall) for calling multiple constant function call into one request.
+- [Multicall2](https://github.com/makerdao/multicall) for calling multiple constant function into one request.
 
 
 ## Quick Start
@@ -17,12 +16,10 @@ Vue 3 library for building Dapps with ethers.js.
 Install dependencies:
 
 ```bash
-npm install --save ethers vue-dapp
-
 yarn add ethers vue-dapp
 ```
 
-Add dependencies to your main.ts:
+Add plugin to your app:
 
 ```javascript
 import { VueDapp } from 'vue-dapp'
@@ -30,7 +27,7 @@ import { VueDapp } from 'vue-dapp'
 const app = createApp(App)
 
 app.use(VueDapp, {
-  infuraId: '', // for enabling WalletConnect
+  infuraId: '...', // optional: for enabling WalletConnect
 })
 ...
 ```
@@ -41,32 +38,44 @@ Add the global component to your App.vue:
 <vdapp-board />
 ```
 
-Use wallet or board from your .vue files:
+Use board, wallet, and ethers from your setup:
 
 ```javascript
 import { defineComponent } from 'vue'
-import { useBoard, useEthers, useWallet } from 'vue-dapp'
+import {
+  useBoard,
+  useEthers,
+  useWallet,
+  displayChainName,
+  displayEther,
+  shortenAddress,
+} from 'vue-dapp'
 
 export default defineComponent({
   name: 'App',
   setup() {
     const { open } = useBoard()
     const { status, disconnect, error } = useWallet()
-    const { address, isActivated } = useEthers()
-    
+    const { address, balance, chainId, isActivated } = useEthers()
 
     return {
+      isActivated,
       address,
       status,
       error,
-      disconnect,
+      chainId,
+      balance,
       open,
+      disconnect,
+      displayEther,
+      displayChainName,
+      shortenAddress,
     }
   },
 })
 ```
 
-Add CDN in index.html for enabling WalletConnect:
+Optional: add CDN in index.html for enabling WalletConnect:
 
 ```html
 <body>
@@ -77,11 +86,10 @@ Add CDN in index.html for enabling WalletConnect:
   <script type="module" src="/src/main.ts"></script>
 </body>
 ```
-(More about [issue of walletconnect](https://github.com/chnejohnson/vue-dapp/issues/3))
 
 ## Contributing
 
-You are more than welcome to improve this project.
+Thanks for being interested in contributing to this project!
 
 Just submit your changes via pull request and I will review them before merging.
 

@@ -1,71 +1,75 @@
 # useWallet
 
-<!-- ## Parameters -->
+## Types
+```typescript
+declare function useWallet(options?: UseWalletOptions): {
+    provider: Ref<WalletProvider | null>;
+    status: Ref<ConnectionState>;
+    walletName: Ref<WalletName>;
+    error: Ref<string>;
+    isConnected: vue_demi.ComputedRef<boolean>;
+    connect: (_walletName: WalletName, infuraAPI?: string | undefined) => Promise<void>;
+    disconnect: () => Promise<void>;
+    onDisconnect: (callback: OnDisconnectCallback) => void;
+    onAccountsChanged: (callback: OnAccountsChangedCallback) => void;
+    onChainChanged: (callback: OnChainChangedCallback) => void;
+};
 
-<!-- ### `target`
-
-Target must be an element (**SVG** / **HTML**), or a reference to an element.
-
-If the target **reference** is **updated**, the **current** style will be **updated** from the new **element** styling. -->
-
-
-
-## Returns
-### State
-
-These state store globally in the Dapp.
-
-#### `provider: Ref<WalletProvider>;`
-```ts
-type WalletProvider = MetaMaskProvider | WalletConnectProvider | null;
+declare type UseWalletOptions = {
+    library: 'ethers' | 'web3';
+};
 ```
-**MetaMask**
-- For `MetaMaskProvider`, see [MetaMask Docs](https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents)
-- For using `request` like `provider.request({ method: 'eth_chainId' })`, see [MetaMask JSON-RPC API](https://metamask.github.io/api-playground/api-documentation/)
 
-**WalletConnect**
-- For testing by web, using [this site](https://test.walletconnect.org/)
-- [WalletConnect Docs](https://docs.walletconnect.org/quick-start/dapps/web3-provider)
-- `WalletConnectProvider` [source code](https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts)
+## Core
 
+These state store globally outside the function `useWallet`.
 
-#### `status: Ref<ConnectionState>;`
+- `provider` - wallet provider, see below
+- `status` - none, connecting, and connected
+- `walletName` - metamask or walletconnect
+- `error` - connect error
+- `isConnected` - computed from status.connected
+
+#### Status
+`status: Ref<ConnectionState>;`
 
 ```ts
 type ConnectionState = 'none' | 'connecting' | 'connected';
 ```
 
-#### `walletName: Ref<WalletName>;`
+#### Wallet Name
+`walletName: Ref<WalletName>;`
 ```ts
 type WalletName = 'none' | 'metamask' | 'walletconnect';
-
 ```
-#### `error: Ref<string>;`
 
-### Methods
-#### `connect`
+
+#### Wallet Provider
+Wallet provider is an object provided by wallet source, like MetaMask or WalletConnect.
+
+
+`provider: Ref<WalletProvider>;`
+
 
 ```ts
-connect('metamask')
-connect('walletconnect', infuraId)
-```
-#### `disconnect`
-
-[Web3Provider](https://docs.ethers.io/v5/api/providers/other/#Web3Provider)
-
-## Types
-```typescript
-declare function useWallet(): {
-    provider: Ref<WalletProvider>;
-    status: Ref<ConnectionState>;
-    walletName: Ref<WalletName>;
-    error: Ref<string>;
-    connect: (_walletName: WalletName, infuraAPI?: string | undefined) => Promise<void>;
-    disconnect: () => Promise<void>;
-};
+type WalletProvider = MetaMaskProvider | WalletConnectProvider | null;
 ```
 
-## Example
+**MetaMask Provider**
+- More on [MetaMask Docs](https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents)
+- For using `request` like `ethereum.request({ method: 'eth_chainId' })`, see [MetaMask JSON-RPC API](https://metamask.github.io/api-playground/api-documentation/)
+
+**WalletConnect Provider**
+- More on [WalletConnect Docs](https://docs.walletconnect.org/quick-start/dapps/web3-provider)
+- For testing by web, using [Test Wallet](https://test.walletconnect.org/)
+- [source code](https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts)
+
+
+
+
+## Examples
+
+Example 1 -  [source](https://github.com/chnejohnson/vue-dapp/blob/main/src/components/Board.vue)
 
 ```ts
 import { defineComponent } from 'vue'
@@ -89,5 +93,22 @@ export default defineComponent({
       connectWalletconnect,
     }
   },
+})
+```
+
+Example 2
+```ts
+const { onAccountsChanged, onChainChanged } = useWallet()
+
+onAccountsChanged(() => {
+  notify({
+    text: 'Account Changed',
+  })
+})
+
+onChainChanged(() => {
+  notify({
+    text: 'Chain Changed',
+  })
 })
 ```

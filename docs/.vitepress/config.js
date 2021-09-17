@@ -42,21 +42,16 @@ module.exports = {
         ],
       },
       {
-        text: 'Guidelines',
-        children: [
-          {
-            text: 'Composable Usage',
-            link: '/guide/composable-usage',
-          },
-          {
-            text: 'Component Usage',
-            link: '/guide/component-usage',
-          },
-        ],
-      },
-      {
         text: 'API Reference',
         children: [
+          {
+            text: 'components',
+            link: '/api/components',
+          },
+          {
+            text: 'utilities',
+            link: '/api/utilities',
+          },
           {
             text: 'useWallet',
             link: '/api/use-wallet',
@@ -64,6 +59,14 @@ module.exports = {
           {
             text: 'useEthers',
             link: '/api/use-ethers',
+          },
+          {
+            text: 'useEthersHooks',
+            link: '/api/use-ethers-hooks',
+          },
+          {
+            text: 'useMulticall',
+            link: '/api/use-multicall',
           },
         ],
       },

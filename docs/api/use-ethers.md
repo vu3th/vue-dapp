@@ -1,54 +1,34 @@
 # useEthers
 
-## Returns
-
-### State
-
-- These state would generate new one while calling `useEthers` every time.
-- Once disconnect, these state would be clean.
-
-#### `provider: Ref<Web3Provider>;`
-Refer to ethers.js [Web3Provider](https://docs.ethers.io/v5/api/providers/other/#Web3Provider)
-
-#### `signer: Ref<{ Signer | null>;`
-Refer to ethers.js [Signer](https://docs.ethers.io/v5/api/signer/#Signer)
-
-#### `network: Ref< Network | null>`
-Refer to ethers.js [Network](https://docs.ethers.io/v5/api/providers/types/#providers-Network)
-
-#### `address: Ref<string>`
-
-#### `chainId: ComputedRef<number | undefined>;`
-computed from `network`
-
-
-### Methods
-#### `setup`
-
-#### `onConnected`
-
-`onConnected: (cb: (state: ProviderState) => void) => Promise<void>;`
-
-In this hook, ethers.js setup complete, you can use `ProviderState` to call contract.
-
-```ts
-interface ProviderState {
-    provider: Web3Provider;
-    signer: Signer;
-    network: Network;
-    address: string;
-}
-```
-
 ## Types
 ```typescript
 declare function useEthers(): {
+    isActivated: Ref<boolean>;
     provider: Ref<Web3Provider | null>;
-    signer: Ref<{ Signer | null>;
-    network: Ref< Network | null>;
+    signer: Ref<Signer | null>;
+    network: Ref<{
+        name: string;
+        chainId: number;
+        ensAddress?: string | undefined;
+        _defaultProvider?: ((providers: any, options?: any) => any) | undefined;
+    } | null>;
     address: Ref<string>;
-    chainId: ComputedRef<number | undefined>;
-    setup: () => Promise<void>;
-    onConnected: (cb: (state: ProviderState) => void) => Promise<void>;
+    balance: Ref<bigint>;
+    chainId: vue_demi.ComputedRef<number | undefined>;
+    activate: typeof activate;
+    deactivate: () => void;
 };
+declare function activate(walletProvider: WalletProvider): Promise<void>;
 ```
+
+## Core
+
+These state store globally outside the function `useEthers`.
+
+- `isActivated` - boolean to present if the state below is available 
+- `provider` - refer to ethers.js [Web3Provider](https://docs.ethers.io/v5/api/providers/other/#Web3Provider)
+- `signer` - refer to ethers.js [Signer](https://docs.ethers.io/v5/api/signer/#Signer)
+- `network` - refer to ethers.js [Network](https://docs.ethers.io/v5/api/providers/types/#providers-Network)
+- `address` - user's address
+- `balance` - user's balance, type of js [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+- `chainId` - network ID 
