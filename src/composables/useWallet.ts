@@ -48,6 +48,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
   async function connect(_walletName: WalletName, infuraAPI?: string) {
     let _provider: WalletProvider | null = null
 
+    error.value = ''
+
     try {
       status.value = 'connecting'
       switch (_walletName) {

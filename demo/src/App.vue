@@ -1,56 +1,33 @@
 <script lang="ts">
-import { formatEther } from '@ethersproject/units'
-import { computed, defineComponent, ref } from 'vue'
-import { useBoard, useEthers, useWallet } from 'vue-dapp'
-import Token from './components/Token.vue'
+import { defineComponent } from 'vue'
+import {
+  useBoard,
+  useEthers,
+  useWallet,
+  displayChainName,
+  displayEther,
+  shortenAddress,
+} from 'vue-dapp'
 
 export default defineComponent({
   name: 'App',
-  components: {
-    Token,
-  },
   setup() {
     const { open } = useBoard()
-    const { status, disconnect, error, provider } = useWallet()
+    const { status, disconnect, error } = useWallet()
     const { address, balance, chainId, isActivated } = useEthers()
-
-    const modalOpen = ref(false)
-    const openModal = () => {
-      modalOpen.value = true
-    }
-    const closeModal = () => {
-      modalOpen.value = false
-    }
-
-    const personalSign = async () => {
-      openModal()
-
-      try {
-        const signedData = await provider.value!.request({
-          method: 'personal_sign',
-          params: ['Hello World', address.value],
-        })
-        console.log(signedData)
-      } catch (e) {
-        console.error(e.message)
-      } finally {
-        closeModal()
-      }
-    }
 
     return {
       isActivated,
       address,
       status,
       error,
-      displayBalance: computed(() => formatEther(balance.value)),
       chainId,
-      disconnect,
+      balance,
       open,
-      modalOpen,
-      openModal,
-      closeModal,
-      personalSign,
+      disconnect,
+      displayEther,
+      displayChainName,
+      shortenAddress,
     }
   },
 })
@@ -68,39 +45,18 @@ export default defineComponent({
       v-if="isActivated"
       class="text-center"
     >
-      <p>{{ address }}</p>
-      <p>{{ displayBalance || ''}} ETH</p>
-      <p>{{ chainId }}</p>
+      <p>{{ shortenAddress(address) }}</p>
+      <p>{{ displayEther(balance) }} ETH</p>
+      <p>network: <span class="capitalize"> {{ chainId ? displayChainName(chainId) : '' }} </span></p>
     </div>
 
     <div class="m-4">
       <button
-        @click="status === 'connected' ? disconnect() : open()"
+        @click="isActivated ? disconnect() : open()"
         class="btn"
         :disabled="status === 'connecting'"
       >{{ status === 'connected' ? "Disconnect" : status === 'connecting' ? "Connecting..." : "Connect" }}</button>
     </div>
-
-    <div v-if="isActivated">
-      <div class="m-4">
-        <button
-          @click="personalSign"
-          class="btn"
-        >personal_sign</button>
-      </div>
-
-      <vdapp-modal
-        :modalOpen="modalOpen"
-        @close="closeModal"
-      >
-        <div class="p-10 text-center">
-          <p class="text-xl">Pending Call Request</p>
-          <p>Approve or reject request using your wallet</p>
-        </div>
-      </vdapp-modal>
-    </div>
-
-    <Token />
   </div>
   <vdapp-board />
 </template>

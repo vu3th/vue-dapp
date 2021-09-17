@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useEthers, useToken, useEthersHooks } from 'vue-dapp'
+import { useEthers, useEthersHooks } from 'vue-dapp'
+import { useToken } from '../composables/useToken'
 
 export default defineComponent({
   name: 'Token',
@@ -12,10 +13,9 @@ export default defineComponent({
     onActivated(({ provider, address }) => {
       call(
         provider,
-        '0xa8d4452ae282fc13521c6a4d91fe58bb49719eb4', // Rinkeby MAT
+        '0x6B175474E89094C44Da98b954EedeAC495271d0F', // DAI Mainnet
         address,
       )
-      // try mainnet DAI 0x6B175474E89094C44Da98b954EedeAC495271d0F
     })
 
     onDeactivated(() => {

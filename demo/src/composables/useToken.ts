@@ -1,7 +1,6 @@
-import { ref } from 'vue-demi'
+import { ref } from 'vue'
 import { Web3Provider } from '@ethersproject/providers'
-import { useMulticall, ContractCall } from './useMulticall'
-import { ERC20Interface } from '../constants'
+import { useMulticall, ContractCall, ERC20Interface } from 'vue-dapp'
 import { BigNumber } from '@ethersproject/bignumber'
 
 const calls: ContractCall[] = [
