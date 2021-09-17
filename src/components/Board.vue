@@ -130,12 +130,8 @@ export default defineComponent({
       <p>Approve or reject request using your wallet</p>
     </div>
 
-    <div
-      class="loading-modal"
-      v-if="status === 'connected'"
-    >
-      <p>Loading...</p>
-    </div>
+    <!-- loading between connected to isActivated -->
+    <div v-if="status === 'connected'"></div>
   </Modal>
 </template>
 
