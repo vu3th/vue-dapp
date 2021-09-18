@@ -6,10 +6,10 @@ Vue 3 library for building Dapps with ethers.js.
 
 
 ## Features
-- TypeScript for safe and efficient development.
-- [Ethers](https://docs.ethers.io/v5/) for interacting with Ethereum.
+- Written in **TypeScript** for safe and efficient development.
+- Demo written and bundled using [Vite](https://github.com/vitejs/vite)
+- [Ethers.js](https://docs.ethers.io/v5/) for interacting with Ethereum.
 - [Multicall2](https://github.com/makerdao/multicall) for calling multiple constant function into one request.
-
 
 ## Quick Start
 
