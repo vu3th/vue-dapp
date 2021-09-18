@@ -16,14 +16,15 @@ Clone this repo to your local machine and install the dependencies.
 yarn install
 ```
 
-For running the docs:
-```
-yarn dev:docs
-```
+To run the demo, add `.env` for using your infura ID, and run:
 
-For running the demo:
 ```
 yarn dev
+```
+
+To run the docs:
+```
+yarn dev:docs
 ```
 
 ### Local Linking

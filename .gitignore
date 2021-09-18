@@ -4,3 +4,5 @@ yarn-error.log
 dist
 # OS
 .DS_Store
+
+.env
