@@ -1,10 +1,9 @@
-import { ref, markRaw, computed, Ref } from 'vue-demi'
+import { ref, markRaw, computed, Ref } from 'vue'
 import Metamask, {
   MetaMaskProvider,
   MetaMaskProviderRpcError,
 } from '../wallets/metamask'
-import { WalletConnectProvider } from '../types/walletconnect'
-import Walletconnect from '../wallets/walletconnect'
+import Walletconnect, { WalletConnectProvider } from '../wallets/walletconnect'
 import { useEthers } from './useEthers'
 
 export type WalletProvider = MetaMaskProvider | WalletConnectProvider
@@ -87,7 +86,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
     subscribeAccountsChanged()
     subscribeChainChanged()
 
-    options.library === 'ethers' && (await activate(provider.value))
+    options.library === 'ethers' &&
+      (await activate(provider.value as WalletProvider))
   }
 
   async function disconnect() {

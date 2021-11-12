@@ -1,4 +1,4 @@
-import { computed, markRaw, ref, Ref } from 'vue-demi'
+import { computed, markRaw, ref, Ref } from 'vue'
 import {
   Web3Provider,
   Network,

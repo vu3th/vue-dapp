@@ -1,24 +1,27 @@
-import { IWalletConnectProviderOptions } from '../types/walletconnect/types'
-import { WalletConnectProvider } from '../types/walletconnect'
+import WalletConnectProvider from '@walletconnect/web3-provider'
+// import { IWalletConnectProviderOptions } from '../types/walletconnect/types'
 
 // Test: https://test.walletconnect.org/
-// Docs: https://docs.walletconnect.org/quick-start/dapps/web3-provider
+// Docs: https://docs.walletconnect.com/1.0/quick-start/dapps/web3-provider
 // WalletConnectProvider source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
 
-declare global {
-  interface Window {
-    WalletConnectProvider?: {
-      default: typeof WalletConnectProvider
-    }
-  }
-}
+// declare global {
+//   interface Window {
+//     WalletConnectProvider?: {
+//       default: typeof WalletConnectProvider
+//     }
+//   }
+// }
 
-const WalletConnectProviderDerived: typeof WalletConnectProvider | null =
-  window.WalletConnectProvider?.default || null
+// const WalletConnectProviderDerived: typeof WalletConnectProvider | null =
+//   window.WalletConnectProvider?.default || null
+
+export { WalletConnectProvider }
 
 export default class Walletconnect {
+  // @todo update check
   static async check() {
-    if (!WalletConnectProviderDerived) {
+    if (!WalletConnectProvider) {
       console.warn(
         'Walletconnect unavailable: please add below script to enable the feature: <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"></script>',
       )
@@ -27,11 +30,8 @@ export default class Walletconnect {
     return true
   }
 
-  static async connect(
-    infuraId: string,
-    options?: IWalletConnectProviderOptions,
-  ) {
-    const provider = new WalletConnectProviderDerived!({
+  static async connect(infuraId: string, options?: any) {
+    const provider = new WalletConnectProvider({
       infuraId,
       ...options,
     })

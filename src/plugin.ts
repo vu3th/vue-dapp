@@ -1,4 +1,4 @@
-import { Plugin } from 'vue-demi'
+import { Plugin } from 'vue'
 import { clickOutside } from './directive'
 import Board from './components/Board.vue'
 import Modal from './components/Modal.vue'

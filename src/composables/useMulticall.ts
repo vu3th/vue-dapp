@@ -1,4 +1,4 @@
-import { ref, markRaw } from 'vue-demi'
+import { ref, markRaw } from 'vue'
 import { Contract, ContractInterface } from '@ethersproject/contracts'
 import { MULTICALL2_ABI, MULTICALL2_ADDRESS } from '../constants'
 import { Multicall2 } from '../types/multicall2/Multicall2'

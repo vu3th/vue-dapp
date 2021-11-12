@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue-demi'
+import { ref, watch } from 'vue'
 import { Signer } from '@ethersproject/abstract-signer'
 import { Network } from '@ethersproject/networks'
 import { useEthers, Web3Provider } from './useEthers'

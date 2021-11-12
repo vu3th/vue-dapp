@@ -8,7 +8,7 @@
     "demo/**/*.tsx",
     "demo/**/*.vue"
   ],
-  "exclude": ["dist", "node_modules", "vue-demi"],
+  "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": ".",
@@ -16,8 +16,8 @@
     "sourceMap": false,
     "noEmit": true,
 
-    "target": "esnext",
-    "module": "esnext",
+    "target": "es2015",
+    "module": "es2015",
     "moduleResolution": "node",
     "skipLibCheck": true,
 
@@ -34,7 +34,7 @@
     "esModuleInterop": true,
     "removeComments": false,
     "jsx": "preserve",
-    "lib": ["esnext", "dom"],
+    "lib": ["es2015", "dom"],
     "types": ["node", "jest", "vite/client"],
     "plugins": [
       {

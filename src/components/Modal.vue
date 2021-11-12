@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onUnmounted, watch } from 'vue-demi'
+import { defineComponent, onUnmounted, watch } from 'vue'
 
 export default defineComponent({
   emits: ['close'],
@@ -39,10 +39,7 @@ export default defineComponent({
 <template>
   <teleport to="body">
     <transition name="modal-animation">
-      <div
-        v-if="modalOpen"
-        class="modal"
-      >
+      <div v-if="modalOpen" class="modal">
         <div class="modal-inner">
           <div class="modal-content">
             <!-- Modal Content -->

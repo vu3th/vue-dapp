@@ -7,11 +7,11 @@ export default defineConfig({
   root: 'demo/',
   plugins: [vue(), WindiCSS()],
   resolve: {
-    alias: [
-      {
-        find: 'vue-dapp',
-        replacement: resolve(__dirname, './src/index.ts'),
-      },
-    ],
+    alias: {
+      'vue-dapp': resolve(__dirname, './src/index.ts'),
+      process: require.resolve('process'),
+      buffer: require.resolve('buffer'),
+      util: require.resolve('util'),
+    },
   },
 })

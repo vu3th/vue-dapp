@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, inject, onMounted, ref } from 'vue-demi'
+import { defineComponent, inject, onMounted, ref } from 'vue'
 import Modal from './Modal.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
@@ -92,15 +92,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <Modal
-    :modalOpen="boardOpen"
-    @close="close"
-  >
+  <Modal :modalOpen="boardOpen" @close="close">
     <div v-click-outside="close">
       <div
         @click="connectWallet('metamask')"
         class="wallet-item"
-        :class="metamaskDisabled? 'wallet-disabled' : ''"
+        :class="metamaskDisabled ? 'wallet-disabled' : ''"
       >
         <div class="item">
           <MetaMaskIcon class="logo" />
@@ -111,7 +108,7 @@ export default defineComponent({
       <div
         @click="connectWallet('walletconnect')"
         class="wallet-item"
-        :class="walletconnectDisabled? 'wallet-disabled' : ''"
+        :class="walletconnectDisabled ? 'wallet-disabled' : ''"
       >
         <div class="item">
           <WalletConnectIcon class="logo" />
@@ -122,10 +119,7 @@ export default defineComponent({
   </Modal>
 
   <Modal :modalOpen="loadingOpen">
-    <div
-      class="loading-modal"
-      v-if="status === 'connecting'"
-    >
+    <div class="loading-modal" v-if="status === 'connecting'">
       <p>Pending Call Request</p>
       <p>Approve or reject request using your wallet</p>
     </div>

@@ -9,7 +9,26 @@
   <body>
     <div id="app"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"></script>
+    <script>
+      window.global = window
+      let global = globalThis
+    </script>
+
+    <script type="module">
+      import process from 'process'
+      window.process = process
+    </script>
+
+    <script type="module">
+      import buffer from 'buffer'
+      window.Buffer = buffer.Buffer
+    </script>
+
+    <script type="module">
+      import util from 'util'
+      window.util = util
+    </script>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

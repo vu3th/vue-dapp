@@ -2,10 +2,10 @@
 
 Vue 3 library for building Dapps with ethers.js.
 
-- [Documentation](https://vue-dapp-docs.netlify.app/)
-
+- [Documentation (v0.4.2)](https://vue-dapp-docs.netlify.app/)
 
 ## Features
+
 - Written in **TypeScript** for safe and efficient development.
 - Demo written and bundled using [Vite](https://github.com/vitejs/vite)
 - [Ethers.js](https://docs.ethers.io/v5/) for interacting with Ethereum.
@@ -75,17 +75,56 @@ export default defineComponent({
 })
 ```
 
-Optional: add CDN in index.html for enabling WalletConnect:
+## Using Vite
+
+If you're using Vite, you should have some settings:
+
+1. Install following dependencies:
+
+```
+yarn add -D buffer process util
+```
+
+2. Add below settings in `vite.config.ts`:
+
+```ts
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      process: require.resolve('process'),
+      buffer: require.resolve('buffer'),
+      util: require.resolve('util'),
+    },
+  },
+})
+```
+
+3. Add below scripts in `index.html`:
 
 ```html
-<body>
-  <div id="app"></div>
+<script>
+  window.global = window
+  let global = globalThis
+</script>
 
-  <!-- this line -->
-  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"></script>
-  <script type="module" src="/src/main.ts"></script>
-</body>
+<script type="module">
+  import process from 'process'
+  window.process = process
+</script>
+
+<script type="module">
+  import buffer from 'buffer'
+  window.Buffer = buffer.Buffer
+</script>
+
+<script type="module">
+  import util from 'util'
+  window.util = util
+</script>
 ```
+
+Welcome to check out [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter).
 
 ## Contributing
 
@@ -98,6 +137,7 @@ If you are making a fix on the project, you can use the `main` branch and send a
 If you are adding a new features, please create a new branch with a name describing your feature (`my-new-feature`), push to your branch and then submit a pull request.
 
 ## Inspiration
+
 - [useDapp: Framework for rapid Dapp development.](https://github.com/EthWorks/useDApp)
 - [vue-tailwind-ethereum-template](https://github.com/ScopeLift/vue-tailwind-ethereum-template)
 - [web3Modal: A single Web3 / Ethereum provider solution for all Wallets](https://github.com/Web3Modal/web3modal)

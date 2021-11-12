@@ -1,38 +1,53 @@
-Changelog
-=========
+# Changelog
 
-v0.4.2 (2021-09-17)
---------------------------------
-  - fix some bugs
+## v0.4.3 (2021-11-12)
 
-v0.4.1 (2021-09-15)
---------------------------------
 #### Big Changes
-  - Change <board> with <vdapp-board>
-  - Register component <vdapp-modal> 
+
+- Remove vue-demi, so only support Vue 3
+- Add @walletconnect/web3-provider, so no longer needed WalletConnect CDN in `index.html`
+- Target changed into es2015 in `tsconfig.json` for compiling optional chaining
 
 #### Features
-  - Add useMulticall
-  - Add useToken
-  - Add useEthersHooks
+
+- Support Vue CLI (#17)
+
+## v0.4.2 (2021-09-17)
+
+- fix some bugs
+
+## v0.4.1 (2021-09-15)
+
+#### Big Changes
+
+- Change <board> with <vdapp-board>
+- Register component <vdapp-modal>
+
+#### Features
+
+- Add useMulticall
+- Add useToken
+- Add useEthersHooks
 
 #### Others
-  - Refactor
-  - improve UX
 
-v0.4.0 (2021-09-05)
---------------------------------
+- Refactor
+- improve UX
+
+## v0.4.0 (2021-09-05)
+
 #### Big Changes
-  - WalletConnect available
-  - Refactor with `useWallet` and `useEthers`
-  - Remove `useMetamask`, using class `MetaMask` and `WalletConnect`
-  - Remove vue-composable by custom `v-click-outside` directive
 
-v0.3.0 (2021-08-28)
---------------------------------
-  - Component library available
-  - `useMetamask` add provider event
+- WalletConnect available
+- Refactor with `useWallet` and `useEthers`
+- Remove `useMetamask`, using class `MetaMask` and `WalletConnect`
+- Remove vue-composable by custom `v-click-outside` directive
 
-v0.2.0 (2021-08-24)
---------------------------------
-  - Simple metamask available
+## v0.3.0 (2021-08-28)
+
+- Component library available
+- `useMetamask` add provider event
+
+## v0.2.0 (2021-08-24)
+
+- Simple metamask available
