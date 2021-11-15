@@ -3,16 +3,19 @@ import { defineComponent, inject, onMounted, ref } from 'vue'
 import Modal from './Modal.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
+import WalletLinkIcon from './logos/WalletLink.vue'
 import { useBoard } from '../composables/useBoard'
 import { useWallet, WalletName } from '../composables/useWallet'
 import Metamask from '../wallets/metamask'
 import Walletconnect from '../wallets/walletconnect'
+import Walletlink from '../wallets/walletlink'
 
 export default defineComponent({
   components: {
     Modal,
     MetaMaskIcon,
     WalletConnectIcon,
+    WalletLinkIcon,
   },
   inject: ['infuraId'],
   setup() {
@@ -21,7 +24,9 @@ export default defineComponent({
 
     const metamaskDisabled = ref(true)
     const walletconnectDisabled = ref(true)
+    const walletlinkDisabled = ref(true)
     const infuraId = inject('infuraId') as string
+    const appName = inject('appName') as string
 
     // check metamask and walletconnect available
     onMounted(async () => {
@@ -30,6 +35,9 @@ export default defineComponent({
       }
       if (infuraId && (await Walletconnect.check())) {
         walletconnectDisabled.value = false
+      }
+      if (infuraId && (await Walletlink.check())) {
+        walletlinkDisabled.value = false
       }
     })
 
@@ -49,6 +57,9 @@ export default defineComponent({
             break
           case 'walletconnect':
             await connectWalletconnect()
+            break
+          case 'walletlink':
+            await connectWalletlink()
             break
         }
       } catch (e: any) {
@@ -74,11 +85,20 @@ export default defineComponent({
       await connect('walletconnect', infuraId)
     }
 
+    const connectWalletlink = async () => {
+      if (walletlinkDisabled.value) return
+      // Prevent from closing the board while clicking disabled wallet
+      close()
+      openLoading()
+      await connect('walletlink', infuraId, appName)
+    }
+
     return {
       status,
       boardOpen,
       metamaskDisabled,
       walletconnectDisabled,
+      walletlinkDisabled,
       close,
       connectWallet,
 
@@ -113,6 +133,18 @@ export default defineComponent({
         <div class="item">
           <WalletConnectIcon class="logo" />
           <div>WalletConnect</div>
+        </div>
+      </div>
+
+      <div class="line"></div>
+      <div
+        @click="connectWallet('walletlink')"
+        class="wallet-item"
+        :class="walletlinkDisabled ? 'wallet-disabled' : ''"
+      >
+        <div class="item">
+          <WalletLinkIcon class="logo" />
+          <div>Coinbase Wallet</div>
         </div>
       </div>
     </div>
