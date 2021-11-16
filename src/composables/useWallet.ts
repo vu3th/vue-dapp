@@ -4,11 +4,18 @@ import Metamask, {
   MetaMaskProviderRpcError,
 } from '../wallets/metamask'
 import Walletconnect, { WalletConnectProvider } from '../wallets/walletconnect'
+import Walletlink, {
+  WalletLinkProvider,
+  WalletLinkProviderRpcError,
+} from '../wallets/walletlink'
 import { useEthers } from './useEthers'
 
-export type WalletProvider = MetaMaskProvider | WalletConnectProvider
+export type WalletProvider =
+  | MetaMaskProvider
+  | WalletConnectProvider
+  | WalletLinkProvider
 export type ConnectionState = 'none' | 'connecting' | 'connected'
-export type WalletName = 'none' | 'metamask' | 'walletconnect'
+export type WalletName = 'none' | 'metamask' | 'walletconnect' | 'walletlink'
 export type OnConnectedCallback = (provider: WalletProvider) => void
 export type OnDisconnectCallback = (msg: string) => void
 export type OnAccountsChangedCallback = (accounts: string[]) => void
@@ -44,7 +51,11 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
     options.library === 'ethers' && deactivate()
   }
 
-  async function connect(_walletName: WalletName, infuraAPI?: string) {
+  async function connect(
+    _walletName: WalletName,
+    infuraAPI?: string,
+    appName?: string,
+  ) {
     let _provider: WalletProvider | null = null
 
     error.value = ''
@@ -67,6 +78,22 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           )) as WalletConnectProvider
           if (!_provider.connected)
             throw new Error('walletconnect is not connected')
+          break
+        case 'walletlink':
+          if (!infuraAPI)
+            throw new Error(
+              'You should provide infuraAPI for connecting WalletLink',
+            )
+          if (!appName)
+            throw new Error(
+              'You should provide an app name for connecting WalletLink',
+            )
+          _provider = (await Walletlink.connect(
+            infuraAPI,
+            appName,
+          )) as WalletLinkProvider
+          if (!_provider.isConnected)
+            throw new Error('walletlink is not connected')
           break
         default:
           throw new Error('Connect Error: wallet name not found')
@@ -126,6 +153,16 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           },
         )
         break
+      case 'walletlink':
+        ;(provider.value as WalletLinkProvider).on(
+          'disconnect',
+          (err: WalletLinkProviderRpcError) => {
+            clear()
+            onDisconnectCallback.value &&
+              onDisconnectCallback.value(err.message)
+          },
+        )
+        break
     }
   }
 
@@ -144,6 +181,17 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
         break
       case 'walletconnect':
         ;(provider.value as WalletConnectProvider).on(
+          'accountsChanged',
+          async (accounts: string[]) => {
+            options.library === 'ethers' &&
+              (await activate(provider.value as WalletProvider))
+            onAccountsChangedCallback.value &&
+              onAccountsChangedCallback.value(accounts)
+          },
+        )
+        break
+      case 'walletlink':
+        ;(provider.value as WalletLinkProvider).on(
           'accountsChanged',
           async (accounts: string[]) => {
             options.library === 'ethers' &&
@@ -174,6 +222,18 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
         ;(provider.value as WalletConnectProvider).on(
           'chainChanged',
           async (chainId: number) => {
+            options.library === 'ethers' &&
+              (await activate(provider.value as WalletProvider))
+            onChainChangedCallback.value &&
+              onChainChangedCallback.value(chainId)
+          },
+        )
+        break
+      case 'walletlink':
+        ;(provider.value as WalletLinkProvider).on(
+          'chainChanged',
+          async (hexChainId: string) => {
+            const chainId = parseInt(hexChainId, 16)
             options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
             onChainChangedCallback.value &&

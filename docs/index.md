@@ -21,7 +21,8 @@ import { VueDapp } from 'vue-dapp'
 const app = createApp(App)
 
 app.use(VueDapp, {
-  infuraId: '...', // optional: for enabling WalletConnect
+  infuraId: '...', // optional: for enabling WalletConnect and/or WalletLink
+  appName: '...', // optional: for enabling WalletLink
 })
 ...
 ```
