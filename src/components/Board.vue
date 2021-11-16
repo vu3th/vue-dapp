@@ -36,7 +36,7 @@ export default defineComponent({
       if (infuraId && (await Walletconnect.check())) {
         walletconnectDisabled.value = false
       }
-      if (infuraId && (await Walletlink.check())) {
+      if (infuraId && appName && (await Walletlink.check())) {
         walletlinkDisabled.value = false
       }
     })
