@@ -179,8 +179,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           },
         )
         break
-      case 'walletlink':
-        ;(provider.value as WalletLinkProvider).on(
+      case 'walletconnect':
+        ;(provider.value as WalletConnectProvider).on(
           'accountsChanged',
           async (accounts: string[]) => {
             options.library === 'ethers' &&
@@ -190,8 +190,8 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           },
         )
         break
-      case 'walletconnect':
-        ;(provider.value as WalletConnectProvider).on(
+      case 'walletlink':
+        ;(provider.value as WalletLinkProvider).on(
           'accountsChanged',
           async (accounts: string[]) => {
             options.library === 'ethers' &&
@@ -218,11 +218,10 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           },
         )
         break
-      case 'walletlink':
-        ;(provider.value as WalletLinkProvider).on(
+      case 'walletconnect':
+        ;(provider.value as WalletConnectProvider).on(
           'chainChanged',
-          async (hexChainId: string) => {
-            const chainId = parseInt(hexChainId, 16)
+          async (chainId: number) => {
             options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
             onChainChangedCallback.value &&
@@ -230,10 +229,11 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           },
         )
         break
-      case 'walletconnect':
-        ;(provider.value as WalletConnectProvider).on(
+      case 'walletlink':
+        ;(provider.value as WalletLinkProvider).on(
           'chainChanged',
-          async (chainId: number) => {
+          async (hexChainId: string) => {
+            const chainId = parseInt(hexChainId, 16)
             options.library === 'ethers' &&
               (await activate(provider.value as WalletProvider))
             onChainChangedCallback.value &&
