@@ -14,7 +14,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      plugins: [inject({ Buffer: ['Buffer', 'Buffer'] })],
+      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
     },
     commonjsOptions: {
       transformMixedEsModules: true,
