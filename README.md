@@ -96,7 +96,7 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     rollupOptions: {
-      plugins: [inject({ Buffer: ['Buffer', 'Buffer'] })],
+      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
     },
     commonjsOptions: {
       transformMixedEsModules: true,
