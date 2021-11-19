@@ -2,6 +2,7 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import WindiCSS from 'vite-plugin-windicss'
+import inject from '@rollup/plugin-inject'
 
 export default defineConfig({
   root: 'demo/',
@@ -9,9 +10,14 @@ export default defineConfig({
   resolve: {
     alias: {
       'vue-dapp': resolve(__dirname, './src/index.ts'),
-      process: require.resolve('process'),
-      buffer: require.resolve('buffer'),
-      util: require.resolve('util'),
+    },
+  },
+  build: {
+    rollupOptions: {
+      plugins: [inject({ Buffer: ['Buffer', 'Buffer'] })],
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true,
     },
   },
 })
