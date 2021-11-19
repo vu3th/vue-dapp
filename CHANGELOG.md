@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.4.5 (2021-11-19)
+
+#### Fix
+
+- issue #20: Successfully serve with production build in the Vite environment.
+
+#### Features
+
+- Support Coinbase Wallet. (Special thank @coxlr for his contribution!)
+
 ## v0.4.4 (2021-11-12)
 
 #### Big Changes

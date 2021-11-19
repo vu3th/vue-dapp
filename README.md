@@ -84,18 +84,22 @@ If you're using Vite, you should have some settings:
 
 ```
 yarn add -D buffer process util
+yarn add -D @rollup/plugin-inject
 ```
 
 2. Add below settings in `vite.config.ts`:
 
 ```ts
+import inject from '@rollup/plugin-inject'
+
 export default defineConfig({
   plugins: [vue()],
-  resolve: {
-    alias: {
-      process: require.resolve('process'),
-      buffer: require.resolve('buffer'),
-      util: require.resolve('util'),
+  build: {
+    rollupOptions: {
+      plugins: [inject({ Buffer: ['Buffer', 'Buffer'] })],
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true,
     },
   },
 })
@@ -125,7 +129,7 @@ export default defineConfig({
 </script>
 ```
 
-Welcome to check out [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter).
+Refer to [issue#20](https://github.com/chnejohnson/vue-dapp/issues/20), and welcome to use [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) directly.
 
 ## Contributing
 

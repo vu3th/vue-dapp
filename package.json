@@ -1,6 +1,6 @@
 {
   "name": "vue-dapp",
-  "version": "0.4.5-beta.0",
+  "version": "0.4.5",
   "description": "Vue 3 library for building Dapps with ethers.js.",
   "repository": "https://github.com/chnejohnson/vue-dapp",
   "bugs": {
