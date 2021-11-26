@@ -58,8 +58,8 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-width: 100vw;
-  height: 100vh;
+  min-width: 100%;
+  height: 100%;
   background-color: rgba(107, 114, 128, 0.7);
   left: 0px;
   top: 0px;

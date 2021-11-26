@@ -20,7 +20,7 @@ module.exports = {
     nav: [
       {
         text: 'Demo',
-        link: 'https://vue-dapp-demo.netlify.app/',
+        link: 'https://vue-dapp.netlify.app/',
       },
     ],
     sidebar: [
