@@ -1,5 +1,7 @@
 import detectEthereumProvider from '@metamask/detect-provider'
 import { providers } from 'ethers'
+import { checkChainId } from '../utils'
+import { NETWORK_DETAILS } from '../constants'
 
 // Provider Docs: https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents
 // JSON RPC API: https://metamask.github.io/api-playground/api-documentation
@@ -20,7 +22,7 @@ export interface MetaMaskProviderRpcError extends Error {
   data?: unknown
 }
 
-export default class Metamask {
+export class Metamask {
   static async check(): Promise<boolean> {
     // @todo try catch
     const provider = await detectEthereumProvider()
@@ -41,4 +43,50 @@ export default class Metamask {
 
     return provider
   }
+
+  static async switchChain(provider: MetaMaskProvider, chainId: number) {
+    try {
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x' + chainId.toString(16) }], // chainId must be in hexadecimal numbers
+      })
+    } catch (err: any) {
+      try {
+        if (err.code === 4902 && checkChainId(chainId)) {
+          await Metamask.addChain(
+            provider,
+            NETWORK_DETAILS[chainId as keyof typeof NETWORK_DETAILS],
+          )
+          return
+        }
+      } catch (err: any) {
+        throw new Error(`Failed to add new chain: ${err.message}`)
+      }
+      throw new Error(`Failed to switch chain: ${err.message}`)
+    }
+  }
+
+  static async addChain(
+    provider: MetaMaskProvider,
+    networkDetails: AddEthereumChainParameter,
+  ) {
+    return provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [networkDetails], // chainId must be in hexadecimal numbers
+    })
+  }
+}
+
+// Refer to https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
+export interface AddEthereumChainParameter {
+  chainId: string // A 0x-prefixed hexadecimal string
+  chainName: string
+  nativeCurrency: {
+    name?: string
+    symbol: string // 2-6 characters long
+    decimals: number
+  }
+  rpcUrls: string[]
+  blockExplorerUrls?: string[]
+  iconUrls?: string[] // Currently ignored.
 }

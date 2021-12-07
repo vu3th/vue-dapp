@@ -1,7 +1,7 @@
 {
   "name": "vue-dapp",
   "version": "0.4.5",
-  "description": "Vue 3 library for building Dapps with ethers.js.",
+  "description": "Vue 3 library for building Dapps on Ethereum",
   "repository": "https://github.com/chnejohnson/vue-dapp",
   "bugs": {
     "url": "https://github.com/chnejohnson/vue-dapp/issues"
@@ -36,7 +36,7 @@
   "dependencies": {
     "@metamask/detect-provider": "^1.2.0",
     "@walletconnect/web3-provider": "^1.6.6",
-    "ethers": "^5.4.5",
+    "ethers": "5.5.2",
     "walletlink": "^2.2.6"
   },
   "devDependencies": {
@@ -68,7 +68,7 @@
     "vite": "2.5.0",
     "vite-plugin-windicss": "^1.2.7",
     "vitepress": "^0.20.1",
-    "vue": "^3.2.4",
+    "vue": "3.2.23",
     "windicss": "^3.1.7",
     "yorkie": "^2.0.0"
   },

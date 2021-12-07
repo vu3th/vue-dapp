@@ -17,7 +17,8 @@ export function displayEther(balance: BigNumber | bigint, fixed: number = 2) {
 
 export function displayChainName(chainId: number) {
   if (!checkChainId(chainId)) {
-    throw new Error('Error: Invalid chainId')
+    console.error('Error: Invalid chainId')
+    return 'network not found'
   }
   return CHAIN_NAMES[chainId as keyof typeof CHAIN_NAMES].toLowerCase()
 }

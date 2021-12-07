@@ -6,9 +6,9 @@ import MetaMaskIcon from './logos/MetaMask.vue'
 import WalletLinkIcon from './logos/WalletLink.vue'
 import { useBoard } from '../composables/useBoard'
 import { useWallet, WalletName } from '../composables/useWallet'
-import Metamask from '../wallets/metamask'
-import Walletconnect from '../wallets/walletconnect'
-import Walletlink from '../wallets/walletlink'
+import { Metamask } from '../wallets/metamask'
+import { Walletconnect } from '../wallets/walletconnect'
+import { Walletlink } from '../wallets/walletlink'
 
 export default defineComponent({
   components: {

@@ -1,10 +1,12 @@
 import { ref, markRaw, computed, Ref } from 'vue'
-import Metamask, {
+import {
+  Metamask,
   MetaMaskProvider,
   MetaMaskProviderRpcError,
 } from '../wallets/metamask'
-import Walletconnect, { WalletConnectProvider } from '../wallets/walletconnect'
-import Walletlink, {
+import { Walletconnect, WalletConnectProvider } from '../wallets/walletconnect'
+import {
+  Walletlink,
   WalletLinkProvider,
   WalletLinkProviderRpcError,
 } from '../wallets/walletlink'
@@ -113,14 +115,24 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
     subscribeAccountsChanged()
     subscribeChainChanged()
 
-    options.library === 'ethers' &&
-      (await activate(provider.value as WalletProvider))
+    try {
+      options.library === 'ethers' &&
+        (await activate(provider.value as WalletProvider))
+    } catch (err: any) {
+      clear()
+      error.value = `Failed to load data: ${err.message}`
+      return
+    }
   }
 
   async function disconnect() {
     // note: metamask can't disconnect by provider
     if (walletName.value === 'walletconnect') {
-      await (provider.value as WalletConnectProvider).disconnect()
+      try {
+        await (provider.value as WalletConnectProvider).disconnect()
+      } catch (err: any) {
+        console.error(err.message)
+      }
     }
     clear()
     onDisconnectCallback.value &&
@@ -172,10 +184,15 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
         ;(provider.value as MetaMaskProvider).on(
           'accountsChanged',
           async (accounts: string[]) => {
-            options.library === 'ethers' &&
-              (await activate(provider.value as WalletProvider))
-            onAccountsChangedCallback.value &&
-              onAccountsChangedCallback.value(accounts)
+            try {
+              options.library === 'ethers' &&
+                (await activate(provider.value as WalletProvider))
+              onAccountsChangedCallback.value &&
+                onAccountsChangedCallback.value(accounts)
+            } catch (err: any) {
+              error.value = `Failed when changing account: ${err.message}`
+              return
+            }
           },
         )
         break
@@ -183,10 +200,15 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
         ;(provider.value as WalletConnectProvider).on(
           'accountsChanged',
           async (accounts: string[]) => {
-            options.library === 'ethers' &&
-              (await activate(provider.value as WalletProvider))
-            onAccountsChangedCallback.value &&
-              onAccountsChangedCallback.value(accounts)
+            try {
+              options.library === 'ethers' &&
+                (await activate(provider.value as WalletProvider))
+              onAccountsChangedCallback.value &&
+                onAccountsChangedCallback.value(accounts)
+            } catch (err: any) {
+              error.value = `Failed when changing account: ${err.message}`
+              return
+            }
           },
         )
         break
@@ -194,10 +216,15 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
         ;(provider.value as WalletLinkProvider).on(
           'accountsChanged',
           async (accounts: string[]) => {
-            options.library === 'ethers' &&
-              (await activate(provider.value as WalletProvider))
-            onAccountsChangedCallback.value &&
-              onAccountsChangedCallback.value(accounts)
+            try {
+              options.library === 'ethers' &&
+                (await activate(provider.value as WalletProvider))
+              onAccountsChangedCallback.value &&
+                onAccountsChangedCallback.value(accounts)
+            } catch (err: any) {
+              error.value = `Failed when changing account: ${err.message}`
+              return
+            }
           },
         )
         break
@@ -210,11 +237,22 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
         ;(provider.value as MetaMaskProvider).on(
           'chainChanged',
           async (hexChainId: string) => {
-            const chainId = parseInt(hexChainId, 16)
-            options.library === 'ethers' &&
-              (await activate(provider.value as WalletProvider))
-            onChainChangedCallback.value &&
-              onChainChangedCallback.value(chainId)
+            // Changing network might lead to disconnect so the provider would be deleted.
+            if (!provider.value) {
+              window.location.reload()
+              return
+            }
+
+            try {
+              const chainId = parseInt(hexChainId, 16)
+              options.library === 'ethers' &&
+                (await activate(provider.value as WalletProvider))
+              onChainChangedCallback.value &&
+                onChainChangedCallback.value(chainId)
+            } catch (err: any) {
+              error.value = `Failed when changing chain: ${err.message}`
+              return
+            }
           },
         )
         break
@@ -222,10 +260,21 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
         ;(provider.value as WalletConnectProvider).on(
           'chainChanged',
           async (chainId: number) => {
-            options.library === 'ethers' &&
-              (await activate(provider.value as WalletProvider))
-            onChainChangedCallback.value &&
-              onChainChangedCallback.value(chainId)
+            // Changing network might lead to disconnect so the provider would be deleted.
+            if (!provider.value) {
+              window.location.reload()
+              return
+            }
+
+            try {
+              options.library === 'ethers' &&
+                (await activate(provider.value as WalletProvider))
+              onChainChangedCallback.value &&
+                onChainChangedCallback.value(chainId)
+            } catch (err: any) {
+              error.value = `Failed when changing chain: ${err.message}`
+              return
+            }
           },
         )
         break
@@ -233,11 +282,22 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
         ;(provider.value as WalletLinkProvider).on(
           'chainChanged',
           async (hexChainId: string) => {
-            const chainId = parseInt(hexChainId, 16)
-            options.library === 'ethers' &&
-              (await activate(provider.value as WalletProvider))
-            onChainChangedCallback.value &&
-              onChainChangedCallback.value(chainId)
+            // Changing network might lead to disconnect so the provider would be deleted.
+            if (!provider.value) {
+              window.location.reload()
+              return
+            }
+
+            try {
+              const chainId = parseInt(hexChainId, 16)
+              options.library === 'ethers' &&
+                (await activate(provider.value as WalletProvider))
+              onChainChangedCallback.value &&
+                onChainChangedCallback.value(chainId)
+            } catch (err: any) {
+              error.value = `Failed when changing chain: ${err.message}`
+              return
+            }
           },
         )
         break

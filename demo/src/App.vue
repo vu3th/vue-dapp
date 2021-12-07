@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Header from './components/Header.vue'
+import Dropdown from './components/Dropdown.vue'
 import {
   useBoard,
   useEthers,
@@ -7,11 +8,45 @@ import {
   displayChainName,
   displayEther,
   shortenAddress,
+  ChainId,
+  useEthersHooks,
+  MetaMaskProvider,
+  Metamask,
 } from 'vue-dapp'
+import { ref, watch } from 'vue'
 
 const { open } = useBoard()
-const { status, disconnect, error } = useWallet()
+const { status, disconnect, error, provider, walletName } = useWallet()
 const { address, balance, chainId, isActivated } = useEthers()
+const { onActivated, onChanged } = useEthersHooks()
+
+const supportedChainId = [
+  ChainId.Mainnet,
+  ChainId.Rinkeby,
+  ChainId.Arbitrum,
+  ChainId.Rinkarby,
+]
+const selectedChainId = ref(0)
+
+onActivated(() => {
+  selectedChainId.value = chainId.value as number
+})
+
+onChanged(() => {
+  selectedChainId.value = chainId.value as number
+})
+
+watch(selectedChainId, async (val, oldVal) => {
+  if (oldVal === 0) return // ignore initial change
+
+  try {
+    walletName.value === 'metamask' &&
+      (await Metamask.switchChain(provider.value as MetaMaskProvider, val))
+  } catch (e: any) {
+    console.error(e)
+    selectedChainId.value = oldVal
+  }
+})
 </script>
 
 <template>
@@ -32,12 +67,14 @@ const { address, balance, chainId, isActivated } = useEthers()
     <div v-if="isActivated" class="text-center">
       <p>{{ shortenAddress(address) }}</p>
       <p>{{ displayEther(balance) }} ETH</p>
-      <p>
-        network:
-        <span class="capitalize">
-          {{ chainId ? displayChainName(chainId) : '' }}
-        </span>
-      </p>
+
+      <!-- Network -->
+      <Dropdown
+        class="mt-2"
+        :options="supportedChainId"
+        v-model:selected="selectedChainId"
+        :filter-fn="displayChainName"
+      ></Dropdown>
     </div>
 
     <div class="m-4">

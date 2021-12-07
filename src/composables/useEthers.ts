@@ -26,6 +26,8 @@ const deactivate = () => {
 }
 
 async function activate(walletProvider: WalletProvider) {
+  if (!walletProvider) throw new Error('Failed to activate: missing provider')
+
   const _provider = new Web3Provider(walletProvider as ExternalProvider)
   const _signer = _provider.getSigner()
   const _network = await _provider.getNetwork()

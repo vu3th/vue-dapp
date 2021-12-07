@@ -8,7 +8,7 @@ export interface WalletLinkProviderRpcError extends Error {
   data?: unknown
 }
 
-export default class Walletlink {
+export class Walletlink {
   static async check() {
     if (!WalletLink) {
       console.warn('WalletLink unavailable')

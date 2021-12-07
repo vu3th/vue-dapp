@@ -1,5 +1,3 @@
-<script setup lang="ts"></script>
-
 <template>
   <header class="w-full px-4">
     <div class="flex justify-between p-4 px-3">
