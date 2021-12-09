@@ -25,7 +25,7 @@ yarn add vue-dapp
 
 ## Quick Start
 
-- If you're using [Vite](https://vitejs.dev/), please check out [Using Vite](./using-vite.md) for more details on environment settings.
+- If you're using [Vite](https://vitejs.dev/), please check out [Using Vite](https://vue-dapp-docs.netlify.app/using-vite.html) for more details on environment settings.
 - Use [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) for a fast startup.
 
 Step 1. Adding plugin to your app:
