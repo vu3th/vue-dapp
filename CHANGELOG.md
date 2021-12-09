@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.4.6 (2021-12-9)
+
+#### Features
+
+- New logo from issue #24 (Special thank @ramuta for his contribution!)
+- Add [Metamask switch chain API](https://github.com/chnejohnson/vue-dapp/blob/062acd4092b8f6a2a67af750f2569294c90c4f7b/src/wallets/metamask.ts#L47) and [network constants](https://github.com/chnejohnson/vue-dapp/blob/main/src/constants/chainId.ts)
+- Update documentation to latest.
+- Support connecting to Arbitrum, RinkArby, and Polygon with MetaMask
+
+#### Fix
+
+- Prevent page scrolling when the board is open
+- Add error handling for useWallet `subscribeChainChanged`
+
 ## v0.4.5 (2021-11-19)
 
 #### Fix
