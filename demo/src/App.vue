@@ -25,6 +25,7 @@ const supportedChainId = [
   ChainId.Rinkeby,
   ChainId.Arbitrum,
   ChainId.Rinkarby,
+  ChainId.Polygon,
 ]
 const selectedChainId = ref(0)
 

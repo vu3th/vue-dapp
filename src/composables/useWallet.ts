@@ -239,7 +239,7 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           async (hexChainId: string) => {
             // Changing network might lead to disconnect so the provider would be deleted.
             if (!provider.value) {
-              window.location.reload()
+              error.value = `Failed when changing chain: missing provider`
               return
             }
 
@@ -262,7 +262,7 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           async (chainId: number) => {
             // Changing network might lead to disconnect so the provider would be deleted.
             if (!provider.value) {
-              window.location.reload()
+              error.value = `Failed when changing chain: missing provider`
               return
             }
 
@@ -284,7 +284,7 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
           async (hexChainId: string) => {
             // Changing network might lead to disconnect so the provider would be deleted.
             if (!provider.value) {
-              window.location.reload()
+              error.value = `Failed when changing chain: missing provider`
               return
             }
 
