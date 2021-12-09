@@ -1,6 +1,12 @@
-# Vue Dapp
+<p align="center">
+  <a href="https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/assets/logo.png">
+    <img src="https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/assets/logo.png" alt="VueDapp Brand" style="max-width:100%;" width="400">
+  </a>
+</p>
 
-Vue 3 library for building Dapps with ethers.js.
+<br />
+
+# Vue Dapp
 
 - [Documentation (v0.4.2)](https://vue-dapp-docs.netlify.app/)
 
