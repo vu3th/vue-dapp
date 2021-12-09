@@ -1,6 +1,6 @@
 module.exports = {
   title: 'Vue Dapp',
-  description: 'Vue 3 library for building Dapps with ethers.js.',
+  description: 'Vue 3 library for building Dapps on Ethereum',
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico', type: 'image/png' }],
     ['meta', { name: 'author', content: 'Johnson Chen' }],
@@ -9,8 +9,7 @@ module.exports = {
       'meta',
       {
         property: 'og:description',
-        content:
-          'Vue 3 composable and components library for building Dapps with ethers.js.',
+        content: 'Vue 3 library for building Dapps on Ethereum',
       },
     ],
   ],
@@ -32,6 +31,10 @@ module.exports = {
             link: '/',
           },
           {
+            text: 'Using Vite',
+            link: '/using-vite',
+          },
+          {
             text: 'Contributing',
             link: '/contributing',
           },
@@ -47,6 +50,10 @@ module.exports = {
           {
             text: 'Components',
             link: '/api/components',
+          },
+          {
+            text: 'Directives',
+            link: '/api/directives',
           },
           {
             text: 'Utilities',

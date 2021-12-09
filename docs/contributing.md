@@ -10,29 +10,20 @@ If you are adding a new features, please create a new branch with a name describ
 
 ## Development
 
-### Setup
 Clone this repo to your local machine and install the dependencies.
-```
+
+```bash
 yarn install
 ```
 
 To run the demo, add `.env` for using your infura ID, and run:
 
-```
+```bash
 yarn dev
 ```
 
 To run the docs:
-```
+
+```bash
 yarn dev:docs
 ```
-
-### Local Linking
-
-If you want to develop your target project by linking local vue-dapp package, check out the steps below:
-
-1. In your local vue-dapp project root, run `yarn link`.
-2. In your target project root, run `yarn link vue-dapp`.
-3. If you're using `vite`, add `optimizeDeps: { exclude: ['vue-demi'] }` at vite.config.ts.
-4. Now the target project is using your local vue-dapp dist folder, so in vue-dapp project, run `yarn dev:dist` for watching the code change in real-time to build the new dist folder.
-

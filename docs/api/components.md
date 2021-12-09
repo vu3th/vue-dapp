@@ -3,5 +3,6 @@
 [source code](https://github.com/chnejohnson/vue-dapp/tree/main/src/components)
 
 ## Core
-- `<vdapp-board>` - wallet board.
-- `<vdapp-modal>` - simple modal use case.
+
+- `<vdapp-board>` - for wallet board.
+- `<vdapp-modal>` - for a simple modal use case.

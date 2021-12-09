@@ -8,7 +8,7 @@
 
 # Vue Dapp
 
-- [Documentation (v0.4.2)](https://vue-dapp-docs.netlify.app/)
+- [Documentation (v0.4.6)](https://vue-dapp-docs.netlify.app/)
 
 ## Features
 
@@ -17,15 +17,18 @@
 - [Ethers.js](https://docs.ethers.io/v5/) for interacting with Ethereum.
 - [Multicall2](https://github.com/makerdao/multicall) for calling multiple constant function into one request.
 
-## Quick Start
-
-Install dependencies:
+## Installation
 
 ```bash
-yarn add ethers vue-dapp
+yarn add vue-dapp
 ```
 
-Add plugin to your app:
+## Quick Start
+
+- If you're using [Vite](https://vitejs.dev/), please check out [Using Vite](./using-vite.md) for more details on environment settings.
+- Use [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) for a fast startup.
+
+Step 1. Adding plugin to your app:
 
 ```javascript
 import { VueDapp } from 'vue-dapp'
@@ -39,16 +42,15 @@ app.use(VueDapp, {
 ...
 ```
 
-Add the global component to your App.vue:
+Step 2. Adding global component `<vdapp-board />` to your App.vue:
 
 ```vue
 <vdapp-board />
 ```
 
-Use board, wallet, and ethers from your setup:
+Step 3. Using composable functions in your script:
 
-```javascript
-import { defineComponent } from 'vue'
+```js
 import {
   useBoard,
   useEthers,
@@ -58,84 +60,10 @@ import {
   shortenAddress,
 } from 'vue-dapp'
 
-export default defineComponent({
-  name: 'App',
-  setup() {
-    const { open } = useBoard()
-    const { status, disconnect, error } = useWallet()
-    const { address, balance, chainId, isActivated } = useEthers()
-
-    return {
-      isActivated,
-      address,
-      status,
-      error,
-      chainId,
-      balance,
-      open,
-      disconnect,
-      displayEther,
-      displayChainName,
-      shortenAddress,
-    }
-  },
-})
+const { open } = useBoard()
+const { status, disconnect, error } = useWallet()
+const { address, balance, chainId, isActivated } = useEthers()
 ```
-
-## Using Vite
-
-If you're using Vite, you should have some settings:
-
-1. Install following dependencies:
-
-```
-yarn add -D buffer process util
-yarn add -D @rollup/plugin-inject
-```
-
-2. Add below settings in `vite.config.ts`:
-
-```ts
-import inject from '@rollup/plugin-inject'
-
-export default defineConfig({
-  plugins: [vue()],
-  build: {
-    rollupOptions: {
-      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
-    },
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
-})
-```
-
-3. Add below scripts in `index.html`:
-
-```html
-<script>
-  window.global = window
-  let global = globalThis
-</script>
-
-<script type="module">
-  import process from 'process'
-  window.process = process
-</script>
-
-<script type="module">
-  import buffer from 'buffer'
-  window.Buffer = buffer.Buffer
-</script>
-
-<script type="module">
-  import util from 'util'
-  window.util = util
-</script>
-```
-
-Refer to [issue#20](https://github.com/chnejohnson/vue-dapp/issues/20), and welcome to use [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) directly.
 
 ## Contributing
 
@@ -159,3 +87,7 @@ If you are adding a new features, please create a new branch with a name describ
 [MIT](https://opensource.org/licenses/MIT)
 
 Copyright (c) 2021-present, Johnson Chen
+
+```
+
+```
