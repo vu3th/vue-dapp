@@ -19,8 +19,8 @@
 
 ## Installation
 
-```bash
-yarn add vue-dapp
+```sh
+yarn add vue-dapp ethers
 ```
 
 ## Quick Start
