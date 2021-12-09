@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onUnmounted, watch } from 'vue'
+import { defineComponent, watch } from 'vue'
 
 export default defineComponent({
   emits: ['close'],
@@ -14,20 +14,17 @@ export default defineComponent({
       emit('close')
     }
 
+    // prevent page scrolling when the modal is open
     watch(
       () => props.modalOpen,
       (value) => {
         if (value) {
-          document.body.classList.add('overflow-hidden')
+          document.body.style.overflow = 'hidden'
         } else {
-          document.body.classList.remove('overflow-hidden')
+          document.body.style.overflow = ''
         }
       },
     )
-
-    onUnmounted(() => {
-      document.body.classList.remove('overflow-hidden')
-    })
 
     return {
       closeModal,
