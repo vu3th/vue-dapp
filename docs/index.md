@@ -26,6 +26,7 @@ const app = createApp(App)
 app.use(VueDapp, {
   infuraId: '...', // optional: for enabling WalletConnect and/or WalletLink
   appName: '...', // optional: for enabling WalletLink
+  appUrl: '...', // optional: for enabling MetaMask deep link for mobile devices
 })
 ...
 ```
