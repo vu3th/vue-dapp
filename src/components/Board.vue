@@ -27,6 +27,7 @@ export default defineComponent({
     const walletlinkDisabled = ref(true)
     const infuraId = inject('infuraId') as string
     const appName = inject('appName') as string
+    const appUrl = inject('appUrl') as string
 
     // check metamask and walletconnect available
     onMounted(async () => {
@@ -70,7 +71,10 @@ export default defineComponent({
     }
 
     const connectMetamask = async () => {
-      if (metamaskDisabled.value) return
+      if (metamaskDisabled.value && appUrl) {
+        window.open(`https://metamask.app.link/dapp/${appUrl}`, '_blank')
+        return
+      } else if (metamaskDisabled.value) return
       // Prevent from closing the board while clicking disabled wallet
       close()
       openLoading()
@@ -99,6 +103,7 @@ export default defineComponent({
       metamaskDisabled,
       walletconnectDisabled,
       walletlinkDisabled,
+      appUrl,
       close,
       connectWallet,
 
@@ -117,7 +122,7 @@ export default defineComponent({
       <div
         @click="connectWallet('metamask')"
         class="wallet-item"
-        :class="metamaskDisabled ? 'wallet-disabled' : ''"
+        :class="metamaskDisabled && !appUrl ? 'wallet-disabled' : ''"
       >
         <div class="item">
           <MetaMaskIcon class="logo" />

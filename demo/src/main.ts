@@ -12,6 +12,7 @@ const app = createApp(App)
 app.use(VueDapp, {
   infuraId: isDev ? infuraId : 'ff6a249a74e048f1b413cba715f98d07',
   appName: 'Vue Dapp',
+  appUrl: 'vue-dapp.netlify.app',
 })
 
 app.mount('#app')
