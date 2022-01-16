@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.7 (2022-1-16)
+
+#### Fix
+
+- Add deep link to MetaMask wallet on mobile device, solved issue #26 (Thank @coxlr for his contribution!)
+
 ## v0.4.6 (2021-12-9)
 
 #### Features
