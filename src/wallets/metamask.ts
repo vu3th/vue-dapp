@@ -8,6 +8,7 @@ import { NETWORK_DETAILS } from '../constants'
 
 export interface MetaMaskProvider extends providers.ExternalProvider {
   isMetaMask: boolean
+  providers?: MetaMaskProvider []
   isConnected: () => boolean
   request: (request: {
     method: string
@@ -30,7 +31,11 @@ export class Metamask {
   }
 
   static async connect() {
-    const provider = (await detectEthereumProvider()) as MetaMaskProvider
+    let provider = (await detectEthereumProvider()) as MetaMaskProvider
+
+    const isMulti = (provider?.providers?.length || 0) > 1
+
+    isMulti && (provider = provider?.providers?.find((e:MetaMaskProvider)=>e.isMetaMask) || provider)
 
     // await provider.request({
     //   method: 'wallet_requestPermissions',
