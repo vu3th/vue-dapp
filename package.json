@@ -1,13 +1,13 @@
 {
   "name": "vue-dapp",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Vue 3 library for building Dapps on Ethereum",
   "repository": "https://github.com/chnejohnson/vue-dapp",
   "bugs": {
     "url": "https://github.com/chnejohnson/vue-dapp/issues"
   },
   "homepage": "https://github.com/chnejohnson/vue-dapp#readme",
-  "author": "Johnson Chen <chnejohnson@gmail.com>",
+  "author": "Johnson Chen <https://twitter.com/johnson_tzw>",
   "license": "MIT",
   "main": "dist/index.common.js",
   "module": "dist/index.esm.js",

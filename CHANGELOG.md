@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.8 (2022-3-3)
+
+#### Fix
+
+- Reduce multi provider, solved issue #30 #36. Thanks @Mulander-J for his contribution!)
+
 ## v0.4.7 (2022-1-16)
 
 #### Fix
