@@ -8,7 +8,7 @@
 
 # Vue Dapp
 
-- [Documentation (v0.4.6)](https://vue-dapp-docs.netlify.app/)
+- [Documentation (v0.4.9-beta.0)](https://vue-dapp-docs.netlify.app/)
 
 ## Features
 
