@@ -75,14 +75,6 @@ module.exports = {
             text: 'useMulticall',
             link: '/api/use-multicall',
           },
-          {
-            text: 'useCall',
-            link: '/api/use-call',
-          },
-          {
-            text: 'useDispatch',
-            link: '/api/use-dispatch',
-          },
         ],
       },
     ],

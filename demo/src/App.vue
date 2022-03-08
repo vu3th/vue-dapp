@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Header from './components/Header.vue'
 import Dropdown from './components/Dropdown.vue'
-
 import {
   useBoard,
   useEthers,
@@ -15,8 +14,6 @@ import {
   Metamask,
 } from 'vue-dapp'
 import { ref, watch } from 'vue'
-import Token from './components/Token.vue';
-import TokenCall from './components/TokenCall.vue';
 
 const { open } = useBoard()
 const { status, disconnect, error, provider, walletName } = useWallet()
@@ -79,10 +76,6 @@ watch(selectedChainId, async (val, oldVal) => {
         v-model:selected="selectedChainId"
         :filter-fn="displayChainName"
       ></Dropdown>
-    </div>
-    <div class="flex">
-      <Token></Token>
-      <TokenCall></TokenCall>
     </div>
 
     <div class="m-4">
