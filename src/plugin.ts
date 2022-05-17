@@ -7,6 +7,7 @@ export type PluginOptions = {
   infuraId?: string
   appName?: string
   appUrl?: string
+  darkMode?: boolean
 }
 
 export const VueDapp: Plugin = {
@@ -32,5 +33,6 @@ export const VueDapp: Plugin = {
     app.provide('infuraId', options?.infuraId)
     app.provide('appName', options?.appName)
     app.provide('appUrl', options?.appUrl)
+    app.provide('darkMode', options?.darkMode || false)
   },
 }

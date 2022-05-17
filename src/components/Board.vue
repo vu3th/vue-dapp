@@ -17,7 +17,7 @@ export default defineComponent({
     WalletConnectIcon,
     WalletLinkIcon,
   },
-  inject: ['infuraId'],
+  inject: ['infuraId', 'appName', 'appUrl', 'darkMode'],
   setup() {
     const { boardOpen, close } = useBoard()
     const { connect, status } = useWallet()
@@ -28,6 +28,8 @@ export default defineComponent({
     const infuraId = inject('infuraId') as string
     const appName = inject('appName') as string
     const appUrl = inject('appUrl') as string
+    const darkMode = inject('darkMode') as boolean
+    const walletItemClass = ref(darkMode ? 'wallet-item--dark' : 'wallet-item')
 
     // check metamask and walletconnect available
     onMounted(async () => {
@@ -104,6 +106,8 @@ export default defineComponent({
       walletconnectDisabled,
       walletlinkDisabled,
       appUrl,
+      darkMode,
+      walletItemClass,
       close,
       connectWallet,
 
@@ -117,23 +121,29 @@ export default defineComponent({
 </script>
 
 <template>
-  <Modal :modalOpen="boardOpen" @close="close">
+  <Modal :modalOpen="boardOpen" @close="close" :darkMode="darkMode">
     <div v-click-outside="close">
       <div
         @click="connectWallet('metamask')"
-        class="wallet-item"
-        :class="metamaskDisabled && !appUrl ? 'wallet-disabled' : ''"
+        :class="
+          walletItemClass +
+          ' ' +
+          (metamaskDisabled && !appUrl ? 'wallet-disabled' : '')
+        "
       >
         <div class="item">
           <MetaMaskIcon class="logo" />
           <div>MetaMask</div>
         </div>
       </div>
-      <div class="line"></div>
+      <div :class="darkMode ? 'line--dark' : 'line'"></div>
       <div
         @click="connectWallet('walletconnect')"
-        class="wallet-item"
-        :class="walletconnectDisabled ? 'wallet-disabled' : ''"
+        :class="
+          walletItemClass +
+          ' ' +
+          (walletconnectDisabled ? 'wallet-disabled' : '')
+        "
       >
         <div class="item">
           <WalletConnectIcon class="logo" />
@@ -141,11 +151,12 @@ export default defineComponent({
         </div>
       </div>
 
-      <div class="line"></div>
+      <div :class="darkMode ? 'line--dark' : 'line'"></div>
       <div
         @click="connectWallet('walletlink')"
-        class="wallet-item"
-        :class="walletlinkDisabled ? 'wallet-disabled' : ''"
+        :class="
+          walletItemClass + ' ' + (walletlinkDisabled ? 'wallet-disabled' : '')
+        "
       >
         <div class="item">
           <WalletLinkIcon class="logo" />
@@ -155,7 +166,7 @@ export default defineComponent({
     </div>
   </Modal>
 
-  <Modal :modalOpen="loadingOpen">
+  <Modal :modalOpen="loadingOpen" :darkMode="darkMode">
     <div class="loading-modal" v-if="status === 'connecting'">
       <p>Pending Call Request</p>
       <p>Approve or reject request using your wallet</p>
@@ -180,11 +191,32 @@ export default defineComponent({
 }
 
 .wallet-item:hover {
-  background-color: rgba(243, 244, 246, 0.664);
+  background-color: rgba(236, 237, 239, 0.737);
+}
+
+/* dark mode */
+.wallet-item--dark {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  padding-bottom: 0.6rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin: 0.5rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  color: rgb(199, 199, 199);
+}
+
+.wallet-item--dark:hover {
+  background-color: #101a20;
 }
 
 @media (min-width: 640px) {
   .wallet-item {
+    width: 24rem;
+  }
+  .wallet-item--dark {
     width: 24rem;
   }
 }
@@ -204,7 +236,14 @@ export default defineComponent({
 }
 
 .line {
-  color: #e5e7eb;
+  border-color: #e5e7eb;
+  border-width: 0px;
+  border-bottom-width: 1px;
+  border-style: solid;
+}
+
+.line--dark {
+  border-color: rgba(195, 195, 195, 0.14);
   border-width: 0px;
   border-bottom-width: 1px;
   border-style: solid;
@@ -220,7 +259,7 @@ export default defineComponent({
 }
 
 .wallet-disabled:hover {
-  background-color: rgba(255, 255, 255, 0.623);
+  background-color: rgba(255, 255, 255, 0);
   cursor: default;
 }
 
