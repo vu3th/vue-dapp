@@ -13,7 +13,23 @@ import {
   MetaMaskProvider,
   Metamask,
 } from 'vue-dapp'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+
+const infuraId = computed(() =>
+  window.location.host === 'localhost:3000'
+    ? 'fd5dad2d869c4b20a703ea9f100333f7'
+    : 'ff6a249a74e048f1b413cba715f98d07',
+)
+const boardOptions = computed(() => {
+  return {
+    metamask: {},
+    walletconnect: { infuraId: infuraId.value },
+    walletlink: {
+      infuraId: infuraId.value,
+      appName: 'Vue Dapp',
+    },
+  }
+})
 
 const { open } = useBoard()
 const { status, disconnect, error, provider, walletName } = useWallet()
@@ -94,5 +110,6 @@ watch(selectedChainId, async (val, oldVal) => {
       </button>
     </div>
   </div>
-  <vdapp-board />
+
+  <vdapp-board dark :options="boardOptions" />
 </template>

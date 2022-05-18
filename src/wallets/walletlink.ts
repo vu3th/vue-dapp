@@ -1,4 +1,5 @@
 import WalletLink, { WalletLinkProvider } from 'walletlink'
+import { checkInfuraId } from '../utils'
 
 export { WalletLinkProvider }
 
@@ -9,10 +10,13 @@ export interface WalletLinkProviderRpcError extends Error {
 }
 
 export class Walletlink {
-  static async check() {
+  static async check(infuraId: string) {
     if (!WalletLink) {
-      console.warn('WalletLink unavailable')
       return false
+    }
+    const res = await checkInfuraId(infuraId)
+    if (!res) {
+      throw new Error('Invalid Infura ID for Coinbase Wallet')
     }
     return true
   }

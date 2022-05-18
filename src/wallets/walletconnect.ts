@@ -1,4 +1,5 @@
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import { checkInfuraId } from '../utils'
 
 // Test: https://test.walletconnect.org/
 // Docs: https://docs.walletconnect.com/1.0/quick-start/dapps/web3-provider
@@ -7,14 +8,16 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 export { WalletConnectProvider }
 
 export class Walletconnect {
-  // @todo update check
-  static async check() {
+  static async check(infuraId: string) {
     if (!WalletConnectProvider) {
-      console.warn(
-        'Walletconnect unavailable: please add below script to enable the feature: <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"></script>',
-      )
       return false
     }
+
+    const res = await checkInfuraId(infuraId)
+    if (!res) {
+      throw new Error('Invalid Infura ID for WalletConnect')
+    }
+
     return true
   }
 

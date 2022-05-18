@@ -1,12 +1,13 @@
 <script lang="ts">
-import { defineComponent, watch, ref, onMounted } from 'vue'
+import { defineComponent, watch, ref } from 'vue'
 
 export default defineComponent({
   emits: ['close'],
   props: {
-    darkMode: {
+    dark: {
       type: Boolean,
       required: false,
+      default: false,
     },
     modalOpen: {
       type: Boolean,
@@ -15,7 +16,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const modalInnerClass = ref(
-      props.darkMode ? 'modal-inner--dark' : 'modal-inner',
+      props.dark ? 'modal-inner--dark' : 'modal-inner',
     )
 
     const closeModal = () => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, inject, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import Modal from './Modal.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
@@ -17,32 +17,87 @@ export default defineComponent({
     WalletConnectIcon,
     WalletLinkIcon,
   },
-  inject: ['infuraId', 'appName', 'appUrl', 'darkMode'],
-  setup() {
+  props: {
+    options: {
+      type: Object,
+      required: false,
+      default: { metamask: null, walletconnect: null, walletlink: null },
+    },
+    dark: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    mute: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  setup(props) {
     const { boardOpen, close } = useBoard()
     const { connect, status } = useWallet()
 
+    // notice that the disabled defaults to true
     const metamaskDisabled = ref(true)
     const walletconnectDisabled = ref(true)
     const walletlinkDisabled = ref(true)
-    const infuraId = inject('infuraId') as string
-    const appName = inject('appName') as string
-    const appUrl = inject('appUrl') as string
-    const darkMode = inject('darkMode') as boolean
-    const walletItemClass = ref(darkMode ? 'wallet-item--dark' : 'wallet-item')
 
-    // check metamask and walletconnect available
+    const walletItemClass = computed(() =>
+      props.dark ? 'wallet-item--dark' : 'wallet-item',
+    )
+
     onMounted(async () => {
-      if (await Metamask.check()) {
-        metamaskDisabled.value = false
-      }
-      if (infuraId && (await Walletconnect.check())) {
-        walletconnectDisabled.value = false
-      }
-      if (infuraId && appName && (await Walletlink.check())) {
-        walletlinkDisabled.value = false
+      try {
+        await checkOptions()
+      } catch (e: unknown) {
+        !props.mute && console.warn(e)
       }
     })
+
+    const checkOptions = async () => {
+      if (props.options.hasOwnProperty('metamask')) {
+        // optoinal
+        if (!props.options.metamask.appUrl) {
+          !props.mute &&
+            console.warn(
+              `For enabling a MetaMask fallback, you should provide the appUrl in options like "{ metamask: { appUrl: <your-app-url> } }"`,
+            )
+        }
+        if (await Metamask.check()) {
+          metamaskDisabled.value = false
+        }
+      }
+      if (props.options.hasOwnProperty('walletconnect')) {
+        if (!props.options.walletconnect.infuraId) {
+          throw new Error(
+            `For enabling WalletConnect, you should provide the infuraId in options like { walletconnect: { infuraId: <your-infura-id> } }`,
+          )
+        }
+        if (await Walletconnect.check(props.options.walletconnect.infuraId)) {
+          walletconnectDisabled.value = false
+        } else {
+          throw new Error(
+            `Walletconnect unavailable: please add below script to enable the feature: <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"><\/script>`,
+          )
+        }
+      }
+      if (props.options.hasOwnProperty('walletlink')) {
+        if (
+          !props.options.walletlink.infuraId ||
+          !props.options.walletlink.appName
+        ) {
+          throw new Error(
+            `For enabling WalletLink, you should provide the infuraId and appName in options like { walletlink: { infuraId: <your-infura-id>, appName: <your-app-name> } }`,
+          )
+        }
+        if (await Walletlink.check(props.options.walletlink.infuraId)) {
+          walletlinkDisabled.value = false
+        } else {
+          throw new Error('WalletLink unavailable')
+        }
+      }
+    }
 
     const loadingOpen = ref(false)
     const openLoading = () => {
@@ -50,6 +105,40 @@ export default defineComponent({
     }
     const closeLoading = () => {
       loadingOpen.value = false
+    }
+
+    const connectMetamask = async () => {
+      if (metamaskDisabled.value && props.options.metamask.appUrl) {
+        window.open(
+          `https://metamask.app.link/dapp/${props.options.metamask.appUrl}`,
+          '_blank',
+        )
+        return
+      } else if (metamaskDisabled.value) return
+      // Prevent from closing the board while clicking disabled wallet
+      close()
+      openLoading()
+      await connect('metamask')
+    }
+
+    const connectWalletconnect = async () => {
+      if (walletconnectDisabled.value) return
+      // Prevent from closing the board while clicking disabled wallet
+      close()
+      openLoading()
+      await connect('walletconnect', props.options.walletconnect.infuraId)
+    }
+
+    const connectWalletlink = async () => {
+      if (walletlinkDisabled.value) return
+      // Prevent from closing the board while clicking disabled wallet
+      close()
+      openLoading()
+      await connect(
+        'walletlink',
+        props.options.walletlink.infuraId,
+        props.options.walletlink.appName,
+      )
     }
 
     const connectWallet = async (wallet: WalletName) => {
@@ -65,38 +154,11 @@ export default defineComponent({
             await connectWalletlink()
             break
         }
-      } catch (e: any) {
-        console.error(e.message)
+      } catch (e: unknown) {
+        console.error(e)
       } finally {
         closeLoading()
       }
-    }
-
-    const connectMetamask = async () => {
-      if (metamaskDisabled.value && appUrl) {
-        window.open(`https://metamask.app.link/dapp/${appUrl}`, '_blank')
-        return
-      } else if (metamaskDisabled.value) return
-      // Prevent from closing the board while clicking disabled wallet
-      close()
-      openLoading()
-      await connect('metamask')
-    }
-
-    const connectWalletconnect = async () => {
-      if (walletconnectDisabled.value) return
-      // Prevent from closing the board while clicking disabled wallet
-      close()
-      openLoading()
-      await connect('walletconnect', infuraId)
-    }
-
-    const connectWalletlink = async () => {
-      if (walletlinkDisabled.value) return
-      // Prevent from closing the board while clicking disabled wallet
-      close()
-      openLoading()
-      await connect('walletlink', infuraId, appName)
     }
 
     return {
@@ -105,8 +167,6 @@ export default defineComponent({
       metamaskDisabled,
       walletconnectDisabled,
       walletlinkDisabled,
-      appUrl,
-      darkMode,
       walletItemClass,
       close,
       connectWallet,
@@ -121,14 +181,14 @@ export default defineComponent({
 </script>
 
 <template>
-  <Modal :modalOpen="boardOpen" @close="close" :darkMode="darkMode">
+  <Modal :modalOpen="boardOpen" @close="close" :dark="dark">
     <div v-click-outside="close">
+      <!-- MetaMask -->
       <div
+        v-if="options.hasOwnProperty('metamask')"
         @click="connectWallet('metamask')"
         :class="
-          walletItemClass +
-          ' ' +
-          (metamaskDisabled && !appUrl ? 'wallet-disabled' : '')
+          walletItemClass + ' ' + (metamaskDisabled ? 'wallet-disabled' : '')
         "
       >
         <div class="item">
@@ -136,8 +196,12 @@ export default defineComponent({
           <div>MetaMask</div>
         </div>
       </div>
-      <div :class="darkMode ? 'line--dark' : 'line'"></div>
+
+      <div :class="dark ? 'line--dark' : 'line'"></div>
+
+      <!-- WalletConnect -->
       <div
+        v-if="options.hasOwnProperty('walletconnect')"
         @click="connectWallet('walletconnect')"
         :class="
           walletItemClass +
@@ -151,8 +215,11 @@ export default defineComponent({
         </div>
       </div>
 
-      <div :class="darkMode ? 'line--dark' : 'line'"></div>
+      <div :class="dark ? 'line--dark' : 'line'"></div>
+
+      <!-- CoinbaseWallet -->
       <div
+        v-if="options.hasOwnProperty('walletlink')"
         @click="connectWallet('walletlink')"
         :class="
           walletItemClass + ' ' + (walletlinkDisabled ? 'wallet-disabled' : '')
@@ -166,7 +233,7 @@ export default defineComponent({
     </div>
   </Modal>
 
-  <Modal :modalOpen="loadingOpen" :darkMode="darkMode">
+  <Modal :modalOpen="loadingOpen" :dark="dark">
     <div class="loading-modal" v-if="status === 'connecting'">
       <p>Pending Call Request</p>
       <p>Approve or reject request using your wallet</p>
