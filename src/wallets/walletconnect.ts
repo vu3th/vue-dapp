@@ -15,16 +15,17 @@ export class Walletconnect {
 
     const res = await checkInfuraId(infuraId)
     if (!res) {
-      throw new Error('Invalid Infura ID for WalletConnect')
+      console.warn('Invalid Infura ID for WalletConnect')
+      return false
     }
 
     return true
   }
 
-  static async connect(infuraId: string, options?: any) {
+  // Refer to https://docs.walletconnect.com/quick-start/dapps/web3-provider#provider-options
+  static async connect(providerOptions: any) {
     const provider = new WalletConnectProvider({
-      infuraId,
-      ...options,
+      ...providerOptions,
     })
 
     // fix: If user reject session, provider.enable() will be stuck and can't be resolved.

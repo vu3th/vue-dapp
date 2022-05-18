@@ -37,6 +37,20 @@ const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
 const onAccountsChangedCallback = ref<OnAccountsChangedCallback | null>(null)
 const onChainChangedCallback = ref<OnChainChangedCallback | null>(null)
 
+export type WalletOptions = {
+  metamask?: {
+    appUrl?: string
+  }
+  walletconnect?: {
+    infuraId?: string
+    options?: any
+  }
+  walletlink?: {
+    infuraId: string
+    appName: string
+  }
+}
+
 export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
   const { activate, deactivate } = useEthers()
 
@@ -55,8 +69,7 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
 
   async function connect(
     _walletName: WalletName,
-    infuraAPI?: string,
-    appName?: string,
+    _walletOptions?: WalletOptions,
   ) {
     let _provider: WalletProvider | null = null
 
@@ -71,31 +84,46 @@ export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
             throw new Error('metamask is not connected')
           break
         case 'walletconnect':
-          if (!infuraAPI)
-            throw new Error(
-              'You should provide infuraAPI for connecting WalletConnect',
-            )
-          _provider = (await Walletconnect.connect(
-            infuraAPI,
-          )) as WalletConnectProvider
-          if (!_provider.connected)
+          // check options at first
+          if (_walletOptions?.walletconnect?.options) {
+            _provider = (await Walletconnect.connect(
+              _walletOptions.walletconnect.options,
+            )) as WalletConnectProvider
+          } else {
+            // if there is no options, then we check infuraId
+            if (_walletOptions?.walletconnect?.infuraId) {
+              _provider = (await Walletconnect.connect({
+                infuraId: _walletOptions.walletconnect.infuraId,
+              })) as WalletConnectProvider
+            } else {
+              // if there is no options and no infuraId
+              throw new Error('Invalid options for WalletConnect')
+            }
+          }
+          if (!_provider.connected) {
             throw new Error('walletconnect is not connected')
+          }
           break
         case 'walletlink':
-          if (!infuraAPI)
+          if (!_walletOptions?.walletlink?.infuraId) {
             throw new Error(
               'You should provide infuraAPI for connecting WalletLink',
             )
-          if (!appName)
+          }
+          if (!_walletOptions?.walletlink?.appName) {
             throw new Error(
               'You should provide an app name for connecting WalletLink',
             )
+          }
+
           _provider = (await Walletlink.connect(
-            infuraAPI,
-            appName,
+            _walletOptions.walletlink.infuraId,
+            _walletOptions.walletlink.appName,
           )) as WalletLinkProvider
-          if (!_provider.isConnected)
+
+          if (!_provider.isConnected) {
             throw new Error('walletlink is not connected')
+          }
           break
         default:
           throw new Error('Connect Error: wallet name not found')

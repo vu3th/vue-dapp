@@ -12,24 +12,47 @@ import {
   useEthersHooks,
   MetaMaskProvider,
   Metamask,
+  WalletOptions,
 } from 'vue-dapp'
 import { computed, ref, watch } from 'vue'
 
+const isDev = window.location.host === 'localhost:3000'
 const infuraId = computed(() =>
-  window.location.host === 'localhost:3000'
+  isDev
     ? 'fd5dad2d869c4b20a703ea9f100333f7'
     : 'ff6a249a74e048f1b413cba715f98d07',
 )
-const boardOptions = computed(() => {
+
+const walletOptions = computed<WalletOptions>(() => {
   return {
-    metamask: {},
-    walletconnect: { infuraId: infuraId.value },
+    metamask: {
+      appUrl: 'vue-dapp.netlify.app',
+    },
+    walletconnect: {
+      options: {
+        infuraId: infuraId.value,
+        qrcodeModalOptions: {
+          mobileLinks: ['trust', 'imtoken'],
+        },
+      },
+    },
     walletlink: {
       infuraId: infuraId.value,
       appName: 'Vue Dapp',
     },
   }
 })
+
+// const walletOptions = computed<WalletOptions>(() => {
+//   return {
+//     metamask: {
+//       appUrl: 'vue-dapp.netlify.app',
+//     },
+//     walletconnect: {
+//       infuraId: infuraId.value,
+//     },
+//   }
+// })
 
 const { open } = useBoard()
 const { status, disconnect, error, provider, walletName } = useWallet()
@@ -111,5 +134,5 @@ watch(selectedChainId, async (val, oldVal) => {
     </div>
   </div>
 
-  <vdapp-board dark :options="boardOptions" />
+  <vdapp-board dark :options="walletOptions" />
 </template>

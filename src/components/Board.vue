@@ -5,7 +5,7 @@ import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
 import WalletLinkIcon from './logos/WalletLink.vue'
 import { useBoard } from '../composables/useBoard'
-import { useWallet, WalletName } from '../composables/useWallet'
+import { useWallet, WalletName, WalletOptions } from '../composables/useWallet'
 import { Metamask } from '../wallets/metamask'
 import { Walletconnect } from '../wallets/walletconnect'
 import { Walletlink } from '../wallets/walletlink'
@@ -55,6 +55,8 @@ export default defineComponent({
       }
     })
 
+    // enable a metamask fallback, see PR#29 for more details
+    const hasMetaMaskBrowserExtension = ref(false)
     const checkOptions = async () => {
       if (props.options.hasOwnProperty('metamask')) {
         // optoinal
@@ -64,22 +66,49 @@ export default defineComponent({
               `For enabling a MetaMask fallback, you should provide the appUrl in options like "{ metamask: { appUrl: <your-app-url> } }"`,
             )
         }
-        if (await Metamask.check()) {
+
+        hasMetaMaskBrowserExtension.value = await Metamask.check()
+
+        if (hasMetaMaskBrowserExtension.value) {
           metamaskDisabled.value = false
+        } else {
+          if (props.options.metamask.appUrl) {
+            metamaskDisabled.value = false
+          }
         }
       }
       if (props.options.hasOwnProperty('walletconnect')) {
-        if (!props.options.walletconnect.infuraId) {
+        if (
+          !props.options.walletconnect.infuraId &&
+          !props.options.walletconnect.options
+        ) {
           throw new Error(
-            `For enabling WalletConnect, you should provide the infuraId in options like { walletconnect: { infuraId: <your-infura-id> } }`,
+            `For enabling WalletConnect, you should provide the infuraId or custom options like { walletconnect: { infuraId: <your-infura-id> } or { walletconnect: { options: {...} } }`,
           )
         }
-        if (await Walletconnect.check(props.options.walletconnect.infuraId)) {
-          walletconnectDisabled.value = false
-        } else {
-          throw new Error(
-            `Walletconnect unavailable: please add below script to enable the feature: <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"><\/script>`,
+        walletconnectDisabled.value = false
+
+        // notice that this check point would delay the button enabled if the network is slow
+        if (props.options.walletconnect.options?.infuraId) {
+          const isValid = await Walletconnect.check(
+            props.options.walletconnect.options.infuraId,
           )
+          if (!isValid) {
+            walletconnectDisabled.value = true
+            throw new Error(
+              `Walletconnect unavailable: might be using invalid infura ID or you forgot to add below script to enable the feature: <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"><\/script>`,
+            )
+          }
+        } else if (props.options.walletconnect.infuraId) {
+          const isValid = await Walletconnect.check(
+            props.options.walletconnect.infuraId,
+          )
+          if (!isValid) {
+            walletconnectDisabled.value = true
+            throw new Error(
+              `Walletconnect unavailable: might be using invalid infura ID or you forgot to add below script to enable the feature: <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"><\/script>`,
+            )
+          }
         }
       }
       if (props.options.hasOwnProperty('walletlink')) {
@@ -91,7 +120,11 @@ export default defineComponent({
             `For enabling WalletLink, you should provide the infuraId and appName in options like { walletlink: { infuraId: <your-infura-id>, appName: <your-app-name> } }`,
           )
         }
-        if (await Walletlink.check(props.options.walletlink.infuraId)) {
+        // notice that this check point would delay the button enabled if the network is slow
+        const isValid = await Walletlink.check(
+          props.options.walletlink.infuraId,
+        )
+        if (isValid) {
           walletlinkDisabled.value = false
         } else {
           throw new Error('WalletLink unavailable')
@@ -108,7 +141,7 @@ export default defineComponent({
     }
 
     const connectMetamask = async () => {
-      if (metamaskDisabled.value && props.options.metamask.appUrl) {
+      if (!hasMetaMaskBrowserExtension.value && props.options.metamask.appUrl) {
         window.open(
           `https://metamask.app.link/dapp/${props.options.metamask.appUrl}`,
           '_blank',
@@ -126,7 +159,9 @@ export default defineComponent({
       // Prevent from closing the board while clicking disabled wallet
       close()
       openLoading()
-      await connect('walletconnect', props.options.walletconnect.infuraId)
+      if (props.options.walletconnect.options) {
+      }
+      await connect('walletconnect', props.options as WalletOptions)
     }
 
     const connectWalletlink = async () => {
@@ -134,11 +169,7 @@ export default defineComponent({
       // Prevent from closing the board while clicking disabled wallet
       close()
       openLoading()
-      await connect(
-        'walletlink',
-        props.options.walletlink.infuraId,
-        props.options.walletlink.appName,
-      )
+      await connect('walletlink', props.options as WalletOptions)
     }
 
     const connectWallet = async (wallet: WalletName) => {
