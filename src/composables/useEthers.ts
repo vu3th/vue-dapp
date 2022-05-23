@@ -5,7 +5,6 @@ import {
   ExternalProvider,
 } from '@ethersproject/providers'
 import { Signer } from 'ethers'
-import { WalletProvider } from './useWallet'
 
 export type { Web3Provider, Signer, Network }
 
@@ -25,10 +24,17 @@ const deactivate = () => {
   balance.value = BigInt(0)
 }
 
-async function activate(walletProvider: WalletProvider) {
-  if (!walletProvider) throw new Error('Failed to activate: missing provider')
+async function activate(externalProvider: ExternalProvider) {
+  if (!externalProvider) throw new Error('Incorrect externalProvider argument')
 
-  const _provider = new Web3Provider(walletProvider as ExternalProvider)
+  // Test loading
+  // await new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     resolve(true)
+  //   }, 2000)
+  // })
+
+  const _provider = new Web3Provider(externalProvider)
   const _signer = _provider.getSigner()
   const _network = await _provider.getNetwork()
   const _address = await _signer.getAddress()

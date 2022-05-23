@@ -10,54 +10,35 @@ import {
   shortenAddress,
   ChainId,
   useEthersHooks,
-  MetaMaskProvider,
-  Metamask,
-  WalletOptions,
+  MetaMaskConnector,
+  WalletConnectConnector,
+  CoinbaseWalletConnector,
 } from 'vue-dapp'
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 const isDev = window.location.host === 'localhost:3000'
-const infuraId = computed(() =>
-  isDev
-    ? 'fd5dad2d869c4b20a703ea9f100333f7'
-    : 'ff6a249a74e048f1b413cba715f98d07',
-)
-
-const walletOptions = computed<WalletOptions>(() => {
-  return {
-    metamask: {
-      appUrl: 'vue-dapp.netlify.app',
-    },
-    walletconnect: {
-      options: {
-        infuraId: infuraId.value,
-        qrcodeModalOptions: {
-          mobileLinks: ['trust', 'imtoken'],
-        },
-      },
-    },
-    walletlink: {
-      infuraId: infuraId.value,
-      appName: 'Vue Dapp',
-    },
-  }
-})
-
-// const walletOptions = computed<WalletOptions>(() => {
-//   return {
-//     metamask: {
-//       appUrl: 'vue-dapp.netlify.app',
-//     },
-//     walletconnect: {
-//       infuraId: infuraId.value,
-//     },
-//   }
-// })
+const infuraId = isDev
+  ? 'fd5dad2d869c4b20a703ea9f100333f7'
+  : 'ff6a249a74e048f1b413cba715f98d07'
 
 const { open } = useBoard()
-const { status, disconnect, error, provider, walletName } = useWallet()
+const { wallet, disconnect } = useWallet()
 const { address, balance, chainId, isActivated } = useEthers()
 const { onActivated, onChanged } = useEthersHooks()
+
+const connectors = [
+  new MetaMaskConnector(),
+  new WalletConnectConnector({
+    qrcode: true,
+    rpc: {
+      1: `https://mainnet.infura.io/v3/${infuraId}`,
+    },
+  }),
+  new CoinbaseWalletConnector({
+    appName: 'Vue Dapp',
+    jsonRpcUrl: `https://mainnet.infura.io/v3/${infuraId}`,
+  }),
+]
 
 const supportedChainId = [
   ChainId.Mainnet,
@@ -76,15 +57,22 @@ onChanged(() => {
   selectedChainId.value = chainId.value as number
 })
 
+// For turning back to previous chainId without calling switchChain() again
+const switchError = ref(false)
 watch(selectedChainId, async (val, oldVal) => {
   if (oldVal === 0) return // ignore initial change
-
+  if (switchError.value) {
+    switchError.value = false
+    return
+  }
   try {
-    walletName.value === 'metamask' &&
-      (await Metamask.switchChain(provider.value as MetaMaskProvider, val))
+    if (wallet.connector) {
+      await wallet.connector.switchChain!(val)
+    }
   } catch (e: any) {
-    console.error(e)
+    switchError.value = true
     selectedChainId.value = oldVal
+    console.error(e)
   }
 })
 </script>
@@ -102,7 +90,7 @@ watch(selectedChainId, async (val, oldVal) => {
 
   <!-- connect -->
   <div class="mt-10 flex flex-col justify-center items-center">
-    <p v-if="error" class="text-red-500">{{ error }}</p>
+    <p v-if="wallet.error" class="text-red-500">{{ wallet.error }}</p>
 
     <div v-if="isActivated" class="text-center">
       <p>{{ shortenAddress(address) }}</p>
@@ -121,12 +109,12 @@ watch(selectedChainId, async (val, oldVal) => {
       <button
         @click="isActivated ? disconnect() : open()"
         class="btn"
-        :disabled="status === 'connecting'"
+        :disabled="wallet.status === 'connecting'"
       >
         {{
-          status === 'connected'
+          wallet.status === 'connected'
             ? 'Disconnect'
-            : status === 'connecting'
+            : wallet.status === 'connecting'
             ? 'Connecting...'
             : 'Connect'
         }}
@@ -134,5 +122,9 @@ watch(selectedChainId, async (val, oldVal) => {
     </div>
   </div>
 
-  <vdapp-board dark :options="walletOptions" />
+  <vdapp-board :connectors="connectors" dark>
+    <!-- <template #loading>
+      <div v-if="wallet.status === 'loading'"></div>
+    </template> -->
+  </vdapp-board>
 </template>
