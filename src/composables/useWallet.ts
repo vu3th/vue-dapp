@@ -78,9 +78,10 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     wallet.status = 'connected'
 
     // subscribe events
-    if (wallet.connector && callbacks.onDisconnectCallback) {
+    if (wallet.connector) {
       wallet.connector.onDisconnect((...args: any[]) => {
-        callbacks.onDisconnectCallback!(...args)
+        callbacks.onDisconnectCallback &&
+          callbacks.onDisconnectCallback!(...args)
         /**
          * Exclude metamask to disconnect on this event
          * @note MetaMask disconnect event would be triggered when the specific chain changed (like L2 network),
@@ -95,18 +96,20 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
       })
     }
 
-    if (wallet.connector && callbacks.onAccountsChangedCallback) {
+    if (wallet.connector) {
       wallet.connector.onAccountsChanged(async (accounts: string[]) => {
-        callbacks.onAccountsChangedCallback!(accounts)
+        callbacks.onAccountsChangedCallback &&
+          callbacks.onAccountsChangedCallback!(accounts)
         if (options.useEthers) {
           await reactivate()
         }
       })
     }
 
-    if (wallet.connector && callbacks.onChainChangedCallback) {
+    if (wallet.connector) {
       wallet.connector.onChainChanged(async (chainId: number) => {
-        callbacks.onChainChangedCallback!(chainId)
+        callbacks.onChainChangedCallback &&
+          callbacks.onChainChangedCallback!(chainId)
         if (options.useEthers) {
           await reactivate()
         }
