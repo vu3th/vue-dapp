@@ -1,4 +1,3 @@
-import { providers } from 'ethers'
 import { hexValue } from 'ethers/lib/utils'
 import { NETWORK_DETAILS } from '../constants'
 import { Connector } from './connector'
@@ -12,15 +11,24 @@ import {
 
 /**
  * MetaMask
- * Docs: https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents
+ * Docs: https://docs.metamask.io/guide/ethereum-provider.html
  * JSON RPC API: https://metamask.github.io/api-playground/api-documentation
  */
+export interface MetaMaskProvider extends MetaMaskEthereumProvider {
+  isMetaMask: boolean
+  providers?: MetaMaskProvider[]
+  isConnected: () => boolean
+  request: (request: {
+    method: string
+    params?: any[] | undefined
+  }) => Promise<any>
+}
 
 /**
  * source: @metamask/detect-provider
  * https://github.com/MetaMask/detect-provider/blob/main/src/index.ts
  */
-interface MetaMaskEthereumProvider {
+export interface MetaMaskEthereumProvider {
   isMetaMask?: boolean
   once(eventName: string | symbol, listener: (...args: any[]) => void): this
   on(eventName: string | symbol, listener: (...args: any[]) => void): this
@@ -37,18 +45,7 @@ interface MetaMaskEthereumProvider {
 }
 
 export interface Window {
-  ethereum?: MetaMaskEthereumProvider
-}
-
-export interface MetaMaskProvider extends providers.ExternalProvider {
-  isMetaMask: boolean
-  providers?: MetaMaskProvider[]
-  isConnected: () => boolean
-  request: (request: {
-    method: string
-    params?: any[] | undefined
-  }) => Promise<any>
-  on: (event: string, callback: (param: any) => void) => void
+  ethereum?: MetaMaskProvider
 }
 
 export type MetaMaskConnectorOptions = {
@@ -60,6 +57,11 @@ export class MetaMaskConnector extends Connector<
   MetaMaskConnectorOptions
 > {
   readonly name = 'metaMask'
+
+  #provider?: MetaMaskProvider
+  #onDisconnectHandler?: (error: ProviderRpcError) => void
+  #onAccountsChangedHandler?: (accounts: string[]) => void
+  #onChainChangedHandler?: (chainId: number) => void
 
   constructor(options: MetaMaskConnectorOptions = {}) {
     super(options)
@@ -78,11 +80,14 @@ export class MetaMaskConnector extends Connector<
         provider?.providers?.find((e: MetaMaskProvider) => e.isMetaMask) ||
         provider)
 
-    const accounts = await provider.request({
+    this.#provider = provider
+
+    const accounts = await this.#provider.request({
       method: 'eth_requestAccounts',
       params: [{ eth_accounts: {} }],
     })
     const account = accounts[0]
+
     return {
       account,
       provider,
@@ -110,14 +115,76 @@ export class MetaMaskConnector extends Connector<
    * MetaMask do not support programmatic disconnect.
    * @see https://github.com/MetaMask/metamask-extension/issues/10353
    */
-  async disconnect() {}
+  async disconnect() {
+    if (!this.#provider) throw new ProviderNotFoundError()
+
+    this.#onDisconnectHandler &&
+      this.#removeListener('disconnect', this.#onDisconnectHandler)
+    this.#onAccountsChangedHandler &&
+      this.#removeListener('accountsChanged', this.#onAccountsChangedHandler)
+    this.#onChainChangedHandler &&
+      this.#removeListener('chainChanged', this.#onChainChangedHandler)
+
+    this.#provider = undefined
+    this.#onDisconnectHandler = undefined
+    this.#onAccountsChangedHandler = undefined
+    this.#onChainChangedHandler = undefined
+  }
+
+  /**
+   * @note MetaMask disconnect event would be triggered when the specific chain changed (like L2 network),
+   * and will not be triggered when a user clicked disconnect in wallet...
+   */
+  onDisconnect(handler: (error: ProviderRpcError) => void) {
+    if (!this.#provider) throw new ProviderNotFoundError()
+    if (this.#onDisconnectHandler) {
+      this.#removeListener('disconnect', this.#onDisconnectHandler)
+    }
+    this.#onDisconnectHandler = handler
+    this.#provider.on('disconnect', handler)
+  }
+
+  onAccountsChanged(handler: (accounts: string[]) => void) {
+    if (!this.#provider) throw new ProviderNotFoundError()
+    if (this.#onAccountsChangedHandler) {
+      this.#removeListener('accountsChanged', this.#onAccountsChangedHandler)
+    }
+    this.#onAccountsChangedHandler = handler
+    this.#provider.on('accountsChanged', handler)
+  }
+
+  onChainChanged(handler: (chainId: number) => void) {
+    if (!this.#provider) throw new ProviderNotFoundError()
+    if (this.#onChainChangedHandler) {
+      this.#removeListener('chainChanged', this.#onChainChangedHandler)
+    }
+    this.#onChainChangedHandler = handler
+    this.#provider.on('chainChanged', (chainId: string) => {
+      const _chainId = this.#normalizeChainId(chainId)
+      handler(_chainId)
+    })
+  }
+
+  #removeListener(event: string, handler: (...args: any[]) => void) {
+    if (!this.#provider) throw new ProviderNotFoundError()
+    this.#provider.removeListener(event, handler)
+  }
+
+  #normalizeChainId(chainId: string | number) {
+    if (typeof chainId === 'string')
+      return Number.parseInt(
+        chainId,
+        chainId.trim().substring(0, 2) === '0x' ? 16 : 10,
+      )
+    return chainId
+  }
 
   async switchChain(chainId: number) {
-    const provider = await this.getProvider()
+    if (!this.#provider) throw new ProviderNotFoundError()
     const id = hexValue(chainId)
 
     try {
-      await provider.request({
+      await this.#provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: id }],
       })
@@ -142,9 +209,9 @@ export class MetaMaskConnector extends Connector<
   }
 
   async addChain(networkDetails: AddEthereumChainParameter) {
-    const provider = await this.getProvider()
+    if (!this.#provider) throw new ProviderNotFoundError()
     try {
-      provider.request({
+      this.#provider.request({
         method: 'wallet_addEthereumChain',
         params: [networkDetails], // notice that chainId must be in hexadecimal numbers
       })

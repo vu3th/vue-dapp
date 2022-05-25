@@ -100,7 +100,7 @@ export default defineComponent({
   </slot>
 
   <slot name="loading">
-    <Loader v-if="wallet.status === 'loading'" />
+    <Modal :modalOpen="wallet.status === 'loading'" :dark="dark"></Modal>
   </slot>
 </template>
 

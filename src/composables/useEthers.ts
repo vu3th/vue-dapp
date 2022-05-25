@@ -25,7 +25,8 @@ const deactivate = () => {
 }
 
 async function activate(externalProvider: ExternalProvider) {
-  if (!externalProvider) throw new Error('Incorrect externalProvider argument')
+  if (!externalProvider)
+    throw new Error('Failed to activate ethers: provider not found')
 
   // Test loading
   // await new Promise((resolve) => {

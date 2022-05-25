@@ -22,16 +22,32 @@ const infuraId = isDev
   : 'ff6a249a74e048f1b413cba715f98d07'
 
 const { open } = useBoard()
-const { wallet, disconnect } = useWallet()
+const { wallet, disconnect, onDisconnect, onAccountsChanged, onChainChanged } =
+  useWallet()
 const { address, balance, chainId, isActivated } = useEthers()
 const { onActivated, onChanged } = useEthersHooks()
 
+onDisconnect(() => {
+  console.log('disconnect')
+})
+
+onAccountsChanged(() => {
+  console.log('accounts changed')
+})
+
+onChainChanged((chainId: any) => {
+  console.log('chain changed', chainId)
+})
+
 const connectors = [
-  new MetaMaskConnector(),
+  new MetaMaskConnector({
+    appUrl: 'http://localhost:3000',
+  }),
   new WalletConnectConnector({
     qrcode: true,
     rpc: {
       1: `https://mainnet.infura.io/v3/${infuraId}`,
+      4: `https://rinkeby.infura.io/v3/${infuraId}`,
     },
   }),
   new CoinbaseWalletConnector({
@@ -53,8 +69,10 @@ onActivated(() => {
   selectedChainId.value = chainId.value as number
 })
 
+const isChainChanged = ref(false)
 onChanged(() => {
   selectedChainId.value = chainId.value as number
+  isChainChanged.value = true
 })
 
 // For turning back to previous chainId without calling switchChain() again
@@ -65,6 +83,11 @@ watch(selectedChainId, async (val, oldVal) => {
     switchError.value = false
     return
   }
+  // if (isChainChanged.value) {
+  //   isChainChanged.value = false
+  //   return
+  // }
+
   try {
     if (wallet.connector) {
       await wallet.connector.switchChain!(val)
@@ -116,6 +139,8 @@ watch(selectedChainId, async (val, oldVal) => {
             ? 'Disconnect'
             : wallet.status === 'connecting'
             ? 'Connecting...'
+            : wallet.status === 'loading'
+            ? 'Loading...'
             : 'Connect'
         }}
       </button>

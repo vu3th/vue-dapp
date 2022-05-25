@@ -10,6 +10,12 @@ import {
   UserRejectedRequestError,
 } from './errors'
 
+/**
+ * Coinbase Wallet SDK
+ * Docs: https://docs.cloud.coinbase.com/wallet-sdk/docs/
+ */
+export interface ICoinbaseWalletProvider extends CoinbaseWalletProvider {}
+
 export type CoinbaseWalletConnectorOptions = CoinbaseWalletSDKOptions & {
   jsonRpcUrl: string
   chainId?: number
@@ -22,6 +28,9 @@ export class CoinbaseWalletConnector extends Connector<
   readonly name = 'coinbaseWallet'
 
   #provider?: CoinbaseWalletProvider
+  #onDisconnectHandler?: () => void
+  #onAccountsChangedHandler?: (accounts: string[]) => void
+  #onChainChangedHandler?: (chainId: number) => void
 
   constructor(options: CoinbaseWalletConnectorOptions) {
     super(options)
@@ -53,6 +62,44 @@ export class CoinbaseWalletConnector extends Connector<
   async disconnect() {
     if (!this.#provider) throw new ProviderNotFoundError()
     await this.#provider.close()
+    this.#provider = undefined
+  }
+
+  /**
+   * @note CoinbaseWallet will reload page if it disconnected by wallet app.
+   * @todo experiment with the browser extension
+   */
+  onDisconnect(handler: () => void) {
+    if (!this.#provider) throw new ProviderNotFoundError()
+    if (this.#onDisconnectHandler) {
+      this.#removeListener('disconnect', this.#onDisconnectHandler)
+    }
+    this.#onDisconnectHandler = handler
+    this.#provider.on('disconnect', handler)
+  }
+
+  onAccountsChanged(handler: (accounts: string[]) => void) {
+    if (!this.#provider) throw new ProviderNotFoundError()
+    if (this.#onAccountsChangedHandler) {
+      this.#removeListener('accountsChanged', this.#onAccountsChangedHandler)
+    }
+    this.#onAccountsChangedHandler = handler
+    this.#provider.on('accountsChanged', handler)
+  }
+
+  onChainChanged(handler: (chainId: number) => void) {
+    if (!this.#provider) throw new ProviderNotFoundError()
+    if (this.#onChainChangedHandler) {
+      this.#removeListener('chainChanged', this.#onChainChangedHandler)
+    }
+    this.#onChainChangedHandler = handler
+    this.#provider.on('chainChanged', handler)
+  }
+
+  #removeListener(event: string, handler: (...args: any[]) => void) {
+    if (!this.#provider) throw new ProviderNotFoundError()
+    this.#provider.removeListener(event, handler)
+    // console.log('remove listener', event, handler)
   }
 
   /**
