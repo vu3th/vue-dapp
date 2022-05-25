@@ -68,7 +68,7 @@
     "util": "^0.12.4",
     "vite": "2.5.0",
     "vite-plugin-windicss": "^1.2.7",
-    "vitepress": "^0.20.1",
+    "vitepress": "0.22.4",
     "vue": "3.2.23",
     "windicss": "^3.1.7"
   },

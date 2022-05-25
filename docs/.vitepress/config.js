@@ -31,6 +31,10 @@ module.exports = {
             link: '/',
           },
           {
+            text: 'Migrating to v0.5.x',
+            link: '/migration',
+          },
+          {
             text: 'Using Vite',
             link: '/using-vite',
           },
@@ -39,25 +43,21 @@ module.exports = {
             link: '/contributing',
           },
           {
-            text: 'Resources',
-            link: '/resources',
+            text: 'References',
+            link: '/references',
           },
         ],
       },
       {
-        text: 'API Reference',
+        text: 'API',
         children: [
           {
             text: 'Components',
             link: '/api/components',
           },
           {
-            text: 'Directives',
-            link: '/api/directives',
-          },
-          {
-            text: 'Utilities',
-            link: '/api/utilities',
+            text: 'Connectors',
+            link: '/api/connectors',
           },
           {
             text: 'useWallet',
@@ -74,6 +74,14 @@ module.exports = {
           {
             text: 'useMulticall',
             link: '/api/use-multicall',
+          },
+          {
+            text: 'Directives',
+            link: '/api/directives',
+          },
+          {
+            text: 'Utilities',
+            link: '/api/utilities',
           },
         ],
       },
