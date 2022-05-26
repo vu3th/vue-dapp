@@ -1,34 +1,14 @@
 # useEthersHooks
 
+Hook for watching provider from `useEthers` as follows:
+
+- `onActivated` - subscribe event when giving the provider.
+- `onDeactivated` - subscribe event when removing the provider.
+- `onChanged` - subscribe event when updating the provider.
+
 [source code](https://github.com/chnejohnson/vue-dapp/blob/main/src/composables/useEthersHooks.ts)
 
-## Types
-
-```ts
-declare type EthersHooksContext = {
-  provider: Web3Provider
-  signer: Signer
-  network: Network
-  address: string
-  balance: bigint
-}
-declare type OnActivatedHook = (context: EthersHooksContext) => void
-declare type OnChangedHook = (context: EthersHooksContext) => void
-declare type OnDeactivatedHook = () => void
-declare function useEthersHooks(): {
-  onActivated: (hook: OnActivatedHook) => OnActivatedHook
-  onDeactivated: (hook: OnDeactivatedHook) => OnDeactivatedHook
-  onChanged: (hook: OnChangedHook) => OnChangedHook
-}
-```
-
-## Core
-
-- `onActivated` - watch `provider` from `useEthers` while giving the provider.
-- `onDeactivated` - watch `provider` from `useEthers` while removing the provider.
-- `onChanged` - watch `provider` from `useEthers` while updating the provider.
-
-## Example
+## Usage
 
 ```ts
 const { onActivated, onDeactivated, onChanged } = useEthersHooks()
@@ -44,4 +24,26 @@ onDeactivated(() => {
 onChanged(() => {
   console.log('change')
 })
+```
+## Return Value
+```ts
+{
+  onActivated: (hook: OnActivatedHook) => OnActivatedHook;
+  onChanged: (hook: OnChangedHook) => OnChangedHook;
+  onDeactivated: (hook: OnDeactivatedHook) => OnDeactivatedHook;
+}
+```
+
+## Types
+```ts
+declare type EthersHooksContext = {
+  provider: Web3Provider
+  signer: Signer
+  network: Network
+  address: string
+  balance: bigint
+}
+declare type OnActivatedHook = (context: EthersHooksContext) => void
+declare type OnChangedHook = (context: EthersHooksContext) => void
+declare type OnDeactivatedHook = () => void
 ```

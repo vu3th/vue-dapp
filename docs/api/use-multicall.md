@@ -1,33 +1,14 @@
 # useMulticall
 
-[source code](https://github.com/chnejohnson/vue-dapp/blob/main/src/composables/useMulticall.ts)
-
-## Types
-```ts
-declare type ContractCall = {
-    interface: ContractInterface;
-    address: string;
-    method: string;
-    args?: any[];
-};
-declare function useMulticall(provider: Web3Provider | JsonRpcProvider): {
-    multicall: Multicall2;
-    blockNumber: vue_demi.Ref<number>;
-    results: vue_demi.Ref<{
-        [x: string]: any;
-        [x: number]: any;
-    }[]>;
-    call: (contractCalls: ContractCall[]) => Promise<void>;
-};
-```
-
-## Core
+Hook for using [Multicall2](https://github.com/makerdao/multicall/blob/master/src/Multicall2.sol)
 - `multicall` - contract of [Multicall2](https://github.com/makerdao/multicall/blob/master/src/Multicall2.sol)
 - `blockNumber`
 - `results` - return value depending on type `ContractCall[]`
 - `call` - call `tryBlockAndAggregate` on [Multicall2](https://github.com/makerdao/multicall/blob/master/src/Multicall2.sol) 
 
-## Example
+[source code](https://github.com/chnejohnson/vue-dapp/blob/main/src/composables/useMulticall.ts)
+
+## Usage
 ```ts
 const calls: ContractCall[] = [
   {
@@ -76,4 +57,23 @@ decimals.value = _decimals
 symbol.value = _symbol
 balance.value = (_balance as BigNumber).toBigInt()
 
+```
+
+## Types
+```ts
+declare type ContractCall = {
+    interface: ContractInterface;
+    address: string;
+    method: string;
+    args?: any[];
+};
+declare function useMulticall(provider: Web3Provider | JsonRpcProvider): {
+    multicall: Multicall2;
+    blockNumber: vue_demi.Ref<number>;
+    results: vue_demi.Ref<{
+        [x: string]: any;
+        [x: number]: any;
+    }[]>;
+    call: (contractCalls: ContractCall[]) => Promise<void>;
+};
 ```

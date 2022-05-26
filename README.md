@@ -9,17 +9,9 @@
 # Vue Dapp
 
 - [Documentation (v0.5.x)](https://vue-dapp-docs.netlify.app/)
-- [Migrate to v0.5.x]()
+- [Migrate to v0.5.x](https://vue-dapp-docs.netlify.app/migration)
 
 ## Installation
-
-```sh
-yarn add ethers vue-dapp
-```
-
-## Installation
-
-yarn
 
 ```bash
 yarn add ethers vue-dapp
@@ -28,7 +20,7 @@ yarn add ethers vue-dapp
 ## Quick Start
 
 - If you're using [Vite](https://vitejs.dev/), please check out [Using Vite](https://vue-dapp-docs.netlify.app/using-vite.html) for more details on environment settings.
-- Use [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) for a fast startup.
+- Take a look at [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) for a fast startup.
 
 Step 1. add plugin to your app:
 
@@ -50,17 +42,9 @@ Step 2. add `<vdapp-board />` component to your `App.vue`:
 Step 3. construct your connectors and use composable functions in your scripts:
 
 ```js
-import {
-  useBoard,
-  useWallet,
-  useEthers,
-} from 'vue-dapp'
+import { MetaMaskConnector, WalletConnectConnector, CoinbaseWalletConnector } from 'vue-dapp'
 
-const infuraId = 'your-infura-id'
-
-const { open } = useBoard()
-const { wallet, disconnect } = useWallet()
-const { address, balance, chainId, isActivated } = useEthers()
+const infuraId = '<your-infura-id>'
 
 const connectors = [
   new MetaMaskConnector({

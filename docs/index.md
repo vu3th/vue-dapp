@@ -33,17 +33,9 @@ Step 2. add `<vdapp-board />` component to your `App.vue`:
 Step 3. construct your connectors and use composable functions in your scripts:
 
 ```js
-import {
-  useBoard,
-  useWallet,
-  useEthers,
-} from 'vue-dapp'
+import { MetaMaskConnector, WalletConnectConnector, CoinbaseWalletConnector } from 'vue-dapp'
 
-const infuraId = 'your-infura-id'
-
-const { open } = useBoard()
-const { wallet, disconnect } = useWallet()
-const { address, balance, chainId, isActivated } = useEthers()
+const infuraId = '<your-infura-id>'
 
 const connectors = [
   new MetaMaskConnector({
