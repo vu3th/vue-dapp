@@ -24,10 +24,10 @@ app.use(VueDapp)
 ...
 ```
 
-Step 2. add `<vdapp-board />` component to your `App.vue`:
+Step 2. add `<vd-board />` component to your `App.vue`:
 
 ```vue
-<vdapp-board :connectors="connectors" dark />
+<vd-board :connectors="connectors" dark />
 ```
 
 Step 3. construct your connectors and use composable functions in your scripts:

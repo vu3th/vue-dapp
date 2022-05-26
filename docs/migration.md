@@ -5,7 +5,7 @@ If you are coming from an earlier version of vue-dapp, in order to update to ver
 ## Breaking changes
 
 - You have to construct your connectors and configure third-party providers as your wallet options on board.
-- Pass your connectors to `<vdapp-board :connectors="connectors">`
+- Pass your connectors to `<vd-board :connectors="connectors">`
 - You don't need to add plugin options anymore.
 
 ### Before
@@ -22,7 +22,7 @@ app.use(VueDapp, {
 App.vue
 ```vue
 <template>
-  <vdapp-board />
+  <vd-board />
 <template />
 ```
 
@@ -59,6 +59,6 @@ App.vue
 
 ```vue
 <template>
-  <vdapp-board :connectors="connectors" dark />
+  <vd-board :connectors="connectors" dark />
 </template>
 ```

@@ -1,19 +1,19 @@
 # Components
 
-- `<vdapp-board>` - for wallet board.
+- `<vd-board>` - for wallet board.
 - `<vdapp-modal>` - for a simple modal.
 
 [source code](https://github.com/chnejohnson/vue-dapp/tree/main/src/components)
 
-## vdapp-board
+## vd-board
 
 ### Usage
 ```vue
-<vdapp-board :connectors="connectors" dark>
+<vd-board :connectors="connectors" dark>
   <template #loading>
     <div v-if="wallet.status === 'loading'">loading...</div>
   </template>
-</vdapp-board>
+</vd-board>
 ```
 
 ### Props

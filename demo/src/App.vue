@@ -147,9 +147,9 @@ watch(selectedChainId, async (val, oldVal) => {
     </div>
   </div>
 
-  <vdapp-board :connectors="connectors" dark>
+  <vd-board :connectors="connectors" dark>
     <!-- <template #loading>
       <div v-if="wallet.status === 'loading'"></div>
     </template> -->
-  </vdapp-board>
+  </vd-board>
 </template>
