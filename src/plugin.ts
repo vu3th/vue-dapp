@@ -6,7 +6,7 @@ import Modal from './components/Modal.vue'
 export const VueDapp: Plugin = {
   install(app) {
     app.directive('click-outside', clickOutside)
-    app.component('vdapp-board', Board)
-    app.component('vdapp-modal', Modal)
+    app.component('vd-board', Board)
+    app.component('vd-modal', Modal)
   },
 }
