@@ -17,7 +17,7 @@ export default defineConfig({
       plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
     },
     commonjsOptions: {
-      transformMixedEsModules: true,
+      transformMixedEsModules: false,
     },
   },
 })
