@@ -1,4 +1,5 @@
 import { Connector } from './connector'
+import CoinbaseWalletSDK from '@coinbase/wallet-sdk'
 import type { CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
 import type { CoinbaseWalletSDKOptions } from '@coinbase/wallet-sdk/dist/CoinbaseWalletSDK'
 import { getAddress, hexValue } from 'ethers/lib/utils'
@@ -49,8 +50,6 @@ export class CoinbaseWalletConnector extends Connector<
   }
 
   async getProvider() {
-    const CoinbaseWalletSDK = (await import('@coinbase/wallet-sdk'))
-      .CoinbaseWalletSDK
     const client = new CoinbaseWalletSDK(this.options)
     const provider = client.makeWeb3Provider(
       this.options.jsonRpcUrl,
