@@ -18,6 +18,10 @@ module.exports = {
     repo: 'chnejohnson/vue-dapp',
     nav: [
       {
+        text: 'Releases',
+        link: 'https://github.com/chnejohnson/vue-dapp/blob/main/CHANGELOG.md',
+      },
+      {
         text: 'Demo',
         link: 'https://vue-dapp.netlify.app/',
       },
@@ -31,6 +35,10 @@ module.exports = {
             link: '/',
           },
           {
+            text: 'Migrating to v0.5.x',
+            link: '/migration',
+          },
+          {
             text: 'Using Vite',
             link: '/using-vite',
           },
@@ -39,25 +47,21 @@ module.exports = {
             link: '/contributing',
           },
           {
-            text: 'Resources',
-            link: '/resources',
+            text: 'References',
+            link: '/references',
           },
         ],
       },
       {
-        text: 'API Reference',
+        text: 'API',
         children: [
           {
             text: 'Components',
             link: '/api/components',
           },
           {
-            text: 'Directives',
-            link: '/api/directives',
-          },
-          {
-            text: 'Utilities',
-            link: '/api/utilities',
+            text: 'Connectors',
+            link: '/api/connectors',
           },
           {
             text: 'useWallet',
@@ -76,12 +80,12 @@ module.exports = {
             link: '/api/use-multicall',
           },
           {
-            text: 'useCall',
-            link: '/api/use-call',
+            text: 'Directives',
+            link: '/api/directives',
           },
           {
-            text: 'useDispatch',
-            link: '/api/use-dispatch',
+            text: 'Utilities',
+            link: '/api/utilities',
           },
         ],
       },

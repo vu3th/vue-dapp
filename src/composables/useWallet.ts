@@ -1,345 +1,151 @@
-import { ref, markRaw, computed, Ref } from 'vue'
-import {
-  Metamask,
-  MetaMaskProvider,
-  MetaMaskProviderRpcError,
-} from '../wallets/metamask'
-import { Walletconnect, WalletConnectProvider } from '../wallets/walletconnect'
-import {
-  Walletlink,
-  WalletLinkProvider,
-  WalletLinkProviderRpcError,
-} from '../wallets/walletlink'
+import { reactive, markRaw } from 'vue'
+import { providers } from 'ethers'
+import { Connector } from '../wallets'
 import { useEthers } from './useEthers'
 
-export type WalletProvider =
-  | MetaMaskProvider
-  | WalletConnectProvider
-  | WalletLinkProvider
-export type ConnectionState = 'none' | 'connecting' | 'connected'
-export type WalletName = 'none' | 'metamask' | 'walletconnect' | 'walletlink'
-export type OnConnectedCallback = (provider: WalletProvider) => void
-export type OnDisconnectCallback = (msg: string) => void
+export type ConnectionStatus = 'none' | 'connecting' | 'loading' | 'connected'
+
+const wallet = reactive({
+  connector: null as Connector | null,
+  provider: null as providers.ExternalProvider | null,
+  error: '',
+  status: 'none' as ConnectionStatus,
+})
+
+export type OnDisconnectCallback = (...args: any[]) => void
 export type OnAccountsChangedCallback = (accounts: string[]) => void
 export type OnChainChangedCallback = (chainId: number) => void
-export type UseWalletOptions = {
-  library: 'ethers' | 'web3'
+
+const callbacks = reactive({
+  onDisconnectCallback: null as OnDisconnectCallback | null,
+  onAccountsChangedCallback: null as OnAccountsChangedCallback | null,
+  onChainChangedCallback: null as OnChainChangedCallback | null,
+})
+
+export type useWalletOptions = {
+  useEthers: boolean
 }
 
-// ========================= state =========================
+export function useWallet(options: useWalletOptions = { useEthers: true }) {
+  const clearWallet = () => {
+    wallet.connector = null
+    wallet.provider = null
+    wallet.error = ''
+    wallet.status = 'none'
 
-const provider = ref<WalletProvider | null>(null)
-const status = ref<ConnectionState>('none')
-const walletName = ref<WalletName>('none')
-const error = ref('')
-
-const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
-const onAccountsChangedCallback = ref<OnAccountsChangedCallback | null>(null)
-const onChainChangedCallback = ref<OnChainChangedCallback | null>(null)
-
-export function useWallet(options: UseWalletOptions = { library: 'ethers' }) {
-  const { activate, deactivate } = useEthers()
-
-  function clear() {
-    provider.value = null
-    status.value = 'none'
-    walletName.value = 'none'
-    error.value = ''
-
-    onDisconnectCallback.value = null
-    onAccountsChangedCallback.value = null
-    onChainChangedCallback.value = null
-
-    options.library === 'ethers' && deactivate()
+    if (options.useEthers) {
+      const { deactivate } = useEthers()
+      deactivate()
+    }
   }
 
-  async function connect(
-    _walletName: WalletName,
-    infuraAPI?: string,
-    appName?: string,
-  ) {
-    let _provider: WalletProvider | null = null
+  async function reactivate() {
+    const { activate } = useEthers()
+    wallet.status = 'loading'
+    try {
+      await activate(wallet.provider!)
+    } catch (err: any) {
+      clearWallet()
+      wallet.error = err.message
+      throw new Error(err)
+    }
+    wallet.status = 'connected'
+  }
 
-    error.value = ''
+  async function connectWith(connector: Connector) {
+    wallet.status = 'connecting'
+    wallet.error = ''
 
     try {
-      status.value = 'connecting'
-      switch (_walletName) {
-        case 'metamask':
-          _provider = (await Metamask.connect()) as MetaMaskProvider
-          if (!_provider.isConnected)
-            throw new Error('metamask is not connected')
-          break
-        case 'walletconnect':
-          if (!infuraAPI)
-            throw new Error(
-              'You should provide infuraAPI for connecting WalletConnect',
-            )
-          _provider = (await Walletconnect.connect(
-            infuraAPI,
-          )) as WalletConnectProvider
-          if (!_provider.connected)
-            throw new Error('walletconnect is not connected')
-          break
-        case 'walletlink':
-          if (!infuraAPI)
-            throw new Error(
-              'You should provide infuraAPI for connecting WalletLink',
-            )
-          if (!appName)
-            throw new Error(
-              'You should provide an app name for connecting WalletLink',
-            )
-          _provider = (await Walletlink.connect(
-            infuraAPI,
-            appName,
-          )) as WalletLinkProvider
-          if (!_provider.isConnected)
-            throw new Error('walletlink is not connected')
-          break
-        default:
-          throw new Error('Connect Error: wallet name not found')
+      if (!connector) throw new Error('Incorrect connector argument')
+
+      const { provider } = await connector.connect()
+
+      wallet.connector = markRaw(connector)
+      wallet.provider = markRaw(provider)
+
+      if (options.useEthers) {
+        wallet.status = 'loading'
+        const { activate } = useEthers()
+        await activate(wallet.provider!)
       }
     } catch (err: any) {
-      clear()
-      error.value = `Failed to connect: ${err.message}`
-      return
+      clearWallet()
+      wallet.error = err.message
+      throw new Error(err)
     }
 
-    provider.value = markRaw(_provider)
-    walletName.value = _walletName
-    status.value = 'connected'
+    wallet.status = 'connected'
 
-    // EIP-1193 subscriber
-    subscribeDisconnect()
-    subscribeAccountsChanged()
-    subscribeChainChanged()
+    // subscribe events
+    if (wallet.connector) {
+      wallet.connector.onDisconnect((...args: any[]) => {
+        callbacks.onDisconnectCallback &&
+          callbacks.onDisconnectCallback!(...args)
+        /**
+         * Exclude metamask to disconnect on this event
+         * @note MetaMask disconnect event would be triggered when the specific chain changed (like L2 network),
+         * so if we disconnect in this case, it would fail to reactivate ethers when chain changed
+         * because the wallet state was cleared.
+         * @todo better solution
+         */
+        if (wallet.connector?.name === 'metaMask') {
+          return
+        }
+        disconnect()
+      })
+    }
 
-    try {
-      options.library === 'ethers' &&
-        (await activate(provider.value as WalletProvider))
-    } catch (err: any) {
-      clear()
-      error.value = `Failed to load data: ${err.message}`
-      return
+    if (wallet.connector) {
+      wallet.connector.onAccountsChanged(async (accounts: string[]) => {
+        callbacks.onAccountsChangedCallback &&
+          callbacks.onAccountsChangedCallback!(accounts)
+        if (options.useEthers) {
+          await reactivate()
+        }
+      })
+    }
+
+    if (wallet.connector) {
+      wallet.connector.onChainChanged(async (chainId: number) => {
+        callbacks.onChainChangedCallback &&
+          callbacks.onChainChangedCallback!(chainId)
+        if (options.useEthers) {
+          await reactivate()
+        }
+      })
     }
   }
 
   async function disconnect() {
-    // note: metamask can't disconnect by provider
-    if (walletName.value === 'walletconnect') {
+    if (wallet.connector) {
       try {
-        await (provider.value as WalletConnectProvider).disconnect()
+        await wallet.connector.disconnect()
       } catch (err: any) {
-        console.error(err.message)
+        throw new Error(err)
       }
     }
-    clear()
-    onDisconnectCallback.value &&
-      onDisconnectCallback.value('Disconnect from Dapp')
+    clearWallet()
   }
-
-  // ========================= EIP-1193 subscriber =========================
-
-  function subscribeDisconnect() {
-    switch (walletName.value) {
-      case 'metamask':
-        ;(provider.value as MetaMaskProvider).on(
-          'disconnect',
-          (err: MetaMaskProviderRpcError) => {
-            clear()
-            onDisconnectCallback.value &&
-              onDisconnectCallback.value(err.message)
-          },
-        )
-        break
-      case 'walletconnect':
-        // Q: why it trigger twice when user click disconnect?
-        // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/0871582be273f8c21bb1351315d649ea47ee70b7/packages/providers/web3-provider/src/index.ts#L277
-        ;(provider.value as WalletConnectProvider).on(
-          'disconnect',
-          (code: number, reason: string) => {
-            clear()
-            onDisconnectCallback.value &&
-              onDisconnectCallback.value(`${code}: ${reason}`)
-          },
-        )
-        break
-      case 'walletlink':
-        ;(provider.value as WalletLinkProvider).on(
-          'disconnect',
-          (err: WalletLinkProviderRpcError) => {
-            clear()
-            onDisconnectCallback.value &&
-              onDisconnectCallback.value(err.message)
-          },
-        )
-        break
-    }
-  }
-
-  function subscribeAccountsChanged() {
-    switch (walletName.value) {
-      case 'metamask':
-        ;(provider.value as MetaMaskProvider).on(
-          'accountsChanged',
-          async (accounts: string[]) => {
-            try {
-              options.library === 'ethers' &&
-                (await activate(provider.value as WalletProvider))
-              onAccountsChangedCallback.value &&
-                onAccountsChangedCallback.value(accounts)
-            } catch (err: any) {
-              error.value = `Failed when changing account: ${err.message}`
-              return
-            }
-          },
-        )
-        break
-      case 'walletconnect':
-        ;(provider.value as WalletConnectProvider).on(
-          'accountsChanged',
-          async (accounts: string[]) => {
-            try {
-              options.library === 'ethers' &&
-                (await activate(provider.value as WalletProvider))
-              onAccountsChangedCallback.value &&
-                onAccountsChangedCallback.value(accounts)
-            } catch (err: any) {
-              error.value = `Failed when changing account: ${err.message}`
-              return
-            }
-          },
-        )
-        break
-      case 'walletlink':
-        ;(provider.value as WalletLinkProvider).on(
-          'accountsChanged',
-          async (accounts: string[]) => {
-            try {
-              options.library === 'ethers' &&
-                (await activate(provider.value as WalletProvider))
-              onAccountsChangedCallback.value &&
-                onAccountsChangedCallback.value(accounts)
-            } catch (err: any) {
-              error.value = `Failed when changing account: ${err.message}`
-              return
-            }
-          },
-        )
-        break
-    }
-  }
-
-  function subscribeChainChanged() {
-    switch (walletName.value) {
-      case 'metamask':
-        ;(provider.value as MetaMaskProvider).on(
-          'chainChanged',
-          async (hexChainId: string) => {
-            // Changing network might lead to disconnect so the provider would be deleted.
-            if (!provider.value) {
-              error.value = `Failed when changing chain: missing provider`
-              return
-            }
-
-            try {
-              const chainId = parseInt(hexChainId, 16)
-              options.library === 'ethers' &&
-                (await activate(provider.value as WalletProvider))
-              onChainChangedCallback.value &&
-                onChainChangedCallback.value(chainId)
-            } catch (err: any) {
-              error.value = `Failed when changing chain: ${err.message}`
-              return
-            }
-          },
-        )
-        break
-      case 'walletconnect':
-        ;(provider.value as WalletConnectProvider).on(
-          'chainChanged',
-          async (chainId: number) => {
-            // Changing network might lead to disconnect so the provider would be deleted.
-            if (!provider.value) {
-              error.value = `Failed when changing chain: missing provider`
-              return
-            }
-
-            try {
-              options.library === 'ethers' &&
-                (await activate(provider.value as WalletProvider))
-              onChainChangedCallback.value &&
-                onChainChangedCallback.value(chainId)
-            } catch (err: any) {
-              error.value = `Failed when changing chain: ${err.message}`
-              return
-            }
-          },
-        )
-        break
-      case 'walletlink':
-        ;(provider.value as WalletLinkProvider).on(
-          'chainChanged',
-          async (hexChainId: string) => {
-            // Changing network might lead to disconnect so the provider would be deleted.
-            if (!provider.value) {
-              error.value = `Failed when changing chain: missing provider`
-              return
-            }
-
-            try {
-              const chainId = parseInt(hexChainId, 16)
-              options.library === 'ethers' &&
-                (await activate(provider.value as WalletProvider))
-              onChainChangedCallback.value &&
-                onChainChangedCallback.value(chainId)
-            } catch (err: any) {
-              error.value = `Failed when changing chain: ${err.message}`
-              return
-            }
-          },
-        )
-        break
-    }
-  }
-
-  // ========================= callback =========================
 
   function onDisconnect(callback: OnDisconnectCallback) {
-    onDisconnectCallback.value = callback
+    callbacks.onDisconnectCallback = callback
   }
 
   function onAccountsChanged(callback: OnAccountsChangedCallback) {
-    onAccountsChangedCallback.value = callback
+    callbacks.onAccountsChangedCallback = callback
   }
 
   function onChainChanged(callback: OnChainChangedCallback) {
-    onChainChangedCallback.value = callback
+    callbacks.onChainChangedCallback = callback
   }
 
-  // ========================= getters =========================
-
-  const isConnected = computed(() => {
-    if (status.value === 'connected') return true
-    else return false
-  })
-
   return {
-    // state
-    provider: provider as Ref<WalletProvider | null>,
-    status,
-    walletName,
-    error,
+    wallet,
 
-    // getters
-    isConnected,
-
-    // methods
-    connect,
+    connectWith,
     disconnect,
 
-    // callback
     onDisconnect,
     onAccountsChanged,
     onChainChanged,

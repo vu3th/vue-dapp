@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.1 (2022-5-26)
+
+#### Breaking changes
+
+- Refactor architecture with Connector classes
+- Upgrade Coinbase Wallet dependencies, close #42
+- Change `<vdapp-board>` into `<vd-board>`
+- Support custom provider options, close #39, #23
+- Support dark mode board
+
 ## v0.4.9-beta.0 (2022-3-8)
 
 #### Features

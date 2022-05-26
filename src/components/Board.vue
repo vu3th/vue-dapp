@@ -1,169 +1,102 @@
 <script lang="ts">
-import { defineComponent, inject, onMounted, ref } from 'vue'
+import { computed, defineComponent } from 'vue'
 import Modal from './Modal.vue'
+import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
-import WalletLinkIcon from './logos/WalletLink.vue'
+import CoinbaseWallet from './logos/CoinbaseWallet.vue'
 import { useBoard } from '../composables/useBoard'
-import { useWallet, WalletName } from '../composables/useWallet'
-import { Metamask } from '../wallets/metamask'
-import { Walletconnect } from '../wallets/walletconnect'
-import { Walletlink } from '../wallets/walletlink'
+import { useWallet } from '../composables/useWallet'
+import { Connector } from '../wallets'
 
 export default defineComponent({
   components: {
     Modal,
+    Loader,
     MetaMaskIcon,
     WalletConnectIcon,
-    WalletLinkIcon,
+    CoinbaseWallet,
   },
-  inject: ['infuraId'],
-  setup() {
+  props: {
+    connectors: {
+      type: Array,
+      required: true,
+      default: [],
+    },
+    dark: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  setup(props) {
     const { boardOpen, close } = useBoard()
-    const { connect, status } = useWallet()
+    const { connectWith, wallet } = useWallet()
 
-    const metamaskDisabled = ref(true)
-    const walletconnectDisabled = ref(true)
-    const walletlinkDisabled = ref(true)
-    const infuraId = inject('infuraId') as string
-    const appName = inject('appName') as string
-    const appUrl = inject('appUrl') as string
+    const walletItemClass = computed(() =>
+      props.dark ? 'wallet-item--dark' : 'wallet-item',
+    )
 
-    // check metamask and walletconnect available
-    onMounted(async () => {
-      if (await Metamask.check()) {
-        metamaskDisabled.value = false
-      }
-      if (infuraId && (await Walletconnect.check())) {
-        walletconnectDisabled.value = false
-      }
-      if (infuraId && appName && (await Walletlink.check())) {
-        walletlinkDisabled.value = false
-      }
-    })
-
-    const loadingOpen = ref(false)
-    const openLoading = () => {
-      loadingOpen.value = true
-    }
-    const closeLoading = () => {
-      loadingOpen.value = false
-    }
-
-    const connectWallet = async (wallet: WalletName) => {
-      try {
-        switch (wallet) {
-          case 'metamask':
-            await connectMetamask()
-            break
-          case 'walletconnect':
-            await connectWalletconnect()
-            break
-          case 'walletlink':
-            await connectWalletlink()
-            break
-        }
-      } catch (e: any) {
-        console.error(e.message)
-      } finally {
-        closeLoading()
-      }
-    }
-
-    const connectMetamask = async () => {
-      if (metamaskDisabled.value && appUrl) {
-        window.open(`https://metamask.app.link/dapp/${appUrl}`, '_blank')
-        return
-      } else if (metamaskDisabled.value) return
-      // Prevent from closing the board while clicking disabled wallet
-      close()
-      openLoading()
-      await connect('metamask')
-    }
-
-    const connectWalletconnect = async () => {
-      if (walletconnectDisabled.value) return
-      // Prevent from closing the board while clicking disabled wallet
-      close()
-      openLoading()
-      await connect('walletconnect', infuraId)
-    }
-
-    const connectWalletlink = async () => {
-      if (walletlinkDisabled.value) return
-      // Prevent from closing the board while clicking disabled wallet
-      close()
-      openLoading()
-      await connect('walletlink', infuraId, appName)
-    }
+    const connectors = props.connectors as Connector[]
 
     return {
-      status,
       boardOpen,
-      metamaskDisabled,
-      walletconnectDisabled,
-      walletlinkDisabled,
-      appUrl,
+      wallet,
+      connectors,
+      walletItemClass,
+      connectWith,
       close,
-      connectWallet,
-
-      // pending modal
-      loadingOpen,
-      openLoading,
-      closeLoading,
     }
   },
 })
 </script>
 
 <template>
-  <Modal :modalOpen="boardOpen" @close="close">
+  <Modal :modalOpen="boardOpen" @close="close" :dark="dark">
     <div v-click-outside="close">
-      <div
-        @click="connectWallet('metamask')"
-        class="wallet-item"
-        :class="metamaskDisabled && !appUrl ? 'wallet-disabled' : ''"
-      >
-        <div class="item">
-          <MetaMaskIcon class="logo" />
-          <div>MetaMask</div>
-        </div>
-      </div>
-      <div class="line"></div>
-      <div
-        @click="connectWallet('walletconnect')"
-        class="wallet-item"
-        :class="walletconnectDisabled ? 'wallet-disabled' : ''"
-      >
-        <div class="item">
-          <WalletConnectIcon class="logo" />
-          <div>WalletConnect</div>
-        </div>
-      </div>
+      <div v-for="(connector, i) in connectors" :key="connector.name">
+        <div
+          :class="walletItemClass"
+          @click="connectWith(connector) && close()"
+        >
+          <div class="item">
+            <MetaMaskIcon v-if="connector.name === 'metaMask'" class="logo" />
+            <WalletConnectIcon
+              v-if="connector.name === 'walletConnect'"
+              class="logo"
+            />
+            <CoinbaseWallet
+              v-if="connector.name === 'coinbaseWallet'"
+              class="logo"
+            />
 
-      <div class="line"></div>
-      <div
-        @click="connectWallet('walletlink')"
-        class="wallet-item"
-        :class="walletlinkDisabled ? 'wallet-disabled' : ''"
-      >
-        <div class="item">
-          <WalletLinkIcon class="logo" />
-          <div>Coinbase Wallet</div>
+            <div v-if="connector.name === 'metaMask'">MeteMask</div>
+            <div v-if="connector.name === 'walletConnect'">WalletConnect</div>
+            <div v-if="connector.name === 'coinbaseWallet'">
+              Coinbase Wallet
+            </div>
+          </div>
         </div>
+        <div
+          v-if="i !== connectors.length - 1"
+          :class="dark ? 'line--dark' : 'line'"
+        ></div>
       </div>
     </div>
   </Modal>
 
-  <Modal :modalOpen="loadingOpen">
-    <div class="loading-modal" v-if="status === 'connecting'">
-      <p>Pending Call Request</p>
-      <p>Approve or reject request using your wallet</p>
-    </div>
+  <slot name="connecting">
+    <Modal :modalOpen="wallet.status === 'connecting'" :dark="dark">
+      <div class="loading-modal" v-if="wallet.status === 'connecting'">
+        <p>Connecting...</p>
+        <p class="mt-4">Approve or reject request using your wallet</p>
+      </div>
+    </Modal>
+  </slot>
 
-    <!-- loading between connected to isActivated -->
-    <div v-if="status === 'connected'"></div>
-  </Modal>
+  <slot name="loading">
+    <Modal :modalOpen="wallet.status === 'loading'" :dark="dark"></Modal>
+  </slot>
 </template>
 
 <style scoped>
@@ -180,11 +113,32 @@ export default defineComponent({
 }
 
 .wallet-item:hover {
-  background-color: rgba(243, 244, 246, 0.664);
+  background-color: rgba(236, 237, 239, 0.737);
+}
+
+/* dark mode */
+.wallet-item--dark {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  padding-bottom: 0.6rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin: 0.5rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  color: rgb(199, 199, 199);
+}
+
+.wallet-item--dark:hover {
+  background-color: #101a20;
 }
 
 @media (min-width: 640px) {
   .wallet-item {
+    width: 24rem;
+  }
+  .wallet-item--dark {
     width: 24rem;
   }
 }
@@ -204,7 +158,14 @@ export default defineComponent({
 }
 
 .line {
-  color: #e5e7eb;
+  border-color: #e5e7eb;
+  border-width: 0px;
+  border-bottom-width: 1px;
+  border-style: solid;
+}
+
+.line--dark {
+  border-color: rgba(195, 195, 195, 0.14);
   border-width: 0px;
   border-bottom-width: 1px;
   border-style: solid;
@@ -220,7 +181,7 @@ export default defineComponent({
 }
 
 .wallet-disabled:hover {
-  background-color: rgba(255, 255, 255, 0.623);
+  background-color: rgba(255, 255, 255, 0);
   cursor: default;
 }
 

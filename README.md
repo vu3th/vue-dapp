@@ -8,86 +8,70 @@
 
 # Vue Dapp
 
-- [Documentation (v0.4.9-beta.0)](https://vue-dapp-docs.netlify.app/)
-
-## Features
-
-- Written in **TypeScript** for safe and efficient development.
-- Demo written and bundled using [Vite](https://github.com/vitejs/vite)
-- [Ethers.js](https://docs.ethers.io/v5/) for interacting with Ethereum.
-- [Multicall2](https://github.com/makerdao/multicall) for calling multiple constant function into one request.
+- [Documentation (v0.5.x)](https://vue-dapp-docs.netlify.app/)
+- [Migrate to v0.5.x](https://vue-dapp-docs.netlify.app/migration)
 
 ## Installation
 
-```sh
-yarn add vue-dapp ethers
+```bash
+yarn add ethers vue-dapp
 ```
 
 ## Quick Start
 
 - If you're using [Vite](https://vitejs.dev/), please check out [Using Vite](https://vue-dapp-docs.netlify.app/using-vite.html) for more details on environment settings.
-- Use [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) for a fast startup.
+- Take a look at [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) for a fast startup.
 
-Step 1. Adding plugin to your app:
+Step 1. add plugin to your app:
 
 ```javascript
 import { VueDapp } from 'vue-dapp'
 
 const app = createApp(App)
 
-app.use(VueDapp, {
-  infuraId: '...', // optional: for enabling WalletConnect and/or WalletLink
-  appName: '...', // optional: for enabling WalletLink
-})
+app.use(VueDapp)
 ...
 ```
 
-Step 2. Adding global component `<vdapp-board />` to your App.vue:
+Step 2. add `<vd-board />` component to your `App.vue`:
 
 ```vue
-<vdapp-board />
+<vd-board :connectors="connectors" dark />
 ```
 
-Step 3. Using composable functions in your script:
+Step 3. construct your connectors and use composable functions in your scripts:
 
 ```js
-import {
-  useBoard,
-  useEthers,
-  useWallet,
-  displayChainName,
-  displayEther,
-  shortenAddress,
-} from 'vue-dapp'
+import { MetaMaskConnector, WalletConnectConnector, CoinbaseWalletConnector } from 'vue-dapp'
 
-const { open } = useBoard()
-const { status, disconnect, error } = useWallet()
-const { address, balance, chainId, isActivated } = useEthers()
+const infuraId = '<your-infura-id>'
+
+const connectors = [
+  new MetaMaskConnector({
+    appUrl: 'http://localhost:3000',
+  }),
+  new WalletConnectConnector({
+    qrcode: true,
+    rpc: {
+      1: `https://mainnet.infura.io/v3/${infuraId}`,
+      4: `https://rinkeby.infura.io/v3/${infuraId}`,
+    },
+  }),
+  new CoinbaseWalletConnector({
+    appName: 'Vue Dapp',
+    jsonRpcUrl: `https://mainnet.infura.io/v3/${infuraId}`,
+  }),
+]
 ```
 
-## Contributing
+For more details, see https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/App.vue
 
-Thanks for being interested in contributing to this project!
+## Sponsor
 
-Just submit your changes via pull request and I will review them before merging.
-
-If you are making a fix on the project, you can use the `main` branch and send a pull request.
-
-If you are adding a new features, please create a new branch with a name describing your feature (`my-new-feature`), push to your branch and then submit a pull request.
-
-## Inspiration
-
-- [useDapp: Framework for rapid Dapp development.](https://github.com/EthWorks/useDApp)
-- [vue-tailwind-ethereum-template](https://github.com/ScopeLift/vue-tailwind-ethereum-template)
-- [web3Modal: A single Web3 / Ethereum provider solution for all Wallets](https://github.com/Web3Modal/web3modal)
-- [vue3-eth: Vue3 library for building Dapps in an ES module environment](https://github.com/samatechtw/vue3-eth)
+Gitcoin Grants: https://gitcoin.co/grants/3987/vue-dapp
 
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
 
 Copyright (c) 2021-present, Johnson Chen
-
-```
-
-```

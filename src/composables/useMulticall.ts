@@ -1,4 +1,4 @@
-import { ref, markRaw } from 'vue'
+import { ref } from 'vue'
 import { Contract, ContractInterface } from '@ethersproject/contracts'
 import { MULTICALL2_ABI, MULTICALL2_ADDRESS } from '../constants'
 import { Multicall2 } from '../types/multicall2/Multicall2'
@@ -16,9 +16,11 @@ export function useMulticall(provider: Web3Provider | JsonRpcProvider) {
   const results = ref<Result[]>([])
   const blockNumber = ref(0)
 
-  const multicall = markRaw(
-    new Contract(MULTICALL2_ADDRESS, MULTICALL2_ABI, provider) as Multicall2,
-  )
+  const multicall = new Contract(
+    MULTICALL2_ADDRESS,
+    MULTICALL2_ABI,
+    provider,
+  ) as Multicall2
 
   interface Call {
     target: string
