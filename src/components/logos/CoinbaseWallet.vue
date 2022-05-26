@@ -1,5 +1,4 @@
 <template>
-  <!-- source: https://docs.cloud.coinbase.com/wallet-sdk/docs/ux-tips -->
   <svg
     width="1024"
     height="1024"
