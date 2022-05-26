@@ -28,11 +28,6 @@ export default defineComponent({
       required: false,
       default: false,
     },
-    mute: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
   },
   setup(props) {
     const { boardOpen, close } = useBoard()

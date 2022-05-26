@@ -18,6 +18,10 @@ module.exports = {
     repo: 'chnejohnson/vue-dapp',
     nav: [
       {
+        text: 'Releases',
+        link: 'https://github.com/chnejohnson/vue-dapp/blob/main/CHANGELOG.md',
+      },
+      {
         text: 'Demo',
         link: 'https://vue-dapp.netlify.app/',
       },

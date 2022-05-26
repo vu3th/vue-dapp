@@ -2,7 +2,7 @@
 
 ## Use cases
 - [splitter - Create a contract for your allocation of earnings.](https://github.com/chnejohnson/splitter)
-
+- [macier - An interface for the Minimal Anti-Collusion Infrastructure (MACI)](https://github.com/chnejohnson/macier)
 
 ## Inspiration
 - [useDapp: Framework for rapid Dapp development.](https://github.com/EthWorks/useDApp)
