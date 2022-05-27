@@ -39,8 +39,8 @@ module.exports = {
             link: '/migration',
           },
           {
-            text: 'Using Vite',
-            link: '/using-vite',
+            text: 'Environment',
+            link: '/environment',
           },
           {
             text: 'Contributing',
