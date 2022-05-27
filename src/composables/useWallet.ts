@@ -70,7 +70,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
         await activate(wallet.provider!)
       }
     } catch (err: any) {
-      clearWallet()
+      await disconnect() // will also clearWallet()
       wallet.error = err.message
       throw new Error(err)
     }
@@ -122,6 +122,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
       try {
         await wallet.connector.disconnect()
       } catch (err: any) {
+        clearWallet()
         throw new Error(err)
       }
     }

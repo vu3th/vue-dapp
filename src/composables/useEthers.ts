@@ -4,7 +4,7 @@ import {
   Network,
   ExternalProvider,
 } from '@ethersproject/providers'
-import { Signer } from 'ethers'
+import { BigNumber, Signer } from 'ethers'
 
 export type { Web3Provider, Signer, Network }
 
@@ -37,9 +37,37 @@ async function activate(externalProvider: ExternalProvider) {
 
   const _provider = new Web3Provider(externalProvider)
   const _signer = _provider.getSigner()
-  const _network = await _provider.getNetwork()
-  const _address = await _signer.getAddress()
-  const _balance = await _signer.getBalance()
+
+  /**
+   * @issue #27
+   * @dev Catch error if walletConnect not connected because of invalid infura id.
+   * if you provide an invalid infura id, you can still open the qrcode but can't connect to wallet.
+   * WalletConnect will throw error and keep polling until timeout as follows.
+   */
+  let _network = null
+  let _address = ''
+  let _balance = BigNumber.from(0)
+  const getData = (timeout: number = 5000) => {
+    return new Promise(async (resolve: (val: any[]) => void, reject) => {
+      try {
+        setTimeout(() => {
+          reject('Failed to activate ethers: timeout')
+        }, timeout)
+        _network = await _provider.getNetwork()
+        _address = await _signer.getAddress()
+        _balance = await _signer.getBalance()
+        resolve([_network, _address, _balance])
+      } catch (err: any) {
+        reject(err)
+      }
+    })
+  }
+
+  try {
+    await getData()
+  } catch (err: any) {
+    throw new Error(err)
+  }
 
   provider.value = markRaw(_provider)
   signer.value = markRaw(_signer)
