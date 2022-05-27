@@ -1,35 +1,35 @@
 # Changelog
 
-## v0.5.1 (2022-5-26)
+## v0.5.2 (2022-5-27)
+#### Fix
 
+- Catch error if walletConnect not connected because of invalid infura id, close #27
+
+## v0.5.1 (2022-5-26)
 #### Breaking changes
 
 - Refactor architecture with Connector classes
 - Upgrade Coinbase Wallet dependencies, close #42
-- Change `<vdapp-board>` into `<vd-board>`
+- Rename `<vdapp-board>` into `<vd-board>`
 - Support custom provider options, close #39, #23
 - Support dark mode board
 
 ## v0.4.9-beta.0 (2022-3-8)
-
 #### Features
 
 - Add Call hook, see PR #40 (Thanks to @kjpou1's contribution!)
 
 ## v0.4.8 (2022-3-3)
-
 #### Fix
 
 - Reduce multi provider, solved issue #30 #36. Thanks @Mulander-J for his contribution!
 
 ## v0.4.7 (2022-1-16)
-
 #### Fix
 
 - Add deep link to MetaMask wallet on mobile device, solved issue #26 (Thank @coxlr for his contribution!)
 
 ## v0.4.6 (2021-12-9)
-
 #### Features
 
 - New logo from issue #24 (Special thank @ramuta for his contribution!)
@@ -43,7 +43,6 @@
 - Add error handling for useWallet `subscribeChainChanged`
 
 ## v0.4.5 (2021-11-19)
-
 #### Fix
 
 - issue #20: Successfully serve with production build in the Vite environment.
@@ -53,7 +52,6 @@
 - Support Coinbase Wallet. (Special thank @coxlr for his contribution!)
 
 ## v0.4.4 (2021-11-12)
-
 #### Big Changes
 
 - Remove vue-demi, so only support Vue 3
@@ -69,7 +67,6 @@
 - fix some bugs
 
 ## v0.4.1 (2021-09-15)
-
 #### Big Changes
 
 - Change <board> with <vdapp-board>
@@ -87,7 +84,6 @@
 - improve UX
 
 ## v0.4.0 (2021-09-05)
-
 #### Big Changes
 
 - WalletConnect available
