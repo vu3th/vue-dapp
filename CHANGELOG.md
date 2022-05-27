@@ -1,12 +1,18 @@
 # Changelog
 
+## v0.5.2 (2022-5-27)
+
+#### Fix
+
+- Catch error if walletConnect not connected because of invalid infura id, close #27
+
 ## v0.5.1 (2022-5-26)
 
 #### Breaking changes
 
 - Refactor architecture with Connector classes
 - Upgrade Coinbase Wallet dependencies, close #42
-- Change `<vdapp-board>` into `<vd-board>`
+- Rename `<vdapp-board>` into `<vd-board>`
 - Support custom provider options, close #39, #23
 - Support dark mode board
 
