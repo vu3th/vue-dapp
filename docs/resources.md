@@ -1,4 +1,4 @@
-# References
+# Resources
 
 ## Use cases
 - [splitter - Create a contract for your allocation of earnings.](https://github.com/chnejohnson/splitter)

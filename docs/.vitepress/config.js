@@ -19,7 +19,7 @@ module.exports = {
     nav: [
       {
         text: 'Releases',
-        link: 'https://github.com/chnejohnson/vue-dapp/blob/main/CHANGELOG.md',
+        link: 'https://github.com/chnejohnson/vue-dapp/releases',
       },
       {
         text: 'Demo',
@@ -39,16 +39,16 @@ module.exports = {
             link: '/migration',
           },
           {
-            text: 'Environment',
-            link: '/environment',
+            text: 'Configurations',
+            link: '/configurations',
           },
           {
             text: 'Contributing',
             link: '/contributing',
           },
           {
-            text: 'References',
-            link: '/references',
+            text: 'Resources',
+            link: '/resources',
           },
         ],
       },
@@ -62,6 +62,14 @@ module.exports = {
           {
             text: 'Connectors',
             link: '/api/connectors',
+          },
+          {
+            text: 'Constants',
+            link: '/api/constants',
+          },
+          {
+            text: 'Directives',
+            link: '/api/directives',
           },
           {
             text: 'useWallet',
@@ -78,10 +86,6 @@ module.exports = {
           {
             text: 'useMulticall',
             link: '/api/use-multicall',
-          },
-          {
-            text: 'Directives',
-            link: '/api/directives',
           },
           {
             text: 'Utilities',

@@ -6,9 +6,8 @@
 yarn add ethers vue-dapp
 ```
 
+
 ## Quick Start
-- If you're using [Vue CLI](https://cli.vuejs.org/guide/creating-a-project.html), check out [vuecli + vue-dapp starter](https://github.com/chnejohnson/vue3-dapp-starter/tree/vuecli) or see [Vue CLI settings](/environment.html#vue-cli) for more details. 
-- If you're using [Vite](https://vitejs.dev/), check out [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter) or see [Vite settings](/environment.html#vite) for more details. 
 
 Step 1. Add plugin to your app:
 
@@ -62,4 +61,6 @@ setup() {
 }
 ```
 
-For the demo code, see https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/App.vue
+Take a look at [Configurations](/configurations) for more detials on Vue CLI, Vite, and Nuxt3 configurations.
+
+To see the demo code, check it out [here](https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/App.vue).

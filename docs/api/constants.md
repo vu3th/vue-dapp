@@ -17,7 +17,10 @@ export enum ChainId {
   Arbitrum = 42161,
   Polygon = 137,
 }
+```
 
+## CHAIN_NAMES
+```ts
 export const CHAIN_NAMES = {
   [ChainId.Hardhat]: 'Hardhat',
   [ChainId.Mainnet]: 'Mainnet',
@@ -30,8 +33,11 @@ export const CHAIN_NAMES = {
   [ChainId.Arbitrum]: 'Arbitrum',
   [ChainId.Polygon]: 'Polygon',
 }
+```
 
-// @todo add other network details. Refer to https://chainlist.org/
+## NETWORK_DETAILS
+
+```ts
 export const NETWORK_DETAILS = {
   [ChainId.Arbitrum]: {
     chainId: '0x' + ChainId.Arbitrum.toString(16),
