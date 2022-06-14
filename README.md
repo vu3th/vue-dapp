@@ -1,15 +1,25 @@
 <p align="center">
-  <a href="https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/assets/logo.png">
+   <a href="https://vue-dapp-docs.netlify.app/">
     <img src="https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/assets/logo.png" alt="VueDapp Brand" style="max-width:100%;" width="400">
   </a>
 </p>
+<h2 align="center">
+  Vue Dapp
+</h2>
+<p align="center">
+  Vue 3 library for building Dapps on Ethereum.
+</p>
 
-<br />
+<p align="center">
+  <a href="https://github.com/chnejohnson/vue-dapp">
+    <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="mit license"/>
+  </a>
+</p>
 
-# Vue Dapp
+## Documentation
 
-- [Documentation (v0.5.x)](https://vue-dapp-docs.netlify.app/)
-- [Migrate to v0.5.x](https://vue-dapp-docs.netlify.app/migration)
+- [Documentation](https://vue-dapp-docs.netlify.app/)
+- [Migrating to v0.5.x](https://vue-dapp-docs.netlify.app/migration)
 
 ## Installation
 
@@ -71,16 +81,14 @@ setup() {
 }
 ```
 
-Take a look at [Configurations](https://vue-dapp-docs.netlify.app/configurations) for more detials on Vue CLI, Vite, and Nuxt3 configurations.
+Take a look at [Configurations](https://vue-dapp-docs.netlify.app/configurations) for more informations about Vue CLI, Vite, and Nuxt3 configurations.
 
 To see the demo code, check it out [here](https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/App.vue).
 
-## Sponsor
+## Support 🙏
 
 Gitcoin Grants: https://gitcoin.co/grants/3987/vue-dapp
 
-## License
+## MIT license
 
-[MIT](https://opensource.org/licenses/MIT)
-
-Copyright (c) 2021-present, Johnson Chen
+Copyright (c) 2021-present, Johnson Chen ([@johnson_tzw](https://twitter.com/johnson_tzw))

@@ -192,7 +192,9 @@ export class MetaMaskConnector extends Connector<
       if ((<ProviderRpcError>err).code === 4902) {
         try {
           await this.addChain(
-            NETWORK_DETAILS[chainId as keyof typeof NETWORK_DETAILS],
+            NETWORK_DETAILS[
+              chainId as keyof typeof NETWORK_DETAILS
+            ] as AddEthereumChainParameter,
           )
         } catch (err: unknown) {
           if (this.#isUserRejectedRequestError(err)) {

@@ -79,7 +79,7 @@ Refer to [issue#20](https://github.com/chnejohnson/vue-dapp/issues/20)
 
 ## Nuxt3
 
-- Examples: [nuxt3 + vue-dapp starter](https://github.com/chnejohnson/vue3-dapp-starter/tree/nuxt3)
+- Example: [nuxt3 + vue-dapp starter](https://github.com/chnejohnson/vue3-dapp-starter/tree/nuxt3)
 
 If you're using [Nuxt3](https://v3.nuxtjs.org/), you should have following dependencies and `nuxt.config.js`.
 
