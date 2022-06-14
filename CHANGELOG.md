@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.5.3 (2022-6-14)
+
+#### Feature
+- Add networks, see #50 (Thanks to @re2005's contribution!)
+
+#### Fix
+- Update MeteMask to MetaMask, close #49
+
 ## v0.5.2 (2022-5-27)
 #### Fix
 
@@ -69,8 +77,8 @@
 ## v0.4.1 (2021-09-15)
 #### Big Changes
 
-- Change <board> with <vdapp-board>
-- Register component <vdapp-modal>
+- Change \<board> with \<vdapp-board>
+- Register component \<vdapp-modal>
 
 #### Features
 
