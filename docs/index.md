@@ -61,6 +61,6 @@ setup() {
 }
 ```
 
-Take a look at [Configurations](/configurations) for more detials on Vue CLI, Vite, and Nuxt3 configurations.
+Take a look at [Configurations](https://vue-dapp-docs.netlify.app/configurations) for more informations about Vue CLI, Vite, and Nuxt3 configurations.
 
 To see the demo code, check it out [here](https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/App.vue).
