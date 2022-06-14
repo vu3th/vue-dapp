@@ -70,7 +70,7 @@ export default defineComponent({
               class="logo"
             />
 
-            <div v-if="connector.name === 'metaMask'">MeteMask</div>
+            <div v-if="connector.name === 'metaMask'">MetaMask</div>
             <div v-if="connector.name === 'walletConnect'">WalletConnect</div>
             <div v-if="connector.name === 'coinbaseWallet'">
               Coinbase Wallet
