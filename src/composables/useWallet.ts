@@ -43,13 +43,17 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     const { activate } = useEthers()
     wallet.status = 'loading'
     try {
-      await activate(wallet.provider!)
+      if (wallet.provider) {
+        await activate(wallet.provider!)
+        wallet.status = 'connected'
+      } else {
+        wallet.status = 'none'
+      }
     } catch (err: any) {
       clearWallet()
       wallet.error = err.message
       throw new Error(err)
     }
-    wallet.status = 'connected'
   }
 
   async function connectWith(connector: Connector) {
