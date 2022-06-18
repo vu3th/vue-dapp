@@ -5,6 +5,8 @@ import {
   ExternalProvider,
 } from '@ethersproject/providers'
 import { BigNumber, Signer } from 'ethers'
+import { NETWORK_DETAILS } from '../constants'
+import { AddEthereumChainParameter } from '../wallets'
 
 export type { Web3Provider, Signer, Network }
 
@@ -16,6 +18,10 @@ const address = ref('')
 const dnsAlias = ref('')
 const balance = ref<bigint>(BigInt(0))
 let updateBalanceInterval: any
+
+const availableNetworks = ref<{ [key: number]: AddEthereumChainParameter }>({
+  ...NETWORK_DETAILS,
+})
 
 const deactivate = () => {
   clearInterval(updateBalanceInterval)
@@ -136,6 +142,7 @@ export function useEthers() {
     address,
     dnsAlias,
     balance,
+    availableNetworks,
 
     // getters
     chainId,

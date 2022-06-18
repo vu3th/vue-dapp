@@ -1,5 +1,5 @@
 import { hexValue } from 'ethers/lib/utils'
-import { NETWORK_DETAILS } from '../constants'
+import type { NETWORK_DETAILS } from '../constants'
 import { Connector } from './connector'
 import {
   AddChainError,
@@ -8,6 +8,8 @@ import {
   UserRejectedRequestError,
   SwitchChainError,
 } from './errors'
+
+import { useEthers } from '../composables/useEthers'
 
 /**
  * MetaMask
@@ -182,6 +184,7 @@ export class MetaMaskConnector extends Connector<
   async switchChain(chainId: number) {
     if (!this.#provider) throw new ProviderNotFoundError()
     const id = hexValue(chainId)
+    const { availableNetworks } = useEthers() as any
 
     try {
       await this.#provider.request({
@@ -192,7 +195,7 @@ export class MetaMaskConnector extends Connector<
       if ((<ProviderRpcError>err).code === 4902) {
         try {
           await this.addChain(
-            NETWORK_DETAILS[
+            availableNetworks[
               chainId as keyof typeof NETWORK_DETAILS
             ] as AddEthereumChainParameter,
           )

@@ -103,10 +103,7 @@ export default defineComponent({
 .wallet-item {
   display: flex;
   justify-content: center;
-  padding-top: 1rem;
-  padding-bottom: 0.6rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 1rem 1rem 0.6rem;
   margin: 0.5rem;
   border-radius: 0.75rem;
   cursor: pointer;
@@ -120,10 +117,7 @@ export default defineComponent({
 .wallet-item--dark {
   display: flex;
   justify-content: center;
-  padding-top: 1rem;
-  padding-bottom: 0.6rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 1rem 1rem 0.6rem;
   margin: 0.5rem;
   border-radius: 0.75rem;
   cursor: pointer;

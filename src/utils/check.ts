@@ -1,4 +1,4 @@
-import { ChainId } from '../constants'
+import { useEthers } from '../composables/useEthers'
 
 export async function checkInfuraId(infuraId: string) {
   const res = await fetch(`https://mainnet.infura.io/v3/${infuraId}`, {
@@ -18,8 +18,6 @@ export async function checkInfuraId(infuraId: string) {
 }
 
 export function checkChainId(chainId: number) {
-  if (chainId in ChainId) {
-    return true
-  }
-  return false
+  const { availableNetworks } = useEthers()
+  return chainId in availableNetworks.value
 }

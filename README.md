@@ -38,14 +38,39 @@ app.use(VueDapp);
 app.mount("#app");
 ```
 
-Step 2. Add `<vd-board />` to your `App.vue` and add a button to open the board:
+Step 2. By default, VueDapp includes `Mainnet` and `Goerli` networks, but you can extend it to include other networks:
+
+```javascript
+app.use(VueDapp, {
+    80001: {
+        chainId: '0x' + 80001,
+        blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
+        chainName: 'Mumbai',
+        rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
+        nativeCurrency: {
+            name: 'Mumbai',
+            decimals: 18,
+            symbol: 'MATIC',
+        },
+    },
+    1336: {
+        ...
+    }
+});
+
+```
+For more examples please check:
+https://github.com/wagmi-dev/wagmi/blob/main/packages/core/src/constants/chains.ts
+
+
+Step 3. Add `<vd-board />` to your `App.vue` and add a button to open the board:
 
 ```vue
 <button @click="open">Connect Wallet</button>
 <vd-board :connectors="connectors" dark />
 ```
 
-Step 3. Construct your connectors and use composable functions in your scripts:
+Step 4. Construct your connectors and use composable functions in your scripts:
 
 ```js
 import {

@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import { formatEther, isAddress } from 'ethers/lib/utils'
-import { CHAIN_NAMES } from '../constants'
 import { checkChainId } from './check'
+import { useEthers } from '../composables'
 
 export function shortenAddress(address: string): string {
   if (isAddress(address)) {
@@ -20,5 +20,6 @@ export function displayChainName(chainId: number) {
     console.error('Error: Invalid chainId')
     return 'network not found'
   }
-  return CHAIN_NAMES[chainId as keyof typeof CHAIN_NAMES].toLowerCase()
+  const { availableNetworks } = useEthers()
+  return availableNetworks.value[chainId].chainName.toLowerCase()
 }
