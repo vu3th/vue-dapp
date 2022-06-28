@@ -75,6 +75,15 @@ async function activate(externalProvider: ExternalProvider) {
   address.value = _address
   balance.value = _balance.toBigInt()
 
+  const updateBalance = async (interval: number = 10000) => {
+    setInterval(async () => {
+      const _balance = await _signer.getBalance()
+      balance.value = _balance.toBigInt()
+    }, interval)
+  }
+
+  updateBalance()
+
   isActivated.value = true
 }
 
