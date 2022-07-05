@@ -13,6 +13,7 @@ const provider = ref<Web3Provider | null>(null)
 const signer = ref<Signer | null>(null)
 const network = ref<Network | null>(null)
 const address = ref('')
+const dnsAlias = ref('')
 const balance = ref<bigint>(BigInt(0))
 
 const deactivate = () => {
@@ -21,6 +22,7 @@ const deactivate = () => {
   signer.value = null
   network.value = null
   address.value = ''
+  dnsAlias.value = ''
   balance.value = BigInt(0)
 }
 
@@ -44,7 +46,7 @@ async function activate(externalProvider: ExternalProvider) {
    * if you provide an invalid infura id, you can still open the qrcode but can't connect to wallet.
    * WalletConnect will throw error and keep polling until timeout as follows.
    */
-  let _network = null
+  let _network: any = null
   let _address = ''
   let _balance = BigNumber.from(0)
   const getData = (timeout: number = 5000) => {
@@ -74,8 +76,39 @@ async function activate(externalProvider: ExternalProvider) {
   network.value = _network
   address.value = _address
   balance.value = _balance.toBigInt()
+  // Put it outside the timer as the lookup method can occasionally take longer than 5000ms
+  dnsAlias.value = await lookupDNS(_network?.chainId, _address)
 
   isActivated.value = true
+}
+
+/**
+ * @title Lookup DNS Alias such as ENS
+ * @returns string
+ */
+async function lookupDNS(
+  chainId: number,
+  address: string,
+  _provider?: Web3Provider,
+) {
+  try {
+    switch (chainId) {
+      /*  Ethereum  */
+      case 1:
+      case 3:
+      case 4:
+      case 5:
+        //  ens will return the primary domain set by user.
+        const _ens = await (_provider || provider.value)?.lookupAddress(address)
+        return _ens || ''
+      // case xxxx: //  Another or Custom DNS
+      default:
+        return ''
+    }
+  } catch (err) {
+    // console.log('look err', err)
+    return ''
+  }
 }
 
 export function useEthers() {
@@ -88,6 +121,7 @@ export function useEthers() {
     signer: signer as Ref<Signer | null>,
     network,
     address,
+    dnsAlias,
     balance,
 
     // getters
@@ -96,5 +130,6 @@ export function useEthers() {
     // methods
     activate,
     deactivate,
+    lookupDNS,
   }
 }
