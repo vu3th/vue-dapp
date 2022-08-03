@@ -75,11 +75,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
       }
     } catch (err: any) {
       await disconnect() // will also clearWallet()
-      if (err.message === 'Error: User closed modal') {
-        return console.log(err.message)
-      }
       wallet.error = err.message
-      throw new Error(err)
     }
 
     wallet.status = 'connected'
