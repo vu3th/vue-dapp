@@ -24,7 +24,7 @@ const infuraId = isDev
 const { open } = useBoard()
 const { wallet, disconnect, onDisconnect, onAccountsChanged, onChainChanged } =
   useWallet()
-const { address, balance, chainId, isActivated } = useEthers()
+const { address, balance, chainId, isActivated, dnsAlias } = useEthers()
 const { onActivated, onChanged } = useEthersHooks()
 
 onDisconnect(() => {
@@ -118,6 +118,7 @@ watch(selectedChainId, async (val, oldVal) => {
     <div v-if="isActivated" class="text-center">
       <p>{{ shortenAddress(address) }}</p>
       <p>{{ displayEther(balance) }} ETH</p>
+      <p>DNS alias(such as ENS): {{ dnsAlias || '-' }}</p>
 
       <!-- Network -->
       <Dropdown
