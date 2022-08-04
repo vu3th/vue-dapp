@@ -76,7 +76,6 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     } catch (err: any) {
       await disconnect() // will also clearWallet()
       wallet.error = err.message
-      throw new Error(err)
     }
 
     wallet.status = 'connected'
