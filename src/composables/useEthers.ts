@@ -15,8 +15,10 @@ const network = ref<Network | null>(null)
 const address = ref('')
 const dnsAlias = ref('')
 const balance = ref<bigint>(BigInt(0))
+let updateBalanceInterval: any
 
 const deactivate = () => {
+  clearInterval(updateBalanceInterval)
   isActivated.value = false
   provider.value = null
   signer.value = null
@@ -79,8 +81,9 @@ async function activate(externalProvider: ExternalProvider) {
   // Put it outside the timer as the lookup method can occasionally take longer than 5000ms
   dnsAlias.value = await lookupDNS(_network?.chainId, _address)
 
+  clearInterval(updateBalanceInterval)
   const updateBalance = async (interval: number = 10000) => {
-    setInterval(async () => {
+    updateBalanceInterval = setInterval(async () => {
       if (!signer.value) return
       const _balance = await signer?.value.getBalance()
       balance.value = _balance.toBigInt()
