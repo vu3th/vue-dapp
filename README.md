@@ -91,4 +91,4 @@ Gitcoin Grants: https://gitcoin.co/grants/3987/vue-dapp
 
 ## MIT license
 
-Copyright (c) 2021-present, Johnson Chen ([@johnson_tzw](https://twitter.com/johnson_tzw))
+Copyright (c) 2021-present, Johnson Chen ([@chnejohnson](https://twitter.com/chnejohnson))
