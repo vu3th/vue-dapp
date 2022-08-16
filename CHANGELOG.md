@@ -1,12 +1,15 @@
 # Changelog
 
+## v0.5.5 (2022-8-16)
+- Fix update wallet balance interval to avoid errors when changing networks #72 #74
+
 ## v0.5.4 (2022-8-7)
 
-- refactor: clean up chain names & urls PR#56
-- fix: issue #57 metamask network change PR#57
-- feat: autoupdate balance every 10 seconds PR#63
-- feat: add ens support PR#65
-- fix: avoid uncaught error when user closes the WalletConnect QR modal PR#69
+- refactor: clean up chain names & urls #56
+- fix: issue #57 metamask network change #57
+- feat: autoupdate balance every 10 seconds #63
+- feat: add ens support #65
+- fix: avoid uncaught error when user closes the WalletConnect QR modal #69
 
 Special thanks to @re2005 and @Mulander-J for their contributions!
 
