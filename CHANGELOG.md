@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.6 (2022-8-23)
+
+- feat: make chain list extendable #59 (by @re2005)
+
 ## v0.5.5 (2022-8-16)
 - Fix update wallet balance interval to avoid errors when changing networks #72 #74
 
