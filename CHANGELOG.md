@@ -1,3 +1,10 @@
+## [0.5.8](https://github.com/chnejohnson/vue-dapp/compare/v0.5.7...v0.5.8) (2022-08-24)
+
+
+### Bug Fixes
+
+* wallet status error, resolve [#77](https://github.com/chnejohnson/vue-dapp/issues/77) ([b675187](https://github.com/chnejohnson/vue-dapp/commit/b675187ea9b120a4ed9e1bd86a883711a695b52e))
+
 # Changelog
 
 ## v0.5.7 (2022-8-24)
