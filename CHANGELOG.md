@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.7 (2022-8-24)
+- fix: metamask can't clone reactive object
+
 ## v0.5.6 (2022-8-23)
 
 - feat: make chain list extendable #59 (by @re2005)
