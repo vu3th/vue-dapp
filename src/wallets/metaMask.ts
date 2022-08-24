@@ -185,6 +185,9 @@ export class MetaMaskConnector extends Connector<
     if (!this.#provider) throw new ProviderNotFoundError()
     const id = hexValue(chainId)
     const { availableNetworks } = useEthers() as any
+    const _availableNetworks = JSON.parse(
+      JSON.stringify(availableNetworks.value),
+    )
 
     try {
       await this.#provider.request({
@@ -195,7 +198,7 @@ export class MetaMaskConnector extends Connector<
       if ((<ProviderRpcError>err).code === 4902) {
         try {
           await this.addChain(
-            availableNetworks[
+            _availableNetworks[
               chainId as keyof typeof NETWORK_DETAILS
             ] as AddEthereumChainParameter,
           )

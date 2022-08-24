@@ -43,7 +43,7 @@ Step 2. By default, VueDapp includes `Mainnet` and `Goerli` networks, but you ca
 ```javascript
 app.use(VueDapp, {
     80001: {
-        chainId: '0x' + 80001,
+        chainId: ethers.utils.hexValue(80001),
         blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
         chainName: 'Mumbai',
         rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
