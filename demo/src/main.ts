@@ -19,6 +19,17 @@ app.use(VueDapp, {
       symbol: 'MATIC',
     },
   },
+  42161: {
+    chainId: ethers.utils.hexValue(42161),
+    blockExplorerUrls: ['https://arbiscan.io'],
+    chainName: 'Arbitrum One',
+    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+    nativeCurrency: {
+      name: 'Arbitrum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+  },
 })
 
 app.mount('#app')
