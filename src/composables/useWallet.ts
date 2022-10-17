@@ -1,6 +1,6 @@
 import { reactive, markRaw } from 'vue'
 import { providers } from 'ethers'
-import { Connector } from '../wallets'
+import { Connector, MetaMaskConnector } from '../wallets'
 import { useEthers } from './useEthers'
 
 export type ConnectionStatus = 'none' | 'connecting' | 'loading' | 'connected'
@@ -133,6 +133,13 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     clearWallet()
   }
 
+  async function autoConnect(metaMaskConnector: MetaMaskConnector) {
+    const isConnected = await MetaMaskConnector.checkConnection()
+    if (isConnected) {
+      await connectWith(metaMaskConnector)
+    }
+  }
+
   function onDisconnect(callback: OnDisconnectCallback) {
     callbacks.onDisconnectCallback = callback
   }
@@ -150,6 +157,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
 
     connectWith,
     disconnect,
+    autoConnect,
 
     onDisconnect,
     onAccountsChanged,
