@@ -1,3 +1,10 @@
+## [0.5.9](https://github.com/chnejohnson/vue-dapp/compare/v0.5.8...v0.5.9) (2022-10-21)
+
+
+### Bug Fixes
+
+* watch isActivated for the onActivatedHook ([dcf0c9a](https://github.com/chnejohnson/vue-dapp/commit/dcf0c9a2f83013a47c149d739742fa05ecbbbde2))
+
 ## [0.5.8](https://github.com/chnejohnson/vue-dapp/compare/v0.5.7...v0.5.8) (2022-08-24)
 
 
