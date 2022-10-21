@@ -8,7 +8,6 @@ import {
   displayChainName,
   displayEther,
   shortenAddress,
-  ChainId,
   useEthersHooks,
   MetaMaskConnector,
   WalletConnectConnector,
