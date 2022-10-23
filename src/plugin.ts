@@ -6,11 +6,21 @@ import { AddEthereumChainParameter } from './wallets'
 import { useEthers } from './composables/useEthers'
 import { NETWORK_DETAILS } from './constants'
 
-export const VueDapp: Plugin = {
-  install(app, options: { [key: number]: AddEthereumChainParameter }) {
-    const { availableNetworks } = useEthers()
-    availableNetworks.value = { ...NETWORK_DETAILS, ...options }
+type Options = {
+  autoConnect: boolean
+  networks: {
+    [key: number]: AddEthereumChainParameter
+  }
+}
 
+export const VueDapp: Plugin = {
+  install(app, options: Options) {
+    if (options.networks) {
+      const { availableNetworks } = useEthers()
+      availableNetworks.value = { ...NETWORK_DETAILS, ...options.networks }
+    }
+
+    app.provide('autoConnect', options.autoConnect || false)
     app.directive('click-outside', clickOutside)
     app.component('vd-board', Board)
     app.component('vd-modal', Modal)

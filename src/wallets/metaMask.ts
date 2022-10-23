@@ -24,6 +24,7 @@ export interface MetaMaskProvider extends MetaMaskEthereumProvider {
     method: string
     params?: any[] | undefined
   }) => Promise<any>
+  selectedAddress: string
 }
 
 /**
@@ -67,6 +68,16 @@ export class MetaMaskConnector extends Connector<
 
   constructor(options: MetaMaskConnectorOptions = {}) {
     super(options)
+  }
+
+  static async checkConnection() {
+    if (typeof window !== 'undefined' && !!window.ethereum) {
+      const provider = window.ethereum as MetaMaskProvider
+      if (provider.selectedAddress) {
+        return true
+      }
+    }
+    return false
   }
 
   async connect() {

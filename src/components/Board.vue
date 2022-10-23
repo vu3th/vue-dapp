@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, inject, onMounted } from 'vue'
 import Modal from './Modal.vue'
 import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
@@ -7,7 +7,7 @@ import MetaMaskIcon from './logos/MetaMask.vue'
 import CoinbaseWallet from './logos/CoinbaseWallet.vue'
 import { useBoard } from '../composables/useBoard'
 import { useWallet } from '../composables/useWallet'
-import { Connector } from '../wallets'
+import { Connector, MetaMaskConnector } from '../wallets'
 
 export default defineComponent({
   components: {
@@ -31,7 +31,7 @@ export default defineComponent({
   },
   setup(props) {
     const { boardOpen, close } = useBoard()
-    const { connectWith, wallet } = useWallet()
+    const { connectWith, wallet, autoConnect } = useWallet()
 
     const walletItemClass = computed(() =>
       props.dark ? 'wallet-item--dark' : 'wallet-item',
@@ -39,12 +39,42 @@ export default defineComponent({
 
     const connectors = props.connectors as Connector[]
 
+    const isAutoConnect = inject('autoConnect')
+    if (isAutoConnect) {
+      onMounted(async () => {
+        const metaMaskConnector = connectors.find(
+          (connector) => connector.name === 'metaMask',
+        ) as MetaMaskConnector
+
+        if (metaMaskConnector) {
+          try {
+            await autoConnect(metaMaskConnector)
+          } catch (err) {
+            console.error(
+              'AutoConnectError: Failed to connect to MetaMask',
+              err,
+            )
+          }
+        } else {
+          console.error(
+            'AutoConnectError: MetaMask connector not found (you should add MetaMask connector so theautoConnect can work)',
+          )
+        }
+      })
+    }
+
+    const onClickWallet = (connector: Connector) => {
+      connectWith(connector)
+      close()
+    }
+
     return {
+      isAutoConnect,
       boardOpen,
       wallet,
       connectors,
       walletItemClass,
-      connectWith,
+      onClickWallet,
       close,
     }
   },
@@ -55,10 +85,7 @@ export default defineComponent({
   <Modal :modalOpen="boardOpen" @close="close" :dark="dark">
     <div v-click-outside="close">
       <div v-for="(connector, i) in connectors" :key="connector.name">
-        <div
-          :class="walletItemClass"
-          @click="connectWith(connector) && close()"
-        >
+        <div :class="walletItemClass" @click="onClickWallet(connector)">
           <div class="item">
             <MetaMaskIcon v-if="connector.name === 'metaMask'" class="logo" />
             <WalletConnectIcon
@@ -86,7 +113,10 @@ export default defineComponent({
   </Modal>
 
   <slot name="connecting">
-    <Modal :modalOpen="wallet.status === 'connecting'" :dark="dark">
+    <Modal
+      :modalOpen="wallet.status === 'connecting' && !isAutoConnect"
+      :dark="dark"
+    >
       <div class="loading-modal" v-if="wallet.status === 'connecting'">
         <p>Connecting...</p>
         <p class="mt-4">Approve or reject request using your wallet</p>
@@ -95,7 +125,10 @@ export default defineComponent({
   </slot>
 
   <slot name="loading">
-    <Modal :modalOpen="wallet.status === 'loading'" :dark="dark"></Modal>
+    <Modal
+      :modalOpen="wallet.status === 'loading' && !isAutoConnect"
+      :dark="dark"
+    ></Modal>
   </slot>
 </template>
 
