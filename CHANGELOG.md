@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/chnejohnson/vue-dapp/compare/v0.5.9...v0.6.0) (2022-10-23)
+
+
+### Features
+
+* automatically load MetaMask wallet, close [#80](https://github.com/chnejohnson/vue-dapp/issues/80) ([69c17ee](https://github.com/chnejohnson/vue-dapp/commit/69c17ee91a53ff6780d66da8ba4351d9700e531c))
+
 ## [0.5.9](https://github.com/chnejohnson/vue-dapp/compare/v0.5.8...v0.5.9) (2022-10-21)
 
 
