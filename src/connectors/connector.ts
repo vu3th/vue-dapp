@@ -24,5 +24,6 @@ export abstract class Connector<
   abstract onDisconnect(handler: (...args: any[]) => any): void
   abstract onAccountsChanged(handler: (accounts: string[]) => any): void
   abstract onChainChanged(handler: (chainId: number) => any): void
-  abstract switchChain(chainId: number): Promise<void>
+
+  switchChain?(chainId: number): Promise<void>
 }

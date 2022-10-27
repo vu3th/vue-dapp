@@ -10,6 +10,7 @@ import {
 } from './errors'
 
 import { useEthers } from '../composables/useEthers'
+import { normalizeChainId } from '../utils'
 
 /**
  * MetaMask
@@ -173,7 +174,7 @@ export class MetaMaskConnector extends Connector<
     }
     this.#onChainChangedHandler = handler
     this.#provider.on('chainChanged', (chainId: string) => {
-      const _chainId = this.#normalizeChainId(chainId)
+      const _chainId = normalizeChainId(chainId)
       handler(_chainId)
     })
   }
@@ -181,15 +182,6 @@ export class MetaMaskConnector extends Connector<
   #removeListener(event: string, handler: (...args: any[]) => void) {
     if (!this.#provider) throw new ProviderNotFoundError()
     this.#provider.removeListener(event, handler)
-  }
-
-  #normalizeChainId(chainId: string | number) {
-    if (typeof chainId === 'string')
-      return Number.parseInt(
-        chainId,
-        chainId.trim().substring(0, 2) === '0x' ? 16 : 10,
-      )
-    return chainId
   }
 
   async switchChain(chainId: number) {

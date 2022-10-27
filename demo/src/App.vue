@@ -12,6 +12,7 @@ import {
   MetaMaskConnector,
   WalletConnectConnector,
   CoinbaseWalletConnector,
+  SafeConnector,
 } from 'vue-dapp'
 import { ref, watch } from 'vue'
 
@@ -53,6 +54,7 @@ const connectors = [
     appName: 'Vue Dapp',
     jsonRpcUrl: `https://mainnet.infura.io/v3/${infuraId}`,
   }),
+  new SafeConnector(),
 ]
 
 const { availableNetworks } = useEthers()

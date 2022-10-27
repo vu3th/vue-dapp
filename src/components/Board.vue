@@ -4,7 +4,9 @@ import Modal from './Modal.vue'
 import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
-import CoinbaseWallet from './logos/CoinbaseWallet.vue'
+import CoinbaseWalletIcon from './logos/CoinbaseWallet.vue'
+import GnosisSafeIcon from './logos/GnosisSafe.vue'
+
 import { useBoard } from '../composables/useBoard'
 import { useWallet } from '../composables/useWallet'
 import { Connector, MetaMaskConnector } from '../connectors'
@@ -15,7 +17,8 @@ export default defineComponent({
     Loader,
     MetaMaskIcon,
     WalletConnectIcon,
-    CoinbaseWallet,
+    CoinbaseWalletIcon,
+    GnosisSafeIcon,
   },
   props: {
     connectors: {
@@ -87,21 +90,24 @@ export default defineComponent({
       <div v-for="(connector, i) in connectors" :key="connector.name">
         <div :class="walletItemClass" @click="onClickWallet(connector)">
           <div class="item">
+            <!-- TODO: refactor these v-if -->
             <MetaMaskIcon v-if="connector.name === 'metaMask'" class="logo" />
             <WalletConnectIcon
               v-if="connector.name === 'walletConnect'"
               class="logo"
             />
-            <CoinbaseWallet
+            <CoinbaseWalletIcon
               v-if="connector.name === 'coinbaseWallet'"
               class="logo"
             />
+            <GnosisSafeIcon v-if="connector.name === 'safe'" class="logo" />
 
             <div v-if="connector.name === 'metaMask'">MetaMask</div>
             <div v-if="connector.name === 'walletConnect'">WalletConnect</div>
             <div v-if="connector.name === 'coinbaseWallet'">
               Coinbase Wallet
             </div>
+            <div v-if="connector.name === 'safe'">Gnosis Safe</div>
           </div>
         </div>
         <div
