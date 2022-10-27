@@ -1,6 +1,6 @@
 import { reactive, markRaw } from 'vue'
 import { providers } from 'ethers'
-import { Connector, MetaMaskConnector } from '../wallets'
+import { Connector, MetaMaskConnector } from '../connectors'
 import { useEthers } from './useEthers'
 
 export type ConnectionStatus = 'none' | 'connecting' | 'loading' | 'connected'

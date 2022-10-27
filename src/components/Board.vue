@@ -7,7 +7,7 @@ import MetaMaskIcon from './logos/MetaMask.vue'
 import CoinbaseWallet from './logos/CoinbaseWallet.vue'
 import { useBoard } from '../composables/useBoard'
 import { useWallet } from '../composables/useWallet'
-import { Connector, MetaMaskConnector } from '../wallets'
+import { Connector, MetaMaskConnector } from '../connectors'
 
 export default defineComponent({
   components: {

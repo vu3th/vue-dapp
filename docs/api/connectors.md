@@ -1,6 +1,6 @@
 # Connectors
 
-[source code](https://github.com/chnejohnson/vue-dapp/tree/main/src/wallets)
+[source code](https://github.com/chnejohnson/vue-dapp/tree/main/src/connectors)
 
 ## Connector Interface
 
