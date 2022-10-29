@@ -9,7 +9,7 @@ import GnosisSafeIcon from './logos/GnosisSafe.vue'
 
 import { useBoard } from '../composables/useBoard'
 import { useWallet } from '../composables/useWallet'
-import { Connector, MetaMaskConnector } from '../connectors'
+import { Connector, MetaMaskConnector, SafeConnector } from '../connectors'
 
 export default defineComponent({
   components: {
@@ -45,23 +45,24 @@ export default defineComponent({
     const isAutoConnect = inject('autoConnect')
     if (isAutoConnect) {
       onMounted(async () => {
-        const metaMaskConnector = connectors.find(
-          (connector) => connector.name === 'metaMask',
-        ) as MetaMaskConnector
+        // auto-connect to Safe as first
+        let connected = false
+        const safe = connectors.find(
+          (conn) => conn.name === 'safe',
+        ) as SafeConnector
+        if (safe) {
+          connected = await autoConnect(safe)
+          if (connected) return
+        }
 
-        if (metaMaskConnector) {
-          try {
-            await autoConnect(metaMaskConnector)
-          } catch (err) {
-            console.error(
-              'AutoConnectError: Failed to connect to MetaMask',
-              err,
-            )
-          }
-        } else {
-          console.error(
-            'AutoConnectError: MetaMask connector not found (you should add MetaMask connector so theautoConnect can work)',
-          )
+        console.log('check metamask')
+        // then check metamask
+        const metamask = connectors.find(
+          (conn) => conn.name === 'metaMask',
+        ) as MetaMaskConnector
+        if (metamask) {
+          connected = await autoConnect(metamask)
+          if (connected) return
         }
       })
     }

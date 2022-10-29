@@ -1,6 +1,6 @@
 import { reactive, markRaw } from 'vue'
 import { providers } from 'ethers'
-import { Connector, MetaMaskConnector } from '../connectors'
+import { Connector, MetaMaskConnector, SafeConnector } from '../connectors'
 import { useEthers } from './useEthers'
 
 export type ConnectionStatus = 'none' | 'connecting' | 'loading' | 'connected'
@@ -133,11 +133,34 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     clearWallet()
   }
 
-  async function autoConnect(metaMaskConnector: MetaMaskConnector) {
-    const isConnected = await MetaMaskConnector.checkConnection()
-    if (isConnected) {
-      await connectWith(metaMaskConnector)
+  async function autoConnect(connector: Connector): Promise<boolean> {
+    if (connector.name === 'metaMask') {
+      const metamask = connector as MetaMaskConnector
+
+      const isConnected = await MetaMaskConnector.checkConnection()
+      console.log('metamask is connected: ', isConnected)
+      if (isConnected) {
+        try {
+          await connectWith(metamask)
+          return true
+        } catch (err) {
+          console.error('Failed to auto-connect MetaMask')
+        }
+      }
+    } else if (connector.name === 'safe') {
+      const safe = connector as SafeConnector
+
+      const isSafeApp = await safe.isSafeApp()
+      if (isSafeApp) {
+        try {
+          await connectWith(safe)
+          return true
+        } catch (err) {
+          console.error('Failed to auto-connect Gnosis Safe')
+        }
+      }
     }
+    return false
   }
 
   function onDisconnect(callback: OnDisconnectCallback) {

@@ -33,7 +33,7 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
   }
 
   async connect() {
-    const runningAsSafeApp = await this.#isSafeApp()
+    const runningAsSafeApp = await this.isSafeApp()
     if (!runningAsSafeApp) {
       throw new ConnectorNotFoundError()
     }
@@ -65,7 +65,7 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
     return this.#provider
   }
 
-  async #isSafeApp(): Promise<boolean> {
+  async isSafeApp(): Promise<boolean> {
     if (!this.ready) {
       return false
     }
