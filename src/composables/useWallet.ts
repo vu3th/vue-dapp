@@ -76,6 +76,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     } catch (err: any) {
       await disconnect() // will also clearWallet()
       wallet.error = err.message
+      console.error(err)
       return
     }
 
@@ -133,34 +134,61 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     clearWallet()
   }
 
-  async function autoConnect(connector: Connector): Promise<boolean> {
-    if (connector.name === 'metaMask') {
-      const metamask = connector as MetaMaskConnector
+  async function autoConnect(connectors: Connector[]) {
+    let connected = false
 
-      const isConnected = await MetaMaskConnector.checkConnection()
-      console.log('metamask is connected: ', isConnected)
+    const safe = connectors.find(
+      (conn) => conn.name === 'safe',
+    ) as SafeConnector
+
+    // connect to safe at first
+    if (safe && !connected) {
+      const isConnected = await autoConnectWith(safe)
       if (isConnected) {
-        try {
-          await connectWith(metamask)
-          return true
-        } catch (err) {
-          console.error('Failed to auto-connect MetaMask')
-        }
-      }
-    } else if (connector.name === 'safe') {
-      const safe = connector as SafeConnector
-
-      const isSafeApp = await safe.isSafeApp()
-      if (isSafeApp) {
-        try {
-          await connectWith(safe)
-          return true
-        } catch (err) {
-          console.error('Failed to auto-connect Gnosis Safe')
-        }
+        connected = true
       }
     }
-    return false
+
+    const metamask = connectors.find(
+      (conn) => conn.name === 'metaMask',
+    ) as MetaMaskConnector
+
+    // if safe not connected, then try connect to metamask
+    if (metamask && !connected) {
+      const isConnected = await autoConnectWith(metamask)
+      if (isConnected) {
+        connected = true
+      }
+    }
+
+    async function autoConnectWith(connector: Connector): Promise<boolean> {
+      if (connector.name === 'metaMask') {
+        const metamask = connector as MetaMaskConnector
+
+        const isConnected = await MetaMaskConnector.checkConnection()
+        if (isConnected) {
+          try {
+            await connectWith(metamask)
+            return true
+          } catch (err) {
+            throw new Error('Failed to auto-connect MetaMask')
+          }
+        }
+      } else if (connector.name === 'safe') {
+        const safe = connector as SafeConnector
+
+        const isSafeApp = await safe.isSafeApp()
+        if (isSafeApp) {
+          try {
+            await connectWith(safe)
+            return true
+          } catch (err) {
+            throw new Error('Failed to auto-connect Gnosis Safe')
+          }
+        }
+      }
+      return false
+    }
   }
 
   function onDisconnect(callback: OnDisconnectCallback) {

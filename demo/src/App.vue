@@ -13,6 +13,8 @@ import {
   WalletConnectConnector,
   CoinbaseWalletConnector,
   SafeConnector,
+  isNotSafeApp,
+  Connector,
 } from 'vue-dapp'
 import { ref, watch } from 'vue'
 
@@ -39,7 +41,7 @@ onChainChanged((chainId: any) => {
   console.log('chain changed', chainId)
 })
 
-const connectors = [
+let connectors: Connector[] = [
   new MetaMaskConnector({
     appUrl: 'http://localhost:3000',
   }),
@@ -54,8 +56,14 @@ const connectors = [
     appName: 'Vue Dapp',
     jsonRpcUrl: `https://mainnet.infura.io/v3/${infuraId}`,
   }),
-  new SafeConnector(),
 ]
+
+// If it's in the safe app, change available connectors
+// notes: only check whether it's in the iframe
+if (!isNotSafeApp()) {
+  const safe = new SafeConnector()
+  connectors = [safe, connectors[0]]
+}
 
 const { availableNetworks } = useEthers()
 

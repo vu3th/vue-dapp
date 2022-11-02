@@ -1,3 +1,4 @@
+import { CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
 import { providers } from 'ethers'
 
 export type ConnectorData<Provider = any> = {
@@ -6,7 +7,7 @@ export type ConnectorData<Provider = any> = {
 }
 
 export abstract class Connector<
-  Provider = providers.ExternalProvider,
+  Provider = providers.ExternalProvider | CoinbaseWalletProvider,
   Options = any,
 > {
   // Connector name

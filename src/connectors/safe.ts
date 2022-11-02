@@ -12,16 +12,21 @@ import {
   ProviderRpcError,
 } from './errors'
 
-const __IS_SERVER__ = typeof window === 'undefined'
-const __IS_IFRAME__ = !__IS_SERVER__ && window?.parent !== window
+export const isServer = typeof window === 'undefined'
+export const isIframe = !isServer && window?.parent !== window
+export const isNotSafeApp = () => {
+  const ready = !isServer && isIframe
+  return ready ? false : true
+}
 
 export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
   readonly name = 'safe'
-  ready = !__IS_SERVER__ && __IS_IFRAME__
+  ready = !isServer && isIframe
 
   #provider?: SafeAppProvider
   #sdk: SafeAppsSDK
   #safe?: SafeInfo
+  #isSafeApp = false
 
   #onDisconnectHandler?: (error: ProviderRpcError) => void
   #onAccountsChangedHandler?: (accounts: string[]) => void
@@ -33,9 +38,11 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
   }
 
   async connect() {
-    const runningAsSafeApp = await this.isSafeApp()
-    if (!runningAsSafeApp) {
-      throw new ConnectorNotFoundError()
+    if (!this.#isSafeApp) {
+      const isSafeApp = await this.isSafeApp()
+      if (!isSafeApp) {
+        throw new ConnectorNotFoundError()
+      }
     }
 
     const provider = await this.getProvider()
@@ -66,15 +73,15 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
   }
 
   async isSafeApp(): Promise<boolean> {
-    if (!this.ready) {
-      return false
-    }
+    if (!this.ready) return false
 
     const safe = await Promise.race([
       this.#getSafeInfo(),
       new Promise<void>((resolve) => setTimeout(resolve, 300)),
     ])
-    return !!safe
+    const isSafeApp = !!safe
+    this.#isSafeApp = isSafeApp
+    return isSafeApp
   }
 
   async #getSafeInfo(): Promise<SafeInfo> {

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, inject, onMounted } from 'vue'
+import { computed, defineComponent, inject, onMounted, ref } from 'vue'
 import Modal from './Modal.vue'
 import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
@@ -9,7 +9,7 @@ import GnosisSafeIcon from './logos/GnosisSafe.vue'
 
 import { useBoard } from '../composables/useBoard'
 import { useWallet } from '../composables/useWallet'
-import { Connector, MetaMaskConnector, SafeConnector } from '../connectors'
+import { Connector } from '../connectors'
 
 export default defineComponent({
   components: {
@@ -42,30 +42,21 @@ export default defineComponent({
 
     const connectors = props.connectors as Connector[]
 
+    const isAutoConnecting = ref(false)
     const isAutoConnect = inject('autoConnect')
-    if (isAutoConnect) {
-      onMounted(async () => {
-        // auto-connect to Safe as first
-        let connected = false
-        const safe = connectors.find(
-          (conn) => conn.name === 'safe',
-        ) as SafeConnector
-        if (safe) {
-          connected = await autoConnect(safe)
-          if (connected) return
+    onMounted(async () => {
+      if (isAutoConnect) {
+        try {
+          isAutoConnecting.value = true
+          await autoConnect(connectors)
+        } catch (err) {
+          console.error('Failed to auto-connect')
+          return
+        } finally {
+          isAutoConnecting.value = false
         }
-
-        console.log('check metamask')
-        // then check metamask
-        const metamask = connectors.find(
-          (conn) => conn.name === 'metaMask',
-        ) as MetaMaskConnector
-        if (metamask) {
-          connected = await autoConnect(metamask)
-          if (connected) return
-        }
-      })
-    }
+      }
+    })
 
     const onClickWallet = (connector: Connector) => {
       connectWith(connector)
@@ -73,7 +64,7 @@ export default defineComponent({
     }
 
     return {
-      isAutoConnect,
+      isAutoConnecting,
       boardOpen,
       wallet,
       connectors,
@@ -121,7 +112,7 @@ export default defineComponent({
 
   <slot name="connecting">
     <Modal
-      :modalOpen="wallet.status === 'connecting' && !isAutoConnect"
+      :modalOpen="wallet.status === 'connecting' && !isAutoConnecting"
       :dark="dark"
     >
       <div class="loading-modal" v-if="wallet.status === 'connecting'">
@@ -133,7 +124,7 @@ export default defineComponent({
 
   <slot name="loading">
     <Modal
-      :modalOpen="wallet.status === 'loading' && !isAutoConnect"
+      :modalOpen="wallet.status === 'loading' && !isAutoConnecting"
       :dark="dark"
     ></Modal>
   </slot>
