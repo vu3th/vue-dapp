@@ -18,7 +18,7 @@ module.exports = {
     repo: 'chnejohnson/vue-dapp',
     nav: [
       {
-        text: 'Releases',
+        text: 'Releases v0.6.1',
         link: 'https://github.com/chnejohnson/vue-dapp/releases',
       },
       {

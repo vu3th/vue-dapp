@@ -22,13 +22,23 @@ return {
 ```typescript
 {
     isActivated: Ref<boolean>;
-    provider: Ref<ethers.Web3Provider | null>;
-    signer: Ref<ethers.Signer | null>;
-    network: Ref<ethers.Network | null>;
+    provider: Ref<Web3Provider | null>;
+    signer: Ref<Signer | null>;
+    network: Ref<{
+        name: string;
+        chainId: number;
+        ensAddress?: string | undefined;
+        _defaultProvider?: ((providers: any, options?: any) => any) | undefined;
+    } | null>;
     address: Ref<string>;
+    dnsAlias: Ref<string>;
     balance: Ref<bigint>;
+    availableNetworks: Ref<{
+        [key: number]: AddEthereumChainParameter;
+    }>;
     chainId: vue.ComputedRef<number | undefined>;
-    activate: (externalProvider: ExternalProvider): Promise<void>;
+    activate: typeof activate;
     deactivate: () => void;
+    lookupDNS: typeof lookupDNS;
 }
 ```

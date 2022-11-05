@@ -19,7 +19,7 @@
 ## Documentation
 
 - [Documentation](https://vue-dapp-docs.netlify.app/)
-- [Migrating to v0.5.x](https://vue-dapp-docs.netlify.app/migration)
+- [Migrating to v0.5.x and beyond](https://vue-dapp-docs.netlify.app/migration)
 
 ## Installation
 
