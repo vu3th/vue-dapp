@@ -2,7 +2,7 @@ import { Plugin } from 'vue'
 import { clickOutside } from './directive'
 import Board from './components/Board.vue'
 import Modal from './components/Modal.vue'
-import { AddEthereumChainParameter } from './wallets'
+import { AddEthereumChainParameter } from './connectors'
 import { useEthers } from './composables/useEthers'
 import { NETWORK_DETAILS } from './constants'
 

@@ -1,13 +1,15 @@
 <script lang="ts">
-import { computed, defineComponent, inject, onMounted } from 'vue'
+import { computed, defineComponent, inject, onMounted, ref } from 'vue'
 import Modal from './Modal.vue'
 import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
-import CoinbaseWallet from './logos/CoinbaseWallet.vue'
+import CoinbaseWalletIcon from './logos/CoinbaseWallet.vue'
+import GnosisSafeIcon from './logos/GnosisSafe.vue'
+
 import { useBoard } from '../composables/useBoard'
 import { useWallet } from '../composables/useWallet'
-import { Connector, MetaMaskConnector } from '../wallets'
+import { Connector } from '../connectors'
 
 export default defineComponent({
   components: {
@@ -15,7 +17,8 @@ export default defineComponent({
     Loader,
     MetaMaskIcon,
     WalletConnectIcon,
-    CoinbaseWallet,
+    CoinbaseWalletIcon,
+    GnosisSafeIcon,
   },
   props: {
     connectors: {
@@ -39,29 +42,21 @@ export default defineComponent({
 
     const connectors = props.connectors as Connector[]
 
+    const isAutoConnecting = ref(false)
     const isAutoConnect = inject('autoConnect')
-    if (isAutoConnect) {
-      onMounted(async () => {
-        const metaMaskConnector = connectors.find(
-          (connector) => connector.name === 'metaMask',
-        ) as MetaMaskConnector
-
-        if (metaMaskConnector) {
-          try {
-            await autoConnect(metaMaskConnector)
-          } catch (err) {
-            console.error(
-              'AutoConnectError: Failed to connect to MetaMask',
-              err,
-            )
-          }
-        } else {
-          console.error(
-            'AutoConnectError: MetaMask connector not found (you should add MetaMask connector so theautoConnect can work)',
-          )
+    onMounted(async () => {
+      if (isAutoConnect) {
+        try {
+          isAutoConnecting.value = true
+          await autoConnect(connectors)
+        } catch (err) {
+          console.error('Failed to auto-connect')
+          return
+        } finally {
+          isAutoConnecting.value = false
         }
-      })
-    }
+      }
+    })
 
     const onClickWallet = (connector: Connector) => {
       connectWith(connector)
@@ -69,7 +64,7 @@ export default defineComponent({
     }
 
     return {
-      isAutoConnect,
+      isAutoConnecting,
       boardOpen,
       wallet,
       connectors,
@@ -87,21 +82,24 @@ export default defineComponent({
       <div v-for="(connector, i) in connectors" :key="connector.name">
         <div :class="walletItemClass" @click="onClickWallet(connector)">
           <div class="item">
+            <!-- TODO: refactor these v-if -->
             <MetaMaskIcon v-if="connector.name === 'metaMask'" class="logo" />
             <WalletConnectIcon
               v-if="connector.name === 'walletConnect'"
               class="logo"
             />
-            <CoinbaseWallet
+            <CoinbaseWalletIcon
               v-if="connector.name === 'coinbaseWallet'"
               class="logo"
             />
+            <GnosisSafeIcon v-if="connector.name === 'safe'" class="logo" />
 
             <div v-if="connector.name === 'metaMask'">MetaMask</div>
             <div v-if="connector.name === 'walletConnect'">WalletConnect</div>
             <div v-if="connector.name === 'coinbaseWallet'">
               Coinbase Wallet
             </div>
+            <div v-if="connector.name === 'safe'">Gnosis Safe</div>
           </div>
         </div>
         <div
@@ -114,7 +112,7 @@ export default defineComponent({
 
   <slot name="connecting">
     <Modal
-      :modalOpen="wallet.status === 'connecting' && !isAutoConnect"
+      :modalOpen="wallet.status === 'connecting' && !isAutoConnecting"
       :dark="dark"
     >
       <div class="loading-modal" v-if="wallet.status === 'connecting'">
@@ -126,7 +124,7 @@ export default defineComponent({
 
   <slot name="loading">
     <Modal
-      :modalOpen="wallet.status === 'loading' && !isAutoConnect"
+      :modalOpen="wallet.status === 'loading' && !isAutoConnecting"
       :dark="dark"
     ></Modal>
   </slot>

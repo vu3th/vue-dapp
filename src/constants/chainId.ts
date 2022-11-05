@@ -1,4 +1,4 @@
-import { AddEthereumChainParameter } from '../wallets'
+import { AddEthereumChainParameter } from '../connectors'
 
 export enum ChainId {
   Mainnet = 1,

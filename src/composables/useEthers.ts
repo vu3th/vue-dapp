@@ -6,7 +6,7 @@ import {
 } from '@ethersproject/providers'
 import { BigNumber, Signer } from 'ethers'
 import { NETWORK_DETAILS } from '../constants'
-import { AddEthereumChainParameter } from '../wallets'
+import { AddEthereumChainParameter } from '../connectors'
 
 export type { Web3Provider, Signer, Network }
 

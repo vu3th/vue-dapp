@@ -1,0 +1,12 @@
+{
+  "background_color": "#fff",
+  "display": "standalone",
+  "homepage_url": "",
+  "providedBy": { "name": "Vue Dapp", "url": "" },
+  "orientation": "portrait",
+  "name": "Vue Dapp",
+  "short_name": "vue-dapp",
+  "description": "vue-dapp test",
+  "start_url": ".",
+  "theme_color": "#ff007a"
+}
