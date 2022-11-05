@@ -1,3 +1,11 @@
+## [0.6.1](https://github.com/chnejohnson/vue-dapp/compare/v0.6.0...v0.6.1) (2022-11-05)
+
+
+### Bug Fixes
+
+* auto-connect with gnosis safe ([05c1f3c](https://github.com/chnejohnson/vue-dapp/commit/05c1f3cb0dd3256224300d8e745e7278ddfed9c4))
+* refactor autoConnect and export isNotSafeApp for users to conditionally include the connector or not ([59d5e26](https://github.com/chnejohnson/vue-dapp/commit/59d5e2674eae067d76e94b77046881ade9720037))
+
 # [0.6.0](https://github.com/chnejohnson/vue-dapp/compare/v0.5.9...v0.6.0) (2022-10-23)
 
 
