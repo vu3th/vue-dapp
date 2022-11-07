@@ -96,3 +96,14 @@ export class UserRejectedRequestError extends ProviderRpcError {
     super(4001, error.message)
   }
 }
+
+export class ActivateEthersError extends Error {
+  name = 'ActivateEthersError'
+  message = 'Failed to activate ethers'
+  constructor(message?: string) {
+    super()
+    if (message) {
+      this.message = this.message + ': ' + message
+    }
+  }
+}
