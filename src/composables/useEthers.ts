@@ -44,15 +44,8 @@ async function activate(externalProvider: ExternalProvider) {
   let _address = ''
   let _balance = BigNumber.from(0)
 
-  try {
-    const data = await getData()
-    ;[_network, _address, _balance] = data!
-  } catch (err: any) {
-    if (err instanceof ActivateEthersError) {
-      throw err
-    }
-    throw new ActivateEthersError(err)
-  }
+  const data = await getData()
+  ;[_network, _address, _balance] = data!
 
   /**
    * @issue #27

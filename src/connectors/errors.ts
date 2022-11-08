@@ -100,10 +100,24 @@ export class UserRejectedRequestError extends ProviderRpcError {
 export class ActivateEthersError extends Error {
   name = 'ActivateEthersError'
   message = 'Failed to activate ethers'
-  constructor(message?: string) {
+  constructor(msg: string) {
     super()
-    if (message) {
-      this.message = this.message + ': ' + message
+    if (msg) {
+      this.message = this.message + ': ' + msg
     }
+  }
+}
+
+export class ConnectError extends Error {
+  name = 'ConnectError'
+  constructor(msg: string) {
+    super(msg)
+  }
+}
+
+export class AutoConnectError extends Error {
+  name = 'AutoConnectError'
+  constructor(msg: string) {
+    super(msg)
   }
 }
