@@ -1,3 +1,10 @@
+## [0.6.2](https://github.com/chnejohnson/vue-dapp/compare/v0.6.1...v0.6.2) (2022-11-18)
+
+
+### Bug Fixes
+
+* uncaught type error when not providing plugin options ([e9d0d2e](https://github.com/chnejohnson/vue-dapp/commit/e9d0d2e0c728020a41b5c4162b4a000a8878c81f))
+
 ## [0.6.1](https://github.com/chnejohnson/vue-dapp/compare/v0.6.0...v0.6.1) (2022-11-05)
 
 
