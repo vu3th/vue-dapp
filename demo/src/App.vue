@@ -13,10 +13,9 @@ import {
   WalletConnectConnector,
   CoinbaseWalletConnector,
   SafeConnector,
-  isNotSafeApp,
   Connector,
 } from 'vue-dapp'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 const isDev = window.location.host === 'localhost:3000'
 const infuraId = isDev
@@ -60,10 +59,20 @@ let connectors: Connector[] = [
 
 // If it's in the safe app, change available connectors
 // notes: only check whether it's in the iframe
-if (!isNotSafeApp()) {
+// if (!isNotSafeApp()) {
+//   const safe = new SafeConnector()
+//   connectors = [safe, connectors[0]]
+// }
+
+const connectorsCreated = ref(false)
+
+onMounted(async () => {
   const safe = new SafeConnector()
-  connectors = [safe, connectors[0]]
-}
+  if (await safe.isSafeApp()) {
+    connectors = [safe]
+  }
+  connectorsCreated.value = true
+})
 
 const { availableNetworks } = useEthers()
 
@@ -156,7 +165,7 @@ watch(selectedChainId, async (val, oldVal) => {
     </div>
   </div>
 
-  <vd-board :connectors="connectors" dark>
+  <vd-board v-if="connectorsCreated" :connectors="connectors" dark>
     <!-- <template #loading>
       <div v-if="wallet.status === 'loading'"></div>
     </template> -->

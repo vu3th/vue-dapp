@@ -5,6 +5,7 @@ import {
   ConnectError,
   Connector,
   ConnectorNotFoundError,
+  isNotSafeApp,
   MetaMaskConnector,
   SafeConnector,
 } from '../connectors'
@@ -151,48 +152,34 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
 
   async function autoConnect(connectors: Connector[]) {
     // try auto-connect to safe
-    const safe = connectors.find(
-      (conn) => conn.name === 'safe',
-    ) as SafeConnector
+    const safe = connectors.find((conn) => conn.name === 'safe') as
+      | SafeConnector
+      | undefined
 
-    if (safe) {
+    if (safe && !isNotSafeApp) {
       try {
-        await autoConnectToSafe(safe)
+        const isSafeApp = await safe.isSafeApp()
+        if (isSafeApp) {
+          await connectWith(safe)
+        }
       } catch (err: any) {
-        console.error(err)
+        console.error(err) // let keep processing the following code
       }
     }
 
     // try auto-connect to metamask
-    const metamask = connectors.find(
-      (conn) => conn.name === 'metaMask',
-    ) as MetaMaskConnector
+    const metamask = connectors.find((conn) => conn.name === 'metaMask') as
+      | MetaMaskConnector
+      | undefined
 
     if (metamask) {
       try {
-        await autoConnectToMetaMask(metamask)
+        const isConnected = await MetaMaskConnector.checkConnection()
+        if (isConnected) {
+          await connectWith(metamask)
+        }
       } catch (err: any) {
         throw new AutoConnectError(err)
-      }
-    }
-  }
-
-  async function autoConnectToSafe(safe: SafeConnector) {
-    // connect to safe at first
-    if (safe) {
-      const isSafeApp = await safe.isSafeApp()
-      if (isSafeApp) {
-        await connectWith(safe)
-      }
-    }
-  }
-
-  async function autoConnectToMetaMask(metamask: MetaMaskConnector) {
-    // if safe not connected, then try connect to metamask
-    if (metamask) {
-      const hasConnected = await MetaMaskConnector.checkConnection()
-      if (hasConnected) {
-        await connectWith(metamask)
       }
     }
   }

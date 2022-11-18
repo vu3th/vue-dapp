@@ -63,7 +63,7 @@ async function activate(externalProvider: ExternalProvider) {
       ]),
       new Promise<void>((resolve, reject) =>
         setTimeout(() => {
-          reject(new ActivateEthersError('timeout'))
+          reject(new ActivateEthersError('Operation timed out'))
         }, timeout),
       ),
     ])

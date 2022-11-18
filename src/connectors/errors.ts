@@ -99,7 +99,7 @@ export class UserRejectedRequestError extends ProviderRpcError {
 
 export class ActivateEthersError extends Error {
   name = 'ActivateEthersError'
-  message = 'Failed to activate ethers'
+  message = 'Failed to load wallet data'
   constructor(msg: string) {
     super()
     if (msg) {
