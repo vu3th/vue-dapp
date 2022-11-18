@@ -6,7 +6,7 @@ import {
 } from '@ethersproject/providers'
 import { BigNumber, Signer } from 'ethers'
 import { NETWORK_DETAILS } from '../constants'
-import { AddEthereumChainParameter } from '../connectors'
+import { ActivateEthersError, AddEthereumChainParameter } from '../connectors'
 
 export type { Web3Provider, Signer, Network }
 
@@ -35,58 +35,64 @@ const deactivate = () => {
 }
 
 async function activate(externalProvider: ExternalProvider) {
-  if (!externalProvider)
-    throw new Error('Failed to activate ethers: provider not found')
-
-  // Test loading
-  // await new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     resolve(true)
-  //   }, 2000)
-  // })
+  if (!externalProvider) throw new ActivateEthersError('provider not found')
 
   const _provider = new Web3Provider(externalProvider)
   const _signer = _provider.getSigner()
 
-  /**
-   * @issue #27
-   * @dev Catch error if walletConnect not connected because of invalid infura id.
-   * if you provide an invalid infura id, you can still open the qrcode but can't connect to wallet.
-   * WalletConnect will throw error and keep polling until timeout as follows.
-   */
   let _network: any = null
   let _address = ''
   let _balance = BigNumber.from(0)
-  const getData = (timeout: number = 5000) => {
-    return new Promise(async (resolve: (val: any[]) => void, reject) => {
-      try {
+
+  const data = await getData()
+  ;[_network, _address, _balance] = data!
+
+  /**
+   * @issue #27
+   * @dev Throw error when walletConnect is not connected because of invalid infura id.
+   * When you provide an invalid infura id, you can still open the qrcode and try connecting to it.
+   * But the WalletConnect will keep polling, throwing errors, and the connecting status is stuck,
+   * so the timeout is needed.
+   */
+  async function getData(timeout: number = 5000) {
+    return Promise.race([
+      Promise.all([
+        _provider.getNetwork(),
+        _signer.getAddress(),
+        _signer.getBalance(),
+      ]),
+      new Promise<void>((resolve, reject) =>
         setTimeout(() => {
-          reject('Failed to activate ethers: timeout')
-        }, timeout)
-        _network = await _provider.getNetwork()
-        _address = await _signer.getAddress()
-        _balance = await _signer.getBalance()
-        resolve([_network, _address, _balance])
-      } catch (err: any) {
-        reject(err)
-      }
-    })
+          reject(new ActivateEthersError('Operation timed out'))
+        }, timeout),
+      ),
+    ])
   }
 
-  try {
-    await getData()
-  } catch (err: any) {
-    throw new Error(err)
-  }
+  // async function testLoading() {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       resolve(true)
+  //     }, 7000)
+  //   })
+  // }
 
   provider.value = markRaw(_provider)
   signer.value = markRaw(_signer)
   network.value = _network
   address.value = _address
   balance.value = _balance.toBigInt()
-  // Put it outside the timer as the lookup method can occasionally take longer than 5000ms
-  dnsAlias.value = await lookupDNS(_network?.chainId, _address)
 
+  // Put it outside the timer as the lookup method can occasionally take longer than 5000ms
+  // Question: what if people don't need this variable but it lead to more connecting time?
+  try {
+    dnsAlias.value = await lookupDNS(_network?.chainId, _address)
+  } catch (err: any) {
+    throw new ActivateEthersError('Failed to look up DNS')
+  }
+
+  // Update ether balance every 10s
+  // Question: how about update balance via provider.on('block', getBalance)
   clearInterval(updateBalanceInterval)
   const updateBalance = async (interval: number = 10000) => {
     updateBalanceInterval = setInterval(async () => {
@@ -124,7 +130,7 @@ async function lookupDNS(
         //  ens will return the primary domain set by user.
         const _ens = await (_provider || provider.value)?.lookupAddress(address)
         return _ens || ''
-      // case xxxx: //  Another or Custom DNS
+      // case xxxx: //  Another or Custom DNSe
       default:
         return ''
     }

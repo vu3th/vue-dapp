@@ -14,13 +14,14 @@ type Options = {
 }
 
 export const VueDapp: Plugin = {
-  install(app, options: Options) {
-    if (options.networks) {
+  install(app, options?: Options) {
+    if (options && options.networks) {
       const { availableNetworks } = useEthers()
       availableNetworks.value = { ...NETWORK_DETAILS, ...options.networks }
     }
 
-    app.provide('autoConnect', options.autoConnect || false)
+    app.provide('autoConnect', options?.autoConnect || false)
+
     app.directive('click-outside', clickOutside)
     app.component('vd-board', Board)
     app.component('vd-modal', Modal)

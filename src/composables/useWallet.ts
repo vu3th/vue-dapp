@@ -1,6 +1,14 @@
 import { reactive, markRaw } from 'vue'
 import { providers } from 'ethers'
-import { Connector, MetaMaskConnector, SafeConnector } from '../connectors'
+import {
+  AutoConnectError,
+  ConnectError,
+  Connector,
+  ConnectorNotFoundError,
+  isNotSafeApp,
+  MetaMaskConnector,
+  SafeConnector,
+} from '../connectors'
 import { useEthers } from './useEthers'
 
 export type ConnectionStatus = 'none' | 'connecting' | 'loading' | 'connected'
@@ -57,32 +65,40 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
   }
 
   async function connectWith(connector: Connector) {
-    wallet.status = 'connecting'
     wallet.error = ''
+    wallet.status = 'connecting'
 
+    // 1. connect wallet
     try {
-      if (!connector) throw new Error('Incorrect connector argument')
+      if (!connector) throw new ConnectorNotFoundError()
 
       const { provider } = await connector.connect()
 
       wallet.connector = markRaw(connector)
       wallet.provider = markRaw(provider)
+    } catch (err: any) {
+      await disconnect() // will also clearWallet()
+      wallet.error = err.message
+      throw new ConnectError(err)
+    }
 
+    wallet.status = 'loading'
+
+    // 2. activate ethers
+    try {
       if (options.useEthers) {
-        wallet.status = 'loading'
         const { activate } = useEthers()
         await activate(wallet.provider!)
       }
     } catch (err: any) {
       await disconnect() // will also clearWallet()
       wallet.error = err.message
-      console.error(err)
-      return
+      throw new ConnectError(err)
     }
 
     wallet.status = 'connected'
 
-    // subscribe events
+    // 3. subscribe events
     if (wallet.connector) {
       wallet.connector.onDisconnect((...args: any[]) => {
         callbacks.onDisconnectCallback &&
@@ -135,59 +151,36 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
   }
 
   async function autoConnect(connectors: Connector[]) {
-    let connected = false
+    // try auto-connect to safe
+    const safe = connectors.find((conn) => conn.name === 'safe') as
+      | SafeConnector
+      | undefined
 
-    const safe = connectors.find(
-      (conn) => conn.name === 'safe',
-    ) as SafeConnector
-
-    // connect to safe at first
-    if (safe && !connected) {
-      const isConnected = await autoConnectWith(safe)
-      if (isConnected) {
-        connected = true
-      }
-    }
-
-    const metamask = connectors.find(
-      (conn) => conn.name === 'metaMask',
-    ) as MetaMaskConnector
-
-    // if safe not connected, then try connect to metamask
-    if (metamask && !connected) {
-      const isConnected = await autoConnectWith(metamask)
-      if (isConnected) {
-        connected = true
-      }
-    }
-
-    async function autoConnectWith(connector: Connector): Promise<boolean> {
-      if (connector.name === 'metaMask') {
-        const metamask = connector as MetaMaskConnector
-
-        const isConnected = await MetaMaskConnector.checkConnection()
-        if (isConnected) {
-          try {
-            await connectWith(metamask)
-            return true
-          } catch (err) {
-            throw new Error('Failed to auto-connect MetaMask')
-          }
-        }
-      } else if (connector.name === 'safe') {
-        const safe = connector as SafeConnector
-
+    if (safe && !isNotSafeApp) {
+      try {
         const isSafeApp = await safe.isSafeApp()
         if (isSafeApp) {
-          try {
-            await connectWith(safe)
-            return true
-          } catch (err) {
-            throw new Error('Failed to auto-connect Gnosis Safe')
-          }
+          await connectWith(safe)
         }
+      } catch (err: any) {
+        console.error(err) // let keep processing the following code
       }
-      return false
+    }
+
+    // try auto-connect to metamask
+    const metamask = connectors.find((conn) => conn.name === 'metaMask') as
+      | MetaMaskConnector
+      | undefined
+
+    if (metamask) {
+      try {
+        const isConnected = await MetaMaskConnector.checkConnection()
+        if (isConnected) {
+          await connectWith(metamask)
+        }
+      } catch (err: any) {
+        throw new AutoConnectError(err)
+      }
     }
   }
 

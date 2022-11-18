@@ -96,3 +96,28 @@ export class UserRejectedRequestError extends ProviderRpcError {
     super(4001, error.message)
   }
 }
+
+export class ActivateEthersError extends Error {
+  name = 'ActivateEthersError'
+  message = 'Failed to load wallet data'
+  constructor(msg: string) {
+    super()
+    if (msg) {
+      this.message = this.message + ': ' + msg
+    }
+  }
+}
+
+export class ConnectError extends Error {
+  name = 'ConnectError'
+  constructor(msg: string) {
+    super(msg)
+  }
+}
+
+export class AutoConnectError extends Error {
+  name = 'AutoConnectError'
+  constructor(msg: string) {
+    super(msg)
+  }
+}

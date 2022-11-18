@@ -50,7 +50,7 @@ export default defineComponent({
           isAutoConnecting.value = true
           await autoConnect(connectors)
         } catch (err) {
-          console.error('Failed to auto-connect')
+          console.error(err)
           return
         } finally {
           isAutoConnecting.value = false
@@ -58,9 +58,13 @@ export default defineComponent({
       }
     })
 
-    const onClickWallet = (connector: Connector) => {
-      connectWith(connector)
-      close()
+    const onClickWallet = async (connector: Connector) => {
+      try {
+        close()
+        await connectWith(connector)
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     return {
