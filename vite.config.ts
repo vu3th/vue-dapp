@@ -2,39 +2,34 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import WindiCSS from 'vite-plugin-windicss'
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
-import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
-import nodePolyfills from 'rollup-plugin-polyfill-node'
+import rollupPolyfillNode from 'rollup-plugin-polyfill-node'
+import nodeStdlibBrowser from 'node-stdlib-browser'
 
 export default defineConfig({
   root: 'demo/',
   plugins: [vue(), WindiCSS()],
   resolve: {
+    // Enable polyfill node used in development to prevent from vite's browser compatibility warning
     alias: {
+      ...nodeStdlibBrowser,
       'vue-dapp': path.resolve(__dirname, './src/index.ts'),
     },
   },
   optimizeDeps: {
+    // Enable polyfill node used in development, refer to https://github.com/sodatea/vite-plugin-node-stdlib-browser/blob/b17f417597c313ecd52c3e420ba8fc33bcbdae20/index.cjs#L17
     esbuildOptions: {
-      // Enable esbuild polyfill plugins, refer to https://stackoverflow.com/a/72440811/10752354
-      plugins: [
-        NodeGlobalsPolyfillPlugin({
-          process: true,
-          buffer: true,
-        }),
-        NodeModulesPolyfillPlugin(),
-      ],
+      inject: [require.resolve('node-stdlib-browser/helpers/esbuild/shim')],
     },
   },
   build: {
-    commonjsOptions: {
-      transformMixedEsModules: true, // @walletconnect/web3-provider is CommonJS, so need to open this
-    },
     rollupOptions: {
       plugins: [
-        // Enable rollup polyfills plugin used during production bundling, refer to https://stackoverflow.com/a/72440811/10752354
-        nodePolyfills(),
+        // Enable rollup polyfills plugin used in production bundling, refer to https://stackoverflow.com/a/72440811/10752354
+        rollupPolyfillNode(),
       ],
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true, // Enable @walletconnect/web3-provider which has some code in CommonJS
     },
   },
 })
