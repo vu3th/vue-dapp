@@ -22,58 +22,43 @@ module.exports = defineConfig({
 
 - Example: [vue3-dapp-starter](https://github.com/chnejohnson/vue3-dapp-starter)
 
-If you're using [Vite](https://vitejs.dev/), you should have following settings:
+If you're using [Vite](https://vitejs.dev/), you should have the following settings in `vite.config.ts`:
 
-- Step 1. Install following dependencies:
-
-```bash
-yarn add -D buffer process util
-yarn add -D @rollup/plugin-inject
-```
-
-- Step 2. Add below settings in `vite.config.ts`:
 
 ```ts
-import inject from '@rollup/plugin-inject'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import rollupPolyfillNode from 'rollup-plugin-polyfill-node'
+import nodeStdlibBrowser from 'node-stdlib-browser'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
-  build: {
-    rollupOptions: {
-      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
-    },
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
+	plugins: [vue()],
+	resolve: {
+		// Enable polyfill node used in development to prevent from vite's browser compatibility warning
+		alias: { ...nodeStdlibBrowser },
+	},
+	optimizeDeps: {
+		// Enable polyfill node used in development, refer to https://github.com/sodatea/vite-plugin-node-stdlib-browser/blob/b17f417597c313ecd52c3e420ba8fc33bcbdae20/index.cjs#L17
+		esbuildOptions: {
+			inject: [require.resolve('node-stdlib-browser/helpers/esbuild/shim')],
+		},
+	},
+	build: {
+		rollupOptions: {
+			plugins: [
+				// Enable rollup polyfills plugin used in production bundling, refer to https://stackoverflow.com/a/72440811/10752354
+				rollupPolyfillNode(),
+			],
+		},
+		commonjsOptions: {
+			transformMixedEsModules: true, // Enable @walletconnect/web3-provider which has some code in CommonJS
+		},
+	},
 })
 ```
 
-- Step 3. Add below scripts in `index.html`:
-
-```html
-<script>
-  window.global = window
-  let global = globalThis
-</script>
-
-<script type="module">
-  import process from 'process'
-  window.process = process
-</script>
-
-<script type="module">
-  import buffer from 'buffer'
-  window.Buffer = buffer.Buffer
-</script>
-
-<script type="module">
-  import util from 'util'
-  window.util = util
-</script>
-```
-
-:::tip
+:::info
 Refer to [issue#20](https://github.com/chnejohnson/vue-dapp/issues/20)
 :::
 
