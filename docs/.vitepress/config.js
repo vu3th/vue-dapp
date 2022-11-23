@@ -29,7 +29,7 @@ module.exports = {
     sidebar: [
       {
         text: 'Introduction',
-        children: [
+        items: [
           {
             text: 'Getting Started',
             link: '/',
@@ -54,7 +54,7 @@ module.exports = {
       },
       {
         text: 'API',
-        children: [
+        items: [
           {
             text: 'Components',
             link: '/api/components',

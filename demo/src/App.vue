@@ -17,9 +17,9 @@ import {
 } from 'vue-dapp'
 import { onMounted, ref, watch } from 'vue'
 
-const isDev = window.location.host === 'localhost:3000'
+const isDev = import.meta.env.DEV
 const infuraId = isDev
-  ? 'fd5dad2d869c4b20a703ea9f100333f7'
+  ? import.meta.env.VITE_INFURA_KEY
   : 'ff6a249a74e048f1b413cba715f98d07'
 
 const { open } = useBoard()
