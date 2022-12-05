@@ -163,7 +163,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
           await connectWith(safe)
         }
       } catch (err: any) {
-        console.error(err) // let keep processing the following code
+        throw new Error('Failed to connect Gnosis Safe') // let keep processing the following code
       }
     }
 

@@ -100,8 +100,8 @@ async function activate(externalProvider: ExternalProvider) {
       try {
         const _balance = await signer?.value.getBalance()
         balance.value = _balance.toBigInt()
-      } catch (e) {
-        console.error(e)
+      } catch (error: any) {
+        throw new Error('Failed to update balance')
       }
     }, interval)
   }

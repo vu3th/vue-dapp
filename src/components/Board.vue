@@ -31,6 +31,16 @@ export default defineComponent({
       required: false,
       default: false,
     },
+    connectErrorHandler: {
+      type: Function,
+      required: false,
+      default: undefined,
+    },
+    autoConnectErrorHandler: {
+      type: Function,
+      required: false,
+      default: undefined,
+    },
   },
   setup(props) {
     const { boardOpen, close } = useBoard()
@@ -49,9 +59,8 @@ export default defineComponent({
         try {
           isAutoConnecting.value = true
           await autoConnect(connectors)
-        } catch (err) {
-          console.error(err)
-          return
+        } catch (err: any) {
+          props.autoConnectErrorHandler && props.autoConnectErrorHandler(err)
         } finally {
           isAutoConnecting.value = false
         }
@@ -62,8 +71,8 @@ export default defineComponent({
       try {
         close()
         await connectWith(connector)
-      } catch (err) {
-        console.error(err)
+      } catch (err: any) {
+        props.connectErrorHandler && props.connectErrorHandler(err)
       }
     }
 
