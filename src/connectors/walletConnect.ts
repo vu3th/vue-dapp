@@ -15,6 +15,7 @@ import {
  * Test Wallet: https://test.walletconnect.org/ \
  * Source: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
  */
+/* eslint-disable */
 export interface IWalletConnectProvider extends WalletConnectProvider {}
 
 export type WalletConnectOptions = ConstructorParameters<

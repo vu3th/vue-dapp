@@ -54,7 +54,7 @@ async function activate(externalProvider: ExternalProvider) {
    * But the WalletConnect will keep polling, throwing errors, and the connecting status is stuck,
    * so the timeout is needed.
    */
-  async function getData(timeout: number = 5000) {
+  async function getData(timeout = 5000) {
     return Promise.race([
       Promise.all([
         _provider.getNetwork(),
@@ -94,7 +94,7 @@ async function activate(externalProvider: ExternalProvider) {
   // Update ether balance every 10s
   // Question: how about update balance via provider.on('block', getBalance)
   clearInterval(updateBalanceInterval)
-  const updateBalance = async (interval: number = 10000) => {
+  const updateBalance = async (interval = 10000) => {
     updateBalanceInterval = setInterval(async () => {
       if (!signer.value) return
       try {
@@ -126,10 +126,11 @@ async function lookupDNS(
       case 1:
       case 3:
       case 4:
-      case 5:
+      case 5: {
         //  ens will return the primary domain set by user.
         const _ens = await (_provider || provider.value)?.lookupAddress(address)
         return _ens || ''
+      }
       // case xxxx: //  Another or Custom DNSe
       default:
         return ''
