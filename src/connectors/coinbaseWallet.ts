@@ -1,5 +1,4 @@
 import { Connector } from './connector'
-import CoinbaseWalletSDK from '@coinbase/wallet-sdk'
 import type { CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
 import type { CoinbaseWalletSDKOptions } from '@coinbase/wallet-sdk/dist/CoinbaseWalletSDK'
 import { getAddress, hexValue } from 'ethers/lib/utils'
@@ -51,6 +50,18 @@ export class CoinbaseWalletConnector extends Connector<
   }
 
   async getProvider() {
+    let CoinbaseWalletSDK = (await import('@coinbase/wallet-sdk')).default
+    // Workaround for Vite dev import errors https://github.com/vitejs/vite/issues/7112
+    // refer to wagmi, thanks! https://github.com/wagmi-dev/references/blob/44b0c4c91147c2aae9689560ddc5f9acbecdfa29/packages/connectors/src/coinbaseWallet.ts#L122-L133
+    if (
+      typeof CoinbaseWalletSDK !== 'function' &&
+      // @ts-expect-error This import error is not visible to TypeScript
+      typeof CoinbaseWalletSDK.default === 'function'
+    )
+      CoinbaseWalletSDK = (
+        CoinbaseWalletSDK as unknown as { default: typeof CoinbaseWalletSDK }
+      ).default
+
     const client = new CoinbaseWalletSDK(this.options)
     const provider = client.makeWeb3Provider(
       this.options.jsonRpcUrl,

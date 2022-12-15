@@ -6,6 +6,23 @@
 yarn add ethers vue-dapp
 ```
 
+If you want to support more wallet providers not only MetaMask, you should install respective packages to enable the dynamic import.
+
+- Support WalletConnect
+```bash
+yarn add @walletconnect/web3-provider
+```
+
+- Support Coinbase Wallet
+```bash
+yarn add @coinbase/wallet-sdk
+```
+
+- Support Gnosis Safe
+```bash
+yarn add @gnosis.pm/safe-apps-provider @gnosis.pm/safe-apps-sdk
+```
+
 ## Quick Start
 
 Step 1. Add plugin to your app:
