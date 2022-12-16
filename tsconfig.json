@@ -43,7 +43,8 @@
     ],
     "paths": {
       "vue-dapp": ["./src/index.ts"],
-      "vue-dapp/*": ["./src/*"]
+      "vue-dapp/*": ["./src/*"],
+      "@/*": ["./src/*"]
     }
   }
 }

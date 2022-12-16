@@ -4,7 +4,7 @@
 
 - Example: [vuecli + vue-dapp starter](https://github.com/chnejohnson/vue3-dapp-starter/tree/vuecli)
 
-If you're using [Vue CLI](https://cli.vuejs.org/guide/creating-a-project.html), you have to install [node-polyfill-webpack-plugin](https://www.npmjs.com/package/node-polyfill-webpack-plugin) and add the plugin in `vite.config.ts` as follows.
+If you're using [Vue CLI](https://cli.vuejs.org/guide/creating-a-project.html), you have to install [node-polyfill-webpack-plugin](https://www.npmjs.com/package/node-polyfill-webpack-plugin) and add the plugin in `vue.config.js` as follows.
 
 ```js
 const { defineConfig } = require("@vue/cli-service");
@@ -122,6 +122,6 @@ export default defineNuxtConfig({
 
 ```
 
-:::tip
+:::info
 Refer to [issue#33](https://github.com/chnejohnson/vue-dapp/issues/33)
 :::

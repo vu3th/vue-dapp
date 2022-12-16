@@ -11,7 +11,7 @@ export function shortenAddress(address: string): string {
   }
 }
 
-export function displayEther(balance: BigNumber | bigint, fixed: number = 2) {
+export function displayEther(balance: BigNumber | bigint, fixed = 2) {
   return (+formatEther(balance)).toFixed(fixed)
 }
 
