@@ -65,9 +65,18 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
       if (!safe) {
         throw new Error('Could not load Safe information')
       }
-      const { SafeAppProvider } = (
-        await import('@gnosis.pm/safe-apps-provider')
-      ).default
+      let SafeAppProvider
+      try {
+        SafeAppProvider = (await import('@gnosis.pm/safe-apps-provider'))
+          .SafeAppProvider
+      } catch (err: any) {
+        throw new Error('Failed to import @gnosis.pm/safe-apps-provider')
+      }
+
+      if (!SafeAppProvider) {
+        throw new Error('SafeAppProvider not found')
+      }
+
       const sdk = await this.#getSafeSDK()
       this.#provider = new SafeAppProvider(safe, sdk)
     }
@@ -90,13 +99,21 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
     if (this.#sdk) {
       return this.#sdk
     }
-    const SafeAppsSDK = (await import('@gnosis.pm/safe-apps-sdk')).default
+    let SafeAppsSDK
+    try {
+      SafeAppsSDK = (await import('@gnosis.pm/safe-apps-sdk')).default
+    } catch (err: any) {
+      throw new Error('Failed to import @gnosis.pm/safe-apps-sdk')
+    }
+    if (!SafeAppsSDK) {
+      throw new Error('SafeAppsSDK not found')
+    }
     this.#sdk = new SafeAppsSDK(this.#sdkOptions)
     return this.#sdk
   }
 
   async #getSafeInfo(): Promise<SafeInfo> {
-    await this.#getSafeSDK
+    await this.#getSafeSDK()
     if (!this.#sdk) {
       throw new ConnectorNotFoundError()
     }
