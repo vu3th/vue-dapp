@@ -1,5 +1,7 @@
 # Plugin Options
 
+- All properties in Plugin Options are optional
+
 ## Types
 ```ts
 type PluginOptions = {
@@ -17,8 +19,8 @@ type PluginOptions = {
 
 ## persistDisconnect
 - Only take effect when autoConnect is true
-- Default to true if autoConnect is true
-- If set up to false, the page would keep auto-connect after clicking disconnect and refreshing page
+- Default to true when autoConnect is true
+- If set up to false, the page would trigger auto-connect even if user clicked disconnect button and refreshed the page
 
 ## networks
 [TBD]
