@@ -1,4 +1,4 @@
-import { reactive, markRaw } from 'vue'
+import { ref, reactive, markRaw } from 'vue'
 import { providers } from 'ethers'
 import {
   AutoConnectError,
@@ -19,6 +19,8 @@ const wallet = reactive({
   error: '',
   status: 'none' as ConnectionStatus,
 })
+
+const persistDisconnect = ref(true)
 
 export type OnDisconnectCallback = (...args: any[]) => void
 export type OnAccountsChangedCallback = (accounts: string[]) => void
@@ -97,6 +99,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     }
 
     wallet.status = 'connected'
+    localStorage.removeItem('hasDisconnected')
 
     // 3. subscribe events
     if (wallet.connector) {
@@ -148,9 +151,13 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
       }
     }
     clearWallet()
+    persistDisconnect.value && localStorage.setItem('hasDisconnected', 'true')
   }
 
   async function autoConnect(connectors: Connector[]) {
+    if (persistDisconnect.value && localStorage.getItem('hasDisconnected')) {
+      return
+    }
     // try auto-connect to safe
     const safe = connectors.find((conn) => conn.name === 'safe') as
       | SafeConnector
@@ -198,6 +205,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
 
   return {
     wallet,
+    persistDisconnect,
 
     connectWith,
     disconnect,
