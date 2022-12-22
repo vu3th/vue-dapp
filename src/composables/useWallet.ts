@@ -163,7 +163,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
       | SafeConnector
       | undefined
 
-    if (safe && !isNotSafeApp) {
+    if (safe && !isNotSafeApp()) {
       try {
         const isSafeApp = await safe.isSafeApp()
         if (isSafeApp) {

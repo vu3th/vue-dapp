@@ -11,9 +11,19 @@
 </p>
 
 <p align="center">
+  <!-- license -->
   <a href="https://github.com/chnejohnson/vue-dapp">
-    <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="mit license"/>
+    <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License"/>
   </a>
+  <!-- version -->
+  <a href="https://www.npmjs.com/package/vue-dapp">
+    <img src="https://badgen.net/npm/v/vue-dapp" alt="Version">
+  </a>
+  <!-- size -->
+  <a href="https://bundlephobia.com/package/vue-dapp">
+      <img src="https://img.shields.io/bundlephobia/minzip/vue-dapp" alt="Size">
+  </a>
+
 </p>
 
 ## Documentation
@@ -25,6 +35,23 @@
 
 ```bash
 yarn add ethers vue-dapp
+```
+
+If you want to support more wallet providers not only MetaMask, you should install respective packages to enable the dynamic import.
+
+- Support WalletConnect
+```bash
+yarn add @walletconnect/web3-provider
+```
+
+- Support Coinbase Wallet
+```bash
+yarn add @coinbase/wallet-sdk
+```
+
+- Support Gnosis Safe
+```bash
+yarn add @gnosis.pm/safe-apps-provider @gnosis.pm/safe-apps-sdk
 ```
 
 ## Quick Start

@@ -1,5 +1,4 @@
-import commonjs from '@rollup/plugin-commonjs'
-import external from 'rollup-plugin-peer-deps-external'
+import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import vue from 'rollup-plugin-vue'
 import typescript from 'rollup-plugin-typescript2'
 import replace from '@rollup/plugin-replace'
@@ -10,13 +9,6 @@ import path from 'path'
 
 import pkg from './package.json'
 
-export const rollupExternal = [
-  ...Object.keys(pkg.dependencies),
-  /@ethersproject\/*/,
-  /ethers\/*/,
-  'vue',
-]
-
 export default [
   {
     input: 'src/index.ts',
@@ -24,13 +16,14 @@ export default [
       {
         file: pkg.main,
         format: 'cjs',
+        sourcemap: true,
       },
       {
         file: pkg.module,
         format: 'esm',
+        sourcemap: true,
       },
     ],
-    external: rollupExternal,
     plugins: [
       vue({
         target: 'browser',
@@ -54,8 +47,7 @@ export default [
         preventAssignment: true, // prevent build warning
       }),
       postcss(),
-      external(), // for reading the dist file
-      commonjs(), // for @metamask/detect-provider
+      peerDepsExternal(),
       json(), // for abi .json files
     ],
   },

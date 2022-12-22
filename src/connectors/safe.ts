@@ -1,8 +1,6 @@
-import { SafeAppProvider } from '@gnosis.pm/safe-apps-provider'
-import SafeAppsSDK, {
-  Opts as SafeOpts,
-  SafeInfo,
-} from '@gnosis.pm/safe-apps-sdk'
+import type { SafeAppProvider } from '@gnosis.pm/safe-apps-provider'
+import type { Opts as SafeOpts, SafeInfo } from '@gnosis.pm/safe-apps-sdk'
+import type SafeAppsSDK from '@gnosis.pm/safe-apps-sdk'
 import { getAddress } from 'ethers/lib/utils'
 import { normalizeChainId } from '../utils'
 import { Connector } from './connector'
@@ -24,7 +22,8 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
   ready = !isServer && isIframe
 
   #provider?: SafeAppProvider
-  #sdk: SafeAppsSDK
+  #sdk?: SafeAppsSDK
+  #sdkOptions: SafeOpts
   #safe?: SafeInfo
   #isSafeApp = false
 
@@ -34,7 +33,7 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
 
   constructor(options: SafeOpts = {}) {
     super(options)
-    this.#sdk = new SafeAppsSDK(options)
+    this.#sdkOptions = options
   }
 
   async connect() {
@@ -66,8 +65,20 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
       if (!safe) {
         throw new Error('Could not load Safe information')
       }
+      let SafeAppProvider
+      try {
+        SafeAppProvider = (await import('@gnosis.pm/safe-apps-provider'))
+          .SafeAppProvider
+      } catch (err: any) {
+        throw new Error('Failed to import @gnosis.pm/safe-apps-provider')
+      }
 
-      this.#provider = new SafeAppProvider(safe, this.#sdk)
+      if (!SafeAppProvider) {
+        throw new Error('SafeAppProvider not found')
+      }
+
+      const sdk = await this.#getSafeSDK()
+      this.#provider = new SafeAppProvider(safe, sdk)
     }
     return this.#provider
   }
@@ -84,7 +95,25 @@ export class SafeConnector extends Connector<SafeAppProvider, SafeOpts> {
     return isSafeApp
   }
 
+  async #getSafeSDK(): Promise<SafeAppsSDK> {
+    if (this.#sdk) {
+      return this.#sdk
+    }
+    let SafeAppsSDK
+    try {
+      SafeAppsSDK = (await import('@gnosis.pm/safe-apps-sdk')).default
+    } catch (err: any) {
+      throw new Error('Failed to import @gnosis.pm/safe-apps-sdk')
+    }
+    if (!SafeAppsSDK) {
+      throw new Error('SafeAppsSDK not found')
+    }
+    this.#sdk = new SafeAppsSDK(this.#sdkOptions)
+    return this.#sdk
+  }
+
   async #getSafeInfo(): Promise<SafeInfo> {
+    await this.#getSafeSDK()
     if (!this.#sdk) {
       throw new ConnectorNotFoundError()
     }
