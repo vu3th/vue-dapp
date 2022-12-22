@@ -3,24 +3,29 @@ import { clickOutside } from './directive'
 import Board from './components/Board.vue'
 import Modal from './components/Modal.vue'
 import { AddEthereumChainParameter } from './connectors'
-import { useEthers } from './composables/useEthers'
 import { NETWORK_DETAILS } from './constants'
+import { useWallet, useEthers } from './composables'
 
-type Options = {
+export type PluginOptions = {
   autoConnect: boolean
+  persistDisconnect?: boolean
   networks: {
     [key: number]: AddEthereumChainParameter
   }
 }
 
 export const VueDapp: Plugin = {
-  install(app, options?: Options) {
+  install(app, options?: PluginOptions) {
     if (options && options.networks) {
       const { availableNetworks } = useEthers()
       availableNetworks.value = { ...NETWORK_DETAILS, ...options.networks }
     }
 
     app.provide('autoConnect', options?.autoConnect || false)
+    if (options?.autoConnect && options?.persistDisconnect === false) {
+      const { persistDisconnect } = useWallet()
+      persistDisconnect.value = false
+    }
 
     app.directive('click-outside', clickOutside)
     app.component('vd-board', Board)

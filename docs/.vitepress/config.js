@@ -56,6 +56,10 @@ module.exports = {
         text: 'API',
         items: [
           {
+            text: 'Plugin Options',
+            link: '/api/plugin-options',
+          },
+          {
             text: 'Components',
             link: '/api/components',
           },
