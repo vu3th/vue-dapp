@@ -15,8 +15,7 @@ import {
  * Test Wallet: https://test.walletconnect.org/ \
  * Source: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
  */
-/* eslint-disable */
-export interface IWalletConnectProvider extends WalletConnectProvider {}
+export interface IWalletConnectProvider extends WalletConnectProvider {} // eslint-disable-line
 
 export type WalletConnectOptions = ConstructorParameters<
   typeof WalletConnectProvider
@@ -58,6 +57,7 @@ export class WalletConnectConnector extends Connector<
 
     // fix: If user reject session, provider.enable() will be stuck and can't be resolved.
     // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
+    // TODO: fix Promise executor functions should not be async.
     return new Promise<WalletConnectProvider>(async (resolve, reject) => {
       provider.wc.on('disconnect', (err, payload) => {
         if (!provider.connected) {

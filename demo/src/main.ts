@@ -8,6 +8,7 @@ const app = createApp(App)
 
 app.use(VueDapp, {
   autoConnect: true,
+  dumb: false,
   networks: {
     80001: {
       chainId: ethers.utils.hexValue(80001),

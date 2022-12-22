@@ -21,6 +21,7 @@ const wallet = reactive({
 })
 
 const persistDisconnect = ref(true)
+const dumb = ref(true)
 
 export type OnDisconnectCallback = (...args: any[]) => void
 export type OnAccountsChangedCallback = (accounts: string[]) => void
@@ -160,6 +161,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
       persistDisconnect.value &&
       localStorage.getItem('VUE_DAPP__hasDisconnected')
     ) {
+      !dumb.value && console.warn('No auto-connect: has disconnected') // eslint-disable-line
       return
     }
     // try auto-connect to safe
@@ -172,10 +174,30 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
         const isSafeApp = await safe.isSafeApp()
         if (isSafeApp) {
           await connectWith(safe)
+        } else if (!dumb.value) {
+          // prettier-ignore
+          console.warn(  // eslint-disable-line
+            'No auto-connect to Safe: not safe app from safe.isSafeApp()',
+          )
         }
       } catch (err: any) {
         throw new Error('Failed to connect Gnosis Safe') // let keep processing the following code
       }
+    } else if (!dumb.value) {
+      if (!safe) {
+        console.warn('No auto-connect to Safe: connector not found') // eslint-disable-line
+      } else if (isNotSafeApp()) {
+        // prettier-ignore
+        console.warn(   // eslint-disable-line
+          'No auto-connect to Safe: not safe app from isNotSafeApp()',
+        )
+      } else {
+        console.warn('No auto-connect to Safe') // eslint-disable-line
+      }
+    }
+
+    if (wallet.status !== 'none') {
+      return
     }
 
     // try auto-connect to metamask
@@ -188,10 +210,14 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
         const isConnected = await MetaMaskConnector.checkConnection()
         if (isConnected) {
           await connectWith(metamask)
+        } else if (!dumb.value) {
+          console.warn('No auto-connect to MetaMask: not connected') // eslint-disable-line
         }
       } catch (err: any) {
         throw new AutoConnectError(err)
       }
+    } else if (!dumb.value) {
+      console.warn('No auto-connect to MetaMask: connector not found') // eslint-disable-line
     }
   }
 
@@ -210,6 +236,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
   return {
     wallet,
     persistDisconnect,
+    dumb,
 
     connectWith,
     disconnect,
