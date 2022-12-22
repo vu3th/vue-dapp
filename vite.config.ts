@@ -1,13 +1,12 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
-import WindiCSS from 'vite-plugin-windicss'
 import nodeStdlibBrowser from 'node-stdlib-browser'
 import inject from '@rollup/plugin-inject'
 
 export default defineConfig({
   root: 'demo/',
-  plugins: [vue(), WindiCSS()],
+  plugins: [vue()],
   resolve: {
     alias: {
       'vue-dapp': path.resolve(__dirname, './src/index.ts'),
