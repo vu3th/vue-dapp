@@ -1,3 +1,10 @@
+## [0.6.4](https://github.com/chnejohnson/vue-dapp/compare/v0.6.3...v0.6.4) (2022-12-22)
+
+
+### Bug Fixes
+
+* remove console.error, and add error handler property on vd-board ([5028f30](https://github.com/chnejohnson/vue-dapp/commit/5028f30dbe523dbdf7b314fc5a5f8fcd3301a96c))
+
 ## [0.6.3](https://github.com/chnejohnson/vue-dapp/compare/v0.6.2...v0.6.3) (2022-12-22)
 
 
