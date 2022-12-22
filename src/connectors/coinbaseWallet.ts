@@ -14,8 +14,7 @@ import {
  * Coinbase Wallet SDK
  * Docs: https://docs.cloud.coinbase.com/wallet-sdk/docs/
  */
-/* eslint-disable */
-export interface ICoinbaseWalletProvider extends CoinbaseWalletProvider {}
+export interface ICoinbaseWalletProvider extends CoinbaseWalletProvider {} // eslint-disable-line
 
 export type CoinbaseWalletConnectorOptions = CoinbaseWalletSDKOptions & {
   jsonRpcUrl: string

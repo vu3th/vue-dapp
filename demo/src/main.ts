@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import 'windi.css'
 import './style.css'
 import { VueDapp } from 'vue-dapp'
 import { ethers } from 'ethers'
@@ -9,6 +8,7 @@ const app = createApp(App)
 
 app.use(VueDapp, {
   autoConnect: true,
+  dumb: false,
   networks: {
     80001: {
       chainId: ethers.utils.hexValue(80001),

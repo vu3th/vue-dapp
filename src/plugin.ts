@@ -12,6 +12,7 @@ export type PluginOptions = {
   networks: {
     [key: number]: AddEthereumChainParameter
   }
+  dumb: boolean
 }
 
 export const VueDapp: Plugin = {
@@ -25,6 +26,11 @@ export const VueDapp: Plugin = {
     if (options?.autoConnect && options?.persistDisconnect === false) {
       const { persistDisconnect } = useWallet()
       persistDisconnect.value = false
+    }
+
+    if (options?.dumb === false) {
+      const { dumb } = useWallet()
+      dumb.value = false
     }
 
     app.directive('click-outside', clickOutside)
