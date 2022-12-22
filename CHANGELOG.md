@@ -1,3 +1,10 @@
+## [0.6.3](https://github.com/chnejohnson/vue-dapp/compare/v0.6.2...v0.6.3) (2022-12-22)
+
+
+### Bug Fixes
+
+* stay disconnected after clicking disconnect and refreshing page, close [#104](https://github.com/chnejohnson/vue-dapp/issues/104), [#62](https://github.com/chnejohnson/vue-dapp/issues/62) ([7ae9f40](https://github.com/chnejohnson/vue-dapp/commit/7ae9f408adddd897abb86e4d559a0f41645234e1))
+
 ## [0.6.2](https://github.com/chnejohnson/vue-dapp/compare/v0.6.1...v0.6.2) (2022-11-18)
 
 
