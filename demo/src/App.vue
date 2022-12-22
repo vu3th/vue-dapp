@@ -15,7 +15,7 @@ import {
   SafeConnector,
   Connector,
 } from 'vue-dapp'
-import { onMounted, ref, watch } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 
 const isDev = import.meta.env.DEV
 const infuraId = isDev
@@ -57,8 +57,7 @@ let connectors: Connector[] = [
   }),
 ]
 
-// If it's in the safe app, change available connectors
-// notes: only check whether it's in the iframe
+// only check whether it's in the iframe
 // if (!isNotSafeApp()) {
 //   const safe = new SafeConnector()
 //   connectors = [safe, connectors[0]]
@@ -66,11 +65,17 @@ let connectors: Connector[] = [
 
 const connectorsCreated = ref(false)
 
-onMounted(async () => {
+onBeforeMount(async () => {
   const safe = new SafeConnector()
-  if (await safe.isSafeApp()) {
-    connectors = [safe]
+  // check SafeAppSDK is available
+  try {
+    if (await safe.isSafeApp()) {
+      connectors = [safe]
+    }
+  } catch (err: any) {
+    console.error(err)
   }
+
   connectorsCreated.value = true
 })
 
@@ -100,10 +105,6 @@ watch(selectedChainId, async (val, oldVal) => {
     switchError.value = false
     return
   }
-  // if (isChainChanged.value) {
-  //   isChainChanged.value = false
-  //   return
-  // }
 
   try {
     if (wallet.connector) {

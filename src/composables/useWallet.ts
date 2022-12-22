@@ -99,7 +99,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     }
 
     wallet.status = 'connected'
-    localStorage.removeItem('hasDisconnected')
+    localStorage.removeItem('VUE_DAPP__hasDisconnected')
 
     // 3. subscribe events
     if (wallet.connector) {
@@ -151,11 +151,15 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
       }
     }
     clearWallet()
-    persistDisconnect.value && localStorage.setItem('hasDisconnected', 'true')
+    persistDisconnect.value &&
+      localStorage.setItem('VUE_DAPP__hasDisconnected', 'true')
   }
 
   async function autoConnect(connectors: Connector[]) {
-    if (persistDisconnect.value && localStorage.getItem('hasDisconnected')) {
+    if (
+      persistDisconnect.value &&
+      localStorage.getItem('VUE_DAPP__hasDisconnected')
+    ) {
       return
     }
     // try auto-connect to safe
@@ -163,7 +167,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
       | SafeConnector
       | undefined
 
-    if (safe && !isNotSafeApp()) {
+    if (!!safe && !isNotSafeApp()) {
       try {
         const isSafeApp = await safe.isSafeApp()
         if (isSafeApp) {
