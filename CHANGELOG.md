@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/chnejohnson/vue-dapp/compare/v0.7.0...v0.7.1) (2022-12-22)
+
+
+### Bug Fixes
+
+* gnosis safe dynamic import error, and rename localStorage item name ([d7750d0](https://github.com/chnejohnson/vue-dapp/commit/d7750d083ef675b1c2288fb3d78ce41c3c1a9454))
+
 # [0.7.0](https://github.com/chnejohnson/vue-dapp/compare/v0.6.4...v0.7.0) (2022-12-22)
 
 
