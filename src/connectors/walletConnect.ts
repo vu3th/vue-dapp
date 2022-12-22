@@ -61,7 +61,6 @@ export class WalletConnectConnector extends Connector<
     return new Promise<WalletConnectProvider>(async (resolve, reject) => {
       provider.wc.on('disconnect', (err, payload) => {
         if (!provider.connected) {
-          console.error(err, payload)
           reject(new UserRejectedRequestError(err))
         }
       })

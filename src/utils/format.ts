@@ -17,8 +17,7 @@ export function displayEther(balance: BigNumber | bigint, fixed = 2) {
 
 export function displayChainName(chainId: number) {
   if (!checkChainId(chainId)) {
-    console.error('Error: Invalid chainId')
-    return 'network not found'
+    return ''
   }
   const { availableNetworks } = useEthers()
   return availableNetworks.value[chainId].chainName.toLowerCase()

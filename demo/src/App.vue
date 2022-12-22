@@ -115,6 +115,10 @@ watch(selectedChainId, async (val, oldVal) => {
     console.error(e)
   }
 })
+
+const connectErrorHandler = (error: any) => {
+  console.error('Connect error: ', error)
+}
 </script>
 
 <template>
@@ -165,7 +169,12 @@ watch(selectedChainId, async (val, oldVal) => {
     </div>
   </div>
 
-  <vd-board v-if="connectorsCreated" :connectors="connectors" dark>
+  <vd-board
+    v-if="connectorsCreated"
+    :connectors="connectors"
+    :connectErrorHandler="connectErrorHandler"
+    dark
+  >
     <!-- <template #loading>
       <div v-if="wallet.status === 'loading'"></div>
     </template> -->
