@@ -1,3 +1,10 @@
+# [0.7.0](https://github.com/chnejohnson/vue-dapp/compare/v0.6.4...v0.7.0) (2022-12-22)
+
+
+### Features
+
+* optional peer dependencies with dynamic import to provide opt-in wallet provider modules to install ([d4cb831](https://github.com/chnejohnson/vue-dapp/commit/d4cb831f5c597d578eb090757e73db4fe45d6422))
+
 ## [0.6.4](https://github.com/chnejohnson/vue-dapp/compare/v0.6.3...v0.6.4) (2022-12-22)
 
 
