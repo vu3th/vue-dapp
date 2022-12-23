@@ -18,12 +18,12 @@ module.exports = {
     repo: 'chnejohnson/vue-dapp',
     nav: [
       {
-        text: 'Releases v0.6.1',
+        text: 'v0.7.1',
         link: 'https://github.com/chnejohnson/vue-dapp/releases',
       },
       {
         text: 'Demo',
-        link: 'https://vue-dapp.netlify.app/',
+        link: 'https://vuedapp.vercel.app/',
       },
     ],
     sidebar: [
