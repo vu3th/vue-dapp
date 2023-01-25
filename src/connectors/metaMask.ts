@@ -74,7 +74,7 @@ export class MetaMaskConnector extends Connector<
   static async checkConnection() {
     if (typeof window !== 'undefined' && !!window.ethereum) {
       const provider = window.ethereum as MetaMaskProvider
-      if (provider.selectedAddress) {
+      if ((await provider.request({ method: 'eth_accounts' })).length !== 0) {
         return true
       }
     }
