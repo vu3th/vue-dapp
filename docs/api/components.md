@@ -20,7 +20,8 @@
 
 - `dark`: boolean, defaults: false - When set to true, the board will be set to dark mode.
 - `connectors`: Connectors[], defaults: [] - An array of [Connectors](/api/connectors.html) that defines the wallet options on board.
-
+- `autoConnectErrorHandler`: Function, default: () => void - catch error when a auto-connect error occurs.
+- `connectErrorHandler`: Function, default: () => void - catch error when a connect error occurs.
 ### Slots
 
 - `connecting` - Provide a custom content when connecting wallet.
