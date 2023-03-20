@@ -47,8 +47,8 @@ let connectors: Connector[] = [
   new WalletConnectConnector({
     qrcode: true,
     rpc: {
-      1: `https://mainnet.infura.io/v3/${infuraId}`,
-      4: `https://rinkeby.infura.io/v3/${infuraId}`,
+      1: 'https://eth-mainnet.public.blastapi.io',
+      5: 'https://rpc.ankr.com/eth_goerli',
     },
   }),
   new CoinbaseWalletConnector({
