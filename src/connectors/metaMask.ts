@@ -81,7 +81,7 @@ export class MetaMaskConnector extends Connector<
     return false
   }
 
-  async connect() {
+  async connect(timeout?: number) {
     let provider = await this.getProvider()
 
     /**
@@ -96,10 +96,35 @@ export class MetaMaskConnector extends Connector<
 
     this.#provider = provider
 
-    const accounts = await this.#provider.request({
-      method: 'eth_requestAccounts',
-      params: [{ eth_accounts: {} }],
-    })
+    let accounts
+
+    try {
+      if (timeout) {
+        accounts = await Promise.race([
+          this.#provider.request({
+            method: 'eth_requestAccounts',
+            params: [{ eth_accounts: {} }],
+          }),
+          new Promise<void>((_, reject) =>
+            setTimeout(() => {
+              reject(new Error('timeout'))
+            }, timeout),
+          ),
+        ])
+      } else {
+        accounts = await this.#provider.request({
+          method: 'eth_requestAccounts',
+          params: [{ eth_accounts: {} }],
+        })
+      }
+    } catch (error: any) {
+      throw new Error(
+        `Failed to request MetaMask${
+          error.message ? ': ' + error.message : ''
+        }`,
+      )
+    }
+
     const account = accounts[0]
 
     return {

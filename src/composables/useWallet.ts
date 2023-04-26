@@ -67,7 +67,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     }
   }
 
-  async function connectWith(connector: Connector) {
+  async function connectWith(connector: Connector, timeout?: number) {
     wallet.error = ''
     wallet.status = 'connecting'
 
@@ -75,7 +75,7 @@ export function useWallet(options: useWalletOptions = { useEthers: true }) {
     try {
       if (!connector) throw new ConnectorNotFoundError()
 
-      const { provider } = await connector.connect()
+      const { provider } = await connector.connect(timeout)
 
       wallet.connector = markRaw(connector)
       wallet.provider = markRaw(provider)
