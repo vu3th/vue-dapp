@@ -13,6 +13,7 @@ export type PluginOptions = {
     [key: number]: AddEthereumChainParameter
   }
   dumb: boolean
+  connectTimeout?: number
 }
 
 export const VueDapp: Plugin = {
@@ -21,6 +22,9 @@ export const VueDapp: Plugin = {
       const { availableNetworks } = useEthers()
       availableNetworks.value = { ...NETWORK_DETAILS, ...options.networks }
     }
+
+    options?.connectTimeout &&
+      app.provide('connectTimeout', options?.connectTimeout)
 
     app.provide('autoConnect', options?.autoConnect || false)
     if (options?.autoConnect && options?.persistDisconnect === false) {

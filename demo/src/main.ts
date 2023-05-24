@@ -7,6 +7,7 @@ import { ethers } from 'ethers'
 const app = createApp(App)
 
 app.use(VueDapp, {
+  connectTimeout: 5000,
   autoConnect: true,
   dumb: false,
   networks: {
