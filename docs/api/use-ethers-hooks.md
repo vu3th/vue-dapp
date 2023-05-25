@@ -6,7 +6,7 @@ Hook for watching provider from `useEthers` as follows:
 - `onDeactivated` - subscribe event when removing the provider.
 - `onChanged` - subscribe event when updating the provider.
 
-[source code](https://github.com/chnejohnson/vue-dapp/blob/main/src/composables/useEthersHooks.ts)
+[source code](https://github.com/vu3th/vue-dapp/blob/main/src/composables/useEthersHooks.ts)
 
 ## Usage
 

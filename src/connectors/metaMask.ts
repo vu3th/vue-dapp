@@ -86,7 +86,7 @@ export class MetaMaskConnector extends Connector<
 
     /**
      * See PR #36 - find the single metamask provider when coinbaseWallet & metaMask are both installed
-     * @link https://github.com/chnejohnson/vue-dapp/pull/36
+     * @link https://github.com/vu3th/vue-dapp/pull/36
      */
     const isMulti = (provider?.providers?.length || 0) > 1
     isMulti &&
@@ -139,7 +139,7 @@ export class MetaMaskConnector extends Connector<
     }
     /**
      * @see PR#29 - add deep link to MetaMask wallet on mobile device
-     * @link https://github.com/chnejohnson/vue-dapp/pull/29
+     * @link https://github.com/vu3th/vue-dapp/pull/29
      */
     if (this.options.appUrl) {
       window.open(

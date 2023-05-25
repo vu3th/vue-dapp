@@ -6,7 +6,7 @@ Hook for using [Multicall2](https://github.com/makerdao/multicall/blob/master/sr
 - `results` - return value depending on type `ContractCall[]`
 - `call` - call `tryBlockAndAggregate` on [Multicall2](https://github.com/makerdao/multicall/blob/master/src/Multicall2.sol) 
 
-[source code](https://github.com/chnejohnson/vue-dapp/blob/main/src/composables/useMulticall.ts)
+[source code](https://github.com/vu3th/vue-dapp/blob/main/src/composables/useMulticall.ts)
 
 ## Usage
 ```ts

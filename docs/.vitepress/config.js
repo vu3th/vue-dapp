@@ -19,7 +19,7 @@ module.exports = {
     nav: [
       {
         text: 'v0.7.1',
-        link: 'https://github.com/chnejohnson/vue-dapp/releases',
+        link: 'https://github.com/vu3th/vue-dapp/releases',
       },
       {
         text: 'Demo',
