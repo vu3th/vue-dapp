@@ -3,7 +3,7 @@
 - `<vd-board>` - for wallet board.
 - `<vdapp-modal>` - for a simple modal.
 
-[source code](https://github.com/chnejohnson/vue-dapp/tree/main/src/components)
+[source code](https://github.com/vu3th/vue-dapp/tree/main/src/components)
 
 ## vd-board
 

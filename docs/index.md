@@ -111,4 +111,4 @@ setup()
 Take a look at [Configurations](https://vue-dapp-docs.netlify.app/configurations) for more informations about Vue CLI,
 Vite, and Nuxt3 configurations.
 
-To see the demo code, check it out [here](https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/App.vue).
+To see the demo code, check it out [here](https://github.com/vu3th/vue-dapp/blob/main/demo/src/App.vue).

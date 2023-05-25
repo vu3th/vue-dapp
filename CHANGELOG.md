@@ -1,73 +1,73 @@
-## [0.7.2](https://github.com/chnejohnson/vue-dapp/compare/v0.7.1...v0.7.2) (2023-01-29)
+## [0.7.2](https://github.com/vu3th/vue-dapp/compare/v0.7.1...v0.7.2) (2023-01-29)
 
 
 ### Bug Fixes
 
-* autoConnect not working in Firefox ([5b0af51](https://github.com/chnejohnson/vue-dapp/commit/5b0af513c93a34ca261fb6175a02db478bba5a61))
+* autoConnect not working in Firefox ([5b0af51](https://github.com/vu3th/vue-dapp/commit/5b0af513c93a34ca261fb6175a02db478bba5a61))
 
-## [0.7.1](https://github.com/chnejohnson/vue-dapp/compare/v0.7.0...v0.7.1) (2022-12-22)
+## [0.7.1](https://github.com/vu3th/vue-dapp/compare/v0.7.0...v0.7.1) (2022-12-22)
 
 
 ### Bug Fixes
 
-* gnosis safe dynamic import error, and rename localStorage item name ([d7750d0](https://github.com/chnejohnson/vue-dapp/commit/d7750d083ef675b1c2288fb3d78ce41c3c1a9454))
+* gnosis safe dynamic import error, and rename localStorage item name ([d7750d0](https://github.com/vu3th/vue-dapp/commit/d7750d083ef675b1c2288fb3d78ce41c3c1a9454))
 
-# [0.7.0](https://github.com/chnejohnson/vue-dapp/compare/v0.6.4...v0.7.0) (2022-12-22)
+# [0.7.0](https://github.com/vu3th/vue-dapp/compare/v0.6.4...v0.7.0) (2022-12-22)
 
 
 ### Features
 
-* optional peer dependencies with dynamic import to provide opt-in wallet provider modules to install ([d4cb831](https://github.com/chnejohnson/vue-dapp/commit/d4cb831f5c597d578eb090757e73db4fe45d6422))
+* optional peer dependencies with dynamic import to provide opt-in wallet provider modules to install ([d4cb831](https://github.com/vu3th/vue-dapp/commit/d4cb831f5c597d578eb090757e73db4fe45d6422))
 
-## [0.6.4](https://github.com/chnejohnson/vue-dapp/compare/v0.6.3...v0.6.4) (2022-12-22)
-
-
-### Bug Fixes
-
-* remove console.error, and add error handler property on vd-board ([5028f30](https://github.com/chnejohnson/vue-dapp/commit/5028f30dbe523dbdf7b314fc5a5f8fcd3301a96c))
-
-## [0.6.3](https://github.com/chnejohnson/vue-dapp/compare/v0.6.2...v0.6.3) (2022-12-22)
+## [0.6.4](https://github.com/vu3th/vue-dapp/compare/v0.6.3...v0.6.4) (2022-12-22)
 
 
 ### Bug Fixes
 
-* stay disconnected after clicking disconnect and refreshing page, close [#104](https://github.com/chnejohnson/vue-dapp/issues/104), [#62](https://github.com/chnejohnson/vue-dapp/issues/62) ([7ae9f40](https://github.com/chnejohnson/vue-dapp/commit/7ae9f408adddd897abb86e4d559a0f41645234e1))
+* remove console.error, and add error handler property on vd-board ([5028f30](https://github.com/vu3th/vue-dapp/commit/5028f30dbe523dbdf7b314fc5a5f8fcd3301a96c))
 
-## [0.6.2](https://github.com/chnejohnson/vue-dapp/compare/v0.6.1...v0.6.2) (2022-11-18)
-
-
-### Bug Fixes
-
-* uncaught type error when not providing plugin options ([e9d0d2e](https://github.com/chnejohnson/vue-dapp/commit/e9d0d2e0c728020a41b5c4162b4a000a8878c81f))
-
-## [0.6.1](https://github.com/chnejohnson/vue-dapp/compare/v0.6.0...v0.6.1) (2022-11-05)
+## [0.6.3](https://github.com/vu3th/vue-dapp/compare/v0.6.2...v0.6.3) (2022-12-22)
 
 
 ### Bug Fixes
 
-* auto-connect with gnosis safe ([05c1f3c](https://github.com/chnejohnson/vue-dapp/commit/05c1f3cb0dd3256224300d8e745e7278ddfed9c4))
-* refactor autoConnect and export isNotSafeApp for users to conditionally include the connector or not ([59d5e26](https://github.com/chnejohnson/vue-dapp/commit/59d5e2674eae067d76e94b77046881ade9720037))
+* stay disconnected after clicking disconnect and refreshing page, close [#104](https://github.com/vu3th/vue-dapp/issues/104), [#62](https://github.com/vu3th/vue-dapp/issues/62) ([7ae9f40](https://github.com/vu3th/vue-dapp/commit/7ae9f408adddd897abb86e4d559a0f41645234e1))
 
-# [0.6.0](https://github.com/chnejohnson/vue-dapp/compare/v0.5.9...v0.6.0) (2022-10-23)
+## [0.6.2](https://github.com/vu3th/vue-dapp/compare/v0.6.1...v0.6.2) (2022-11-18)
+
+
+### Bug Fixes
+
+* uncaught type error when not providing plugin options ([e9d0d2e](https://github.com/vu3th/vue-dapp/commit/e9d0d2e0c728020a41b5c4162b4a000a8878c81f))
+
+## [0.6.1](https://github.com/vu3th/vue-dapp/compare/v0.6.0...v0.6.1) (2022-11-05)
+
+
+### Bug Fixes
+
+* auto-connect with gnosis safe ([05c1f3c](https://github.com/vu3th/vue-dapp/commit/05c1f3cb0dd3256224300d8e745e7278ddfed9c4))
+* refactor autoConnect and export isNotSafeApp for users to conditionally include the connector or not ([59d5e26](https://github.com/vu3th/vue-dapp/commit/59d5e2674eae067d76e94b77046881ade9720037))
+
+# [0.6.0](https://github.com/vu3th/vue-dapp/compare/v0.5.9...v0.6.0) (2022-10-23)
 
 
 ### Features
 
-* automatically load MetaMask wallet, close [#80](https://github.com/chnejohnson/vue-dapp/issues/80) ([69c17ee](https://github.com/chnejohnson/vue-dapp/commit/69c17ee91a53ff6780d66da8ba4351d9700e531c))
+* automatically load MetaMask wallet, close [#80](https://github.com/vu3th/vue-dapp/issues/80) ([69c17ee](https://github.com/vu3th/vue-dapp/commit/69c17ee91a53ff6780d66da8ba4351d9700e531c))
 
-## [0.5.9](https://github.com/chnejohnson/vue-dapp/compare/v0.5.8...v0.5.9) (2022-10-21)
-
-
-### Bug Fixes
-
-* watch isActivated for the onActivatedHook ([dcf0c9a](https://github.com/chnejohnson/vue-dapp/commit/dcf0c9a2f83013a47c149d739742fa05ecbbbde2))
-
-## [0.5.8](https://github.com/chnejohnson/vue-dapp/compare/v0.5.7...v0.5.8) (2022-08-24)
+## [0.5.9](https://github.com/vu3th/vue-dapp/compare/v0.5.8...v0.5.9) (2022-10-21)
 
 
 ### Bug Fixes
 
-* wallet status error, resolve [#77](https://github.com/chnejohnson/vue-dapp/issues/77) ([b675187](https://github.com/chnejohnson/vue-dapp/commit/b675187ea9b120a4ed9e1bd86a883711a695b52e))
+* watch isActivated for the onActivatedHook ([dcf0c9a](https://github.com/vu3th/vue-dapp/commit/dcf0c9a2f83013a47c149d739742fa05ecbbbde2))
+
+## [0.5.8](https://github.com/vu3th/vue-dapp/compare/v0.5.7...v0.5.8) (2022-08-24)
+
+
+### Bug Fixes
+
+* wallet status error, resolve [#77](https://github.com/vu3th/vue-dapp/issues/77) ([b675187](https://github.com/vu3th/vue-dapp/commit/b675187ea9b120a4ed9e1bd86a883711a695b52e))
 
 # Changelog
 
@@ -132,7 +132,7 @@ Special thanks to @re2005 and @Mulander-J for their contributions!
 #### Features
 
 - New logo from issue #24 (Special thank @ramuta for his contribution!)
-- Add [Metamask switch chain API](https://github.com/chnejohnson/vue-dapp/blob/062acd4092b8f6a2a67af750f2569294c90c4f7b/src/connectors/metamask.ts#L47) and [network constants](https://github.com/chnejohnson/vue-dapp/blob/main/src/constants/chainId.ts)
+- Add [Metamask switch chain API](https://github.com/vu3th/vue-dapp/blob/062acd4092b8f6a2a67af750f2569294c90c4f7b/src/connectors/metamask.ts#L47) and [network constants](https://github.com/vu3th/vue-dapp/blob/main/src/constants/chainId.ts)
 - Update documentation to latest.
 - Support connecting to Arbitrum, RinkArby, and Polygon with MetaMask
 

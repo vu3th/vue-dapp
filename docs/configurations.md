@@ -59,7 +59,7 @@ export default defineConfig({
 ```
 
 :::info
-Refer to [issue#20](https://github.com/chnejohnson/vue-dapp/issues/20)
+Refer to [issue#20](https://github.com/vu3th/vue-dapp/issues/20)
 :::
 
 ## Nuxt3
@@ -123,5 +123,5 @@ export default defineNuxtConfig({
 ```
 
 :::info
-Refer to [issue#33](https://github.com/chnejohnson/vue-dapp/issues/33)
+Refer to [issue#33](https://github.com/vu3th/vue-dapp/issues/33)
 :::

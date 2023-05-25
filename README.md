@@ -1,6 +1,6 @@
 <p align="center">
    <a href="https://vue-dapp-docs.netlify.app/">
-    <img src="https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/assets/logo.png" alt="VueDapp Brand" style="max-width:100%;" width="400">
+    <img src="https://github.com/vu3th/vue-dapp/blob/main/demo/src/assets/logo.png" alt="VueDapp Brand" style="max-width:100%;" width="400">
   </a>
 </p>
 <h2 align="center">
@@ -12,7 +12,7 @@
 
 <p align="center">
   <!-- license -->
-  <a href="https://github.com/chnejohnson/vue-dapp">
+  <a href="https://github.com/vu3th/vue-dapp">
     <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License"/>
   </a>
   <!-- version -->
@@ -138,7 +138,7 @@ setup() {
 
 Take a look at [Configurations](https://vue-dapp-docs.netlify.app/configurations) for more informations about Vue CLI, Vite, and Nuxt3 configurations.
 
-To see the demo code, check it out [here](https://github.com/chnejohnson/vue-dapp/blob/main/demo/src/App.vue).
+To see the demo code, check it out [here](https://github.com/vu3th/vue-dapp/blob/main/demo/src/App.vue).
 
 ## Support 🙏
 

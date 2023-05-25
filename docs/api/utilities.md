@@ -1,6 +1,6 @@
 # Utilities
 
-[source code](https://github.com/chnejohnson/vue-dapp/tree/main/src/utils)
+[source code](https://github.com/vu3th/vue-dapp/tree/main/src/utils)
 
 ## Types
 
@@ -14,4 +14,4 @@ declare function checkInfuraId(infuraId: string): Promise<any>;
 declare function checkChainId(chainId: number): boolean;
 ```
 
-[source code](https://github.com/chnejohnson/vue-dapp/tree/main/src/utils)
+[source code](https://github.com/vu3th/vue-dapp/tree/main/src/utils)

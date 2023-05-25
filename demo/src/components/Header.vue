@@ -16,7 +16,7 @@
             >
               Documentation
             </a>
-            <a href="https://github.com/chnejohnson/vue-dapp" target="_blank">
+            <a href="https://github.com/vu3th/vue-dapp" target="_blank">
               <svg
                 class="w-7 cursor-pointer hover:opacity-50"
                 width="24px"

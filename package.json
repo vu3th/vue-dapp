@@ -2,11 +2,11 @@
   "name": "vue-dapp",
   "version": "0.7.2",
   "description": "Vue 3 library for building Dapps on Ethereum",
-  "repository": "https://github.com/chnejohnson/vue-dapp",
+  "repository": "https://github.com/vu3th/vue-dapp",
   "bugs": {
-    "url": "https://github.com/chnejohnson/vue-dapp/issues"
+    "url": "https://github.com/vu3th/vue-dapp/issues"
   },
-  "homepage": "https://github.com/chnejohnson/vue-dapp#readme",
+  "homepage": "https://github.com/vu3th/vue-dapp#readme",
   "author": "Johnson Chen <https://twitter.com/chnejohnson>",
   "license": "MIT",
   "main": "dist/index.common.js",

@@ -1,6 +1,6 @@
 # Connectors
 
-[source code](https://github.com/chnejohnson/vue-dapp/tree/main/src/connectors)
+[source code](https://github.com/vu3th/vue-dapp/tree/main/src/connectors)
 
 ## Connector Interface
 
@@ -37,7 +37,7 @@ const connector = new MetaMaskConnector({
 ```
 
 ### Configuration
-- `appUrl` (optional): Add deep link to MetaMask wallet on mobile device, see https://github.com/chnejohnson/vue-dapp/pull/29
+- `appUrl` (optional): Add deep link to MetaMask wallet on mobile device, see https://github.com/vu3th/vue-dapp/pull/29
 
 
 ### Types 

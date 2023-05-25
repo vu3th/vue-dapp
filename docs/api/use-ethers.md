@@ -2,7 +2,7 @@
 
 Hook for accessing the connected wallet by ethers
 
-[source code](https://github.com/chnejohnson/vue-dapp/blob/main/src/composables/useEthers.ts)
+[source code](https://github.com/vu3th/vue-dapp/blob/main/src/composables/useEthers.ts)
 
 ## Usage
 ```ts
