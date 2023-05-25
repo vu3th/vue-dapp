@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/vu3th/vue-dapp/compare/v0.7.2...v0.8.0) (2023-05-25)
+
+
+### Features
+
+* add optional connect timeout to config ([5a83a4e](https://github.com/vu3th/vue-dapp/commit/5a83a4edb30d628da6dc8fd97b527aadbca8c862))
+
 ## [0.7.2](https://github.com/vu3th/vue-dapp/compare/v0.7.1...v0.7.2) (2023-01-29)
 
 
