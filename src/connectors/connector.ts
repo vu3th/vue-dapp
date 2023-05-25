@@ -19,7 +19,7 @@ export abstract class Connector<
     this.options = options
   }
 
-  abstract connect(): Promise<Required<ConnectorData>>
+  abstract connect(timeout?: number): Promise<Required<ConnectorData>>
   abstract getProvider(): Promise<Provider>
   abstract disconnect(): Promise<void>
   abstract onDisconnect(handler: (...args: any[]) => any): void

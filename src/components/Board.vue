@@ -54,6 +54,8 @@ export default defineComponent({
 
     const isAutoConnecting = ref(false)
     const isAutoConnect = inject('autoConnect')
+    const connectTimeout = inject('connectTimeout') as number | undefined
+
     onMounted(async () => {
       if (isAutoConnect) {
         try {
@@ -70,7 +72,7 @@ export default defineComponent({
     const onClickWallet = async (connector: Connector) => {
       try {
         close()
-        await connectWith(connector)
+        await connectWith(connector, connectTimeout)
       } catch (err: any) {
         props.connectErrorHandler && props.connectErrorHandler(err)
       }
