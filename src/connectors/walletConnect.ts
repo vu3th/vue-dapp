@@ -1,5 +1,5 @@
 import { Connector } from './connector'
-import type WalletConnectProvider from '@walletconnect/web3-provider'
+import { type EthereumProvider } from '@walletconnect/ethereum-provider'
 import { getAddress, hexValue } from 'ethers/lib/utils'
 import {
   ProviderNotFoundError,
@@ -15,19 +15,19 @@ import {
  * Test Wallet: https://test.walletconnect.org/ \
  * Source: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
  */
-export interface IWalletConnectProvider extends WalletConnectProvider {} // eslint-disable-line
+export interface IWalletConnectProvider extends EthereumProvider {} // eslint-disable-line
 
 export type WalletConnectOptions = ConstructorParameters<
-  typeof WalletConnectProvider
+  typeof EthereumProvider
 >[0]
 
 export class WalletConnectConnector extends Connector<
-  WalletConnectProvider,
+  typeof EthereumProvider,
   WalletConnectOptions
 > {
   readonly name = 'walletConnect'
 
-  #provider?: WalletConnectProvider
+  #provider?: typeof EthereumProvider
   #onDisconnectHandler?: (code: number, reason: string) => void
   #onAccountsChangedHandler?: (accounts: string[]) => void
   #onChainChangedHandler?: (chainId: number) => void
@@ -49,17 +49,20 @@ export class WalletConnectConnector extends Connector<
   }
 
   async getProvider() {
-    const WalletConnectProvider = (await import('@walletconnect/web3-provider'))
-      .default
-    const provider = new WalletConnectProvider({
-      ...this.options,
+    const { EthereumProvider } = await import(
+      '@walletconnect/ethereum-provider'
+    )
+    const provider = await EthereumProvider.init({
+      projectId: '3aa02046d49fbab7a52978d8a41497ca',
+      chains: [1, 137, 5],
+      showQrModal: true,
     })
 
     // fix: If user reject session, provider.enable() will be stuck and can't be resolved.
     // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
     // TODO: fix Promise executor functions should not be async.
-    return new Promise<WalletConnectProvider>(async (resolve, reject) => {
-      provider.wc.on('disconnect', (err, payload) => {
+    return new Promise<typeof EthereumProvider>(async (resolve, reject) => {
+      provider.on('disconnect', (err, payload) => {
         if (!provider.connected) {
           reject(new UserRejectedRequestError(err))
         }

@@ -36,7 +36,10 @@
     "LICENSE",
     "README.md"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@walletconnect/ethereum-provider": "^2.7.7",
+    "@web3modal/standalone": "^2.4.1"
+  },
   "peerDependencies": {
     "@coinbase/wallet-sdk": ">=3.1.0",
     "@gnosis.pm/safe-apps-provider": ">=0.15.1",
