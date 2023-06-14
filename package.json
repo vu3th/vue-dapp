@@ -38,13 +38,15 @@
   ],
   "dependencies": {
     "@walletconnect/ethereum-provider": "^2.7.7",
+    "@walletconnect/modal": "^2.4.5",
     "@web3modal/standalone": "^2.4.1"
   },
   "peerDependencies": {
     "@coinbase/wallet-sdk": ">=3.1.0",
     "@gnosis.pm/safe-apps-provider": ">=0.15.1",
     "@gnosis.pm/safe-apps-sdk": ">=7.8.0",
-    "@walletconnect/web3-provider": ">=1.7.8",
+    "@walletconnect/ethereum-provider": "^2.7.7",
+    "@web3modal/standalone": "^2.4.1",
     "ethers": ">=5.6.8",
     "vue": ">=3.2.0"
   },
@@ -52,7 +54,10 @@
     "@coinbase/wallet-sdk": {
       "optional": true
     },
-    "@walletconnect/web3-provider": {
+    "@walletconnect/ethereum-provider": {
+      "optional": true
+    },
+    "@web3modal/standalone": {
       "optional": true
     },
     "@gnosis.pm/safe-apps-provider": {

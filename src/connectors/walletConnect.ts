@@ -10,16 +10,14 @@ import {
 } from './errors'
 
 /**
- * WalletConnect v1.0 \
- * Docs: https://docs.walletconnect.com/quick-start/dapps/web3-provider \
- * Test Wallet: https://test.walletconnect.org/ \
- * Source: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
+ * WalletConnect v2.0 \
+ * Docs: https://docs.walletconnect.com/2.0/web/web3modal/html/wagmi/installation \
  */
-export interface IWalletConnectProvider extends EthereumProvider {} // eslint-disable-line
+export interface IWalletConnectProvider extends EthereumProvider {}
 
 export type WalletConnectOptions = ConstructorParameters<
   typeof EthereumProvider
->[0]
+>
 
 export class WalletConnectConnector extends Connector<
   typeof EthereumProvider,
@@ -53,14 +51,12 @@ export class WalletConnectConnector extends Connector<
       '@walletconnect/ethereum-provider'
     )
     const provider = await EthereumProvider.init({
-      projectId: '3aa02046d49fbab7a52978d8a41497ca',
-      chains: [1, 137, 5],
-      showQrModal: true,
+      projectId: this.options?.projectId,
+      chains: this.options?.chains,
+      showQrModal: this.options?.showQrModal,
+      qrModalOptions: this.options?.qrModalOptions,
     })
 
-    // fix: If user reject session, provider.enable() will be stuck and can't be resolved.
-    // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
-    // TODO: fix Promise executor functions should not be async.
     return new Promise<typeof EthereumProvider>(async (resolve, reject) => {
       provider.on('disconnect', (err, payload) => {
         if (!provider.connected) {

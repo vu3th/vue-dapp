@@ -45,10 +45,22 @@ let connectors: Connector[] = [
     appUrl: 'http://localhost:3000',
   }),
   new WalletConnectConnector({
-    qrcode: true,
-    rpc: {
-      1: 'https://eth-mainnet.public.blastapi.io',
-      5: 'https://rpc.ankr.com/eth_goerli',
+    projectId: '3aa02046d49fbab7a52978d8a41497ca',
+    chains: [1, 137],
+    showQrModal: true,
+    qrModalOptions: {
+      themeMode: 'dark',
+      themeVariables: undefined,
+      chainImages: undefined,
+      desktopWallets: undefined,
+      walletImages: undefined,
+      mobileWallets: undefined,
+      enableExplorer: true,
+      explorerAllowList: undefined,
+      tokenImages: undefined,
+      privacyPolicyUrl: undefined,
+      explorerDenyList: undefined,
+      termsOfServiceUrl: undefined,
     },
   }),
   new CoinbaseWalletConnector({
