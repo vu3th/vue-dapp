@@ -1,5 +1,4 @@
 import { Connector } from './connector'
-import { EthereumProvider } from '@walletconnect/ethereum-provider'
 import { getAddress, hexValue } from 'ethers/lib/utils'
 import {
   ProviderNotFoundError,
@@ -8,34 +7,21 @@ import {
   SwitchChainNotSupportedError,
   UserRejectedRequestError,
 } from './errors'
+import { EthereumProviderOptions } from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
 
-/**
- * WalletConnect v2.0 \
- * Docs: https://docs.walletconnect.com/2.0/web/web3modal/html/wagmi/installation \
- */
-export interface IWalletConnectProvider extends EthereumProvider {}
-
-export type WalletConnectOptions = ConstructorParameters<
-  typeof EthereumProvider
->
-
-export class WalletConnectConnector extends Connector<
-  typeof EthereumProvider,
-  WalletConnectOptions
-> {
+export class WalletConnectConnector extends Connector {
   readonly name = 'walletConnect'
-
-  #provider?: typeof EthereumProvider
+  #provider?: any
   #onDisconnectHandler?: (code: number, reason: string) => void
   #onAccountsChangedHandler?: (accounts: string[]) => void
   #onChainChangedHandler?: (chainId: number) => void
 
-  constructor(options: WalletConnectOptions) {
+  constructor(options: EthereumProviderOptions) {
     super(options)
   }
 
   async connect() {
-    const provider = await this.getProvider()
+    const provider: any = await this.getProvider()
     this.#provider = provider
     const accounts = await provider.enable()
     const account = getAddress(accounts[0])
@@ -55,9 +41,9 @@ export class WalletConnectConnector extends Connector<
     })
 
     return new Promise<typeof EthereumProvider>(async (resolve, reject) => {
-      provider.on('disconnect', (err, payload) => {
+      provider.on('disconnect', (args: any) => {
         if (!provider.connected) {
-          reject(new UserRejectedRequestError(err))
+          reject(new UserRejectedRequestError(args.message))
         }
       })
       try {
@@ -66,7 +52,7 @@ export class WalletConnectConnector extends Connector<
         reject(new Error(e))
         return
       }
-      resolve(provider)
+      resolve(provider as any)
     })
   }
 
