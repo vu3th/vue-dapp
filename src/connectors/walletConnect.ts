@@ -40,20 +40,19 @@ export class WalletConnectConnector extends Connector {
       ...this.options,
     })
 
-    return new Promise<typeof EthereumProvider>(async (resolve, reject) => {
-      provider.on('disconnect', (args: any) => {
-        if (!provider.connected) {
-          reject(new UserRejectedRequestError(args.message))
-        }
-      })
-      try {
-        await provider.enable()
-      } catch (e: any) {
-        reject(new Error(e))
-        return
+    provider.on('disconnect', (args: any) => {
+      if (!provider.connected) {
+        throw new UserRejectedRequestError(args.message)
       }
-      resolve(provider as any)
     })
+
+    try {
+      await provider.enable()
+    } catch (err: any) {
+      throw new Error(err)
+    }
+
+    return provider
   }
 
   async disconnect() {
