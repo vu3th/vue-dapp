@@ -45,8 +45,8 @@ let connectors: Connector[] = [
     appUrl: 'http://localhost:3000',
   }),
   new WalletConnectConnector({
-    projectId: '3aa02046d49fbab7a52978d8a41497ca',
-    chains: [1, 137],
+    projectId: '3f3c98042b194264687bf59e104c534a',
+    chains: [1],
     showQrModal: true,
     qrModalOptions: {
       themeMode: 'dark',

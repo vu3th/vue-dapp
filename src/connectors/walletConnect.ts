@@ -1,5 +1,5 @@
 import { Connector } from './connector'
-import { type EthereumProvider } from '@walletconnect/ethereum-provider'
+import { EthereumProvider } from '@walletconnect/ethereum-provider'
 import { getAddress, hexValue } from 'ethers/lib/utils'
 import {
   ProviderNotFoundError,
@@ -51,10 +51,7 @@ export class WalletConnectConnector extends Connector<
       '@walletconnect/ethereum-provider'
     )
     const provider = await EthereumProvider.init({
-      projectId: this.options?.projectId,
-      chains: this.options?.chains,
-      showQrModal: this.options?.showQrModal,
-      qrModalOptions: this.options?.qrModalOptions,
+      ...this.options,
     })
 
     return new Promise<typeof EthereumProvider>(async (resolve, reject) => {
