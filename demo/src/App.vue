@@ -25,8 +25,14 @@ const infuraId = isDev
 const { open } = useBoard()
 const { wallet, disconnect, onDisconnect, onAccountsChanged, onChainChanged } =
   useWallet()
-const { address, balance, chainId, isActivated, dnsAlias } = useEthers()
+const { address, balance, chainId, isActivated, dnsAlias, provider, signer } =
+  useEthers()
 const { onActivated, onChanged } = useEthersHooks()
+
+async function sign() {
+  const re = await signer.value?.signMessage('Reno')
+  console.log(re)
+}
 
 onDisconnect(() => {
   console.log('disconnect')
@@ -143,6 +149,10 @@ const connectErrorHandler = (error: any) => {
     <p class="bold text-md px-4 sm:text-xl">
       Vue 3 library for building Dapps on Ethereum
     </p>
+  </div>
+
+  <div class="bg-red-100 p-10">
+    <button @click="sign">sign</button>
   </div>
 
   <!-- connect -->
