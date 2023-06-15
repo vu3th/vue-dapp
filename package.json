@@ -54,6 +54,9 @@
     "@walletconnect/ethereum-provider": {
       "optional": true
     },
+    "@walletconnect/modal": {
+      "optional": true
+    },
     "@web3modal/standalone": {
       "optional": true
     },
