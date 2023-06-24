@@ -1,5 +1,4 @@
 import { Connector } from './connector'
-import type WalletConnectProvider from '@walletconnect/web3-provider'
 import { getAddress, hexValue } from 'ethers/lib/utils'
 import {
   ProviderNotFoundError,
@@ -8,36 +7,21 @@ import {
   SwitchChainNotSupportedError,
   UserRejectedRequestError,
 } from './errors'
+import { EthereumProviderOptions } from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
 
-/**
- * WalletConnect v1.0 \
- * Docs: https://docs.walletconnect.com/quick-start/dapps/web3-provider \
- * Test Wallet: https://test.walletconnect.org/ \
- * Source: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
- */
-export interface IWalletConnectProvider extends WalletConnectProvider {} // eslint-disable-line
-
-export type WalletConnectOptions = ConstructorParameters<
-  typeof WalletConnectProvider
->[0]
-
-export class WalletConnectConnector extends Connector<
-  WalletConnectProvider,
-  WalletConnectOptions
-> {
+export class WalletConnectConnector extends Connector {
   readonly name = 'walletConnect'
-
-  #provider?: WalletConnectProvider
+  #provider?: any
   #onDisconnectHandler?: (code: number, reason: string) => void
   #onAccountsChangedHandler?: (accounts: string[]) => void
   #onChainChangedHandler?: (chainId: number) => void
 
-  constructor(options: WalletConnectOptions) {
+  constructor(options: EthereumProviderOptions) {
     super(options)
   }
 
   async connect() {
-    const provider = await this.getProvider()
+    const provider: any = await this.getProvider()
     this.#provider = provider
     const accounts = await provider.enable()
     const account = getAddress(accounts[0])
@@ -49,29 +33,26 @@ export class WalletConnectConnector extends Connector<
   }
 
   async getProvider() {
-    const WalletConnectProvider = (await import('@walletconnect/web3-provider'))
-      .default
-    const provider = new WalletConnectProvider({
+    const { EthereumProvider } = await import(
+      '@walletconnect/ethereum-provider'
+    )
+    const provider = await EthereumProvider.init({
       ...this.options,
     })
 
-    // fix: If user reject session, provider.enable() will be stuck and can't be resolved.
-    // source code: https://github.com/WalletConnect/walletconnect-monorepo/blob/v1.0/packages/providers/web3-provider/src/index.ts
-    // TODO: fix Promise executor functions should not be async.
-    return new Promise<WalletConnectProvider>(async (resolve, reject) => {
-      provider.wc.on('disconnect', (err, payload) => {
-        if (!provider.connected) {
-          reject(new UserRejectedRequestError(err))
-        }
-      })
-      try {
-        await provider.enable()
-      } catch (e: any) {
-        reject(new Error(e))
-        return
+    provider.on('disconnect', (args: any) => {
+      if (!provider.connected) {
+        throw new UserRejectedRequestError(args.message)
       }
-      resolve(provider)
     })
+
+    try {
+      await provider.enable()
+    } catch (err: any) {
+      throw new Error(err)
+    }
+
+    return provider
   }
 
   async disconnect() {

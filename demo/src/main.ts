@@ -11,6 +11,17 @@ app.use(VueDapp, {
   autoConnect: true,
   dumb: false,
   networks: {
+    137: {
+      chainId: ethers.utils.hexValue(137),
+      blockExplorerUrls: ['https://polygonscan.com'],
+      chainName: 'Polygon',
+      rpcUrls: ['https://rpc-mainnet.maticvigil.com'],
+      nativeCurrency: {
+        name: 'Matic',
+        decimals: 18,
+        symbol: 'MATIC',
+      },
+    },
     80001: {
       chainId: ethers.utils.hexValue(80001),
       blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
