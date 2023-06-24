@@ -1,3 +1,15 @@
+# [0.9.0](https://github.com/vu3th/vue-dapp/compare/v0.8.0...v0.9.0) (2023-06-24)
+
+
+### Bug Fixes
+
+* revise getProvider for type check ([4c6e71b](https://github.com/vu3th/vue-dapp/commit/4c6e71b61a06a53bbd54a1b80fedd6b3dce4f78e))
+
+
+### Features
+
+* wallet connect v2 ([5bdaa19](https://github.com/vu3th/vue-dapp/commit/5bdaa1957441d3fa715bbf7d8d3d83777178f86e))
+
 # [0.8.0](https://github.com/vu3th/vue-dapp/compare/v0.7.2...v0.8.0) (2023-05-25)
 
 
