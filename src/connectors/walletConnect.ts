@@ -7,9 +7,15 @@ import {
   SwitchChainNotSupportedError,
   UserRejectedRequestError,
 } from './errors'
-import { EthereumProviderOptions } from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
+import {
+  EthereumProviderOptions,
+  EthereumProvider,
+} from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
 
-export class WalletConnectConnector extends Connector {
+export class WalletConnectConnector extends Connector<
+  EthereumProvider,
+  EthereumProviderOptions
+> {
   readonly name = 'walletConnect'
   #provider?: any
   #onDisconnectHandler?: (code: number, reason: string) => void
@@ -85,8 +91,10 @@ export class WalletConnectConnector extends Connector {
       this.#removeListener('chainChanged', this.#onChainChangedHandler)
     }
     this.#onChainChangedHandler = handler
-    this.#provider.on('chainChanged', (chainId: number) => {
-      if (this.options?.rpc && this.options.rpc[chainId]) {
+    this.#provider.on('chainChanged', (hexChainId: string) => {
+      const chainId = parseInt(hexChainId, 16)
+
+      if (this.options.rpcMap && this.options.rpcMap[chainId]) {
         handler(chainId)
       } else {
         // TODO: what's the best way to handle this?
@@ -108,7 +116,9 @@ export class WalletConnectConnector extends Connector {
    */
   async switchChain(chainId: number) {
     if (!this.#provider) throw new ProviderNotFoundError()
-    if (!this.options?.rpc?.[chainId]) throw new SwitchChainNotSupportedError()
+    if (!this.options.rpcMap?.[chainId]) {
+      throw new SwitchChainNotSupportedError()
+    }
 
     const id = hexValue(chainId)
 
