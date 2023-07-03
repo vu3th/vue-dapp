@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/vu3th/vue-dapp/compare/v0.9.0...v0.9.1) (2023-07-03)
+
+
+### Bug Fixes
+
+* fix some bugs about walletconnect v2, resolve [#129](https://github.com/vu3th/vue-dapp/issues/129) ([f2412f2](https://github.com/vu3th/vue-dapp/commit/f2412f237725f985873d5964061bfd0755fb23a3))
+
 # [0.9.0](https://github.com/vu3th/vue-dapp/compare/v0.8.0...v0.9.0) (2023-06-24)
 
 
