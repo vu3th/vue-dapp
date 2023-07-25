@@ -28,6 +28,19 @@
 
 ## Documentation
 
+- v1: Work in progress, see [Discussion#141](https://github.com/vu3th/vue-dapp/discussions/141)
+
+
+Brief versions and functionalities are as follows:
+
+- v0.10.x: Uses ethers v6 and supports WalletConnect v2.
+- v0.9.x: Uses ethers v5 and supports WalletConnect v2.
+- Before v0.8.x: Uses ethers v5 and does not support WalletConnect v2.
+
+I recommend keeping an eye on [vue-dapp-starter](https://github.com/vu3th/vue3-dapp-starter), as it strives to maintain a development-friendly version whenever possible.
+
+Please be cautious when using the documentation below, as it hasn't been updated for some time.
+
 - [Documentation](https://vue-dapp-docs.netlify.app/)
 - [Migrating to v0.5.x and beyond](https://vue-dapp-docs.netlify.app/migration)
 
