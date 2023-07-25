@@ -1,5 +1,5 @@
 import { ref, reactive, markRaw } from 'vue'
-import { providers } from 'ethers'
+import { ethers } from 'ethers'
 import {
   AutoConnectError,
   ConnectError,
@@ -15,7 +15,7 @@ export type ConnectionStatus = 'none' | 'connecting' | 'loading' | 'connected'
 
 const wallet = reactive({
   connector: null as Connector | null,
-  provider: null as providers.ExternalProvider | null,
+  provider: null as ethers.Eip1193Provider | null,
   error: '',
   status: 'none' as ConnectionStatus,
 })

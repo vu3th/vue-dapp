@@ -1,8 +1,7 @@
 import { ref } from 'vue'
-import { Contract, ContractInterface } from '@ethersproject/contracts'
+import { Contract, ContractInterface, Provider } from 'ethers'
 import { MULTICALL2_ABI, MULTICALL2_ADDRESS } from '../constants'
 import { Multicall2 } from '../types/multicall2/Multicall2'
-import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { Result, Interface } from '@ethersproject/abi'
 
 export type ContractCall = {
@@ -12,7 +11,7 @@ export type ContractCall = {
   args?: any[]
 }
 
-export function useMulticall(provider: Web3Provider | JsonRpcProvider) {
+export function useMulticall(provider: Provider) {
   const results = ref<Result[]>([])
   const blockNumber = ref(0)
 
@@ -20,7 +19,7 @@ export function useMulticall(provider: Web3Provider | JsonRpcProvider) {
     MULTICALL2_ADDRESS,
     MULTICALL2_ABI,
     provider,
-  ) as Multicall2
+  ) as unknown as Multicall2
 
   interface Call {
     target: string
@@ -69,5 +68,6 @@ function getInterface(contractInterface: ContractInterface): Interface {
   if (Interface.isInterface(contractInterface)) {
     return contractInterface
   }
+  // @ts-ignore
   return new Interface(contractInterface)
 }

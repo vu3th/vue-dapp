@@ -1,6 +1,5 @@
 import { ref, watch } from 'vue'
-import { Signer } from '@ethersproject/abstract-signer'
-import { Network } from '@ethersproject/networks'
+import { Signer, Network } from 'ethers'
 import { useEthers, Web3Provider } from './useEthers'
 
 export type EthersHooksContext = {

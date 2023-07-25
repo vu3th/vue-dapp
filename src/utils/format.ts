@@ -1,5 +1,4 @@
-import { BigNumber } from 'ethers'
-import { formatEther, isAddress } from 'ethers/lib/utils'
+import { formatEther, isAddress, BigNumberish } from 'ethers'
 import { checkChainId } from './check'
 import { useEthers } from '../composables'
 
@@ -11,7 +10,7 @@ export function shortenAddress(address: string): string {
   }
 }
 
-export function displayEther(balance: BigNumber | bigint, fixed = 2) {
+export function displayEther(balance: BigNumberish | bigint, fixed = 2) {
   return (+formatEther(balance)).toFixed(fixed)
 }
 

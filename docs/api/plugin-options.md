@@ -31,7 +31,7 @@ app.use(VueDapp, {
   autoConnect: true,
   networks: {
     80001: {
-      chainId: ethers.utils.hexValue(80001),
+      chainId: ethers.toQuantity(80001),
       blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
       chainName: 'Mumbai',
       rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
@@ -42,7 +42,7 @@ app.use(VueDapp, {
       },
     },
     42161: {
-      chainId: ethers.utils.hexValue(42161),
+      chainId: ethers.toQuantity(42161),
       blockExplorerUrls: ['https://arbiscan.io'],
       chainName: 'Arbitrum One',
       rpcUrls: ['https://arb1.arbitrum.io/rpc'],

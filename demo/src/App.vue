@@ -100,12 +100,12 @@ const supportedChainId = Object.keys(availableNetworks.value).map((key) =>
 const selectedChainId = ref(0)
 
 onActivated(() => {
-  selectedChainId.value = chainId.value as number
+  selectedChainId.value = Number(chainId.value)
 })
 
 const isChainChanged = ref(false)
 onChanged(() => {
-  selectedChainId.value = chainId.value as number
+  selectedChainId.value = Number(chainId.value)
   isChainChanged.value = true
 })
 

@@ -1,7 +1,7 @@
 import type { SafeAppProvider } from '@gnosis.pm/safe-apps-provider'
 import type { Opts as SafeOpts, SafeInfo } from '@gnosis.pm/safe-apps-sdk'
 import type SafeAppsSDK from '@gnosis.pm/safe-apps-sdk'
-import { getAddress } from 'ethers/lib/utils'
+import { getAddress } from 'ethers'
 import { normalizeChainId } from '../utils'
 import { Connector } from './connector'
 import {
