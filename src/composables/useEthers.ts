@@ -1,17 +1,13 @@
 import { computed, markRaw, ref, Ref } from 'vue'
-import {
-  Web3Provider,
-  Network,
-  ExternalProvider,
-} from '@ethersproject/providers'
-import { BigNumber, Signer } from 'ethers'
+import { Web3Provider } from '@ethersproject/providers'
+import { BrowserProvider, Eip1193Provider, Signer, Network } from 'ethers'
 import { NETWORK_DETAILS } from '../constants'
 import { ActivateEthersError, AddEthereumChainParameter } from '../connectors'
 
 export type { Web3Provider, Signer, Network }
 
 const isActivated = ref(false)
-const provider = ref<Web3Provider | null>(null)
+const provider = ref<BrowserProvider | null>(null)
 const signer = ref<Signer | null>(null)
 const network = ref<Network | null>(null)
 const address = ref('')
@@ -34,18 +30,19 @@ const deactivate = () => {
   balance.value = BigInt(0)
 }
 
-async function activate(externalProvider: ExternalProvider) {
+async function activate(externalProvider: Eip1193Provider) {
   if (!externalProvider) throw new ActivateEthersError('provider not found')
 
-  const _provider = new Web3Provider(externalProvider)
-  const _signer = _provider.getSigner()
+  const _provider = new BrowserProvider(externalProvider)
+  const _signer = await _provider.getSigner()
 
-  let _network: any = null
+  let _network: Network | null = null
   let _address = ''
-  let _balance = BigNumber.from(0)
+  let _balance = BigInt(0)
 
   const data = await getData()
-  ;[_network, _address, _balance] = data!
+  ;[_network, _address] = data!
+  _balance = await _provider.getBalance(_address)
 
   /**
    * @issue #27
@@ -56,11 +53,7 @@ async function activate(externalProvider: ExternalProvider) {
    */
   async function getData(timeout = 5000) {
     return Promise.race([
-      Promise.all([
-        _provider.getNetwork(),
-        _signer.getAddress(),
-        _signer.getBalance(),
-      ]),
+      Promise.all([_provider.getNetwork(), _signer.getAddress()]),
       new Promise<void>((resolve, reject) =>
         setTimeout(() => {
           reject(new ActivateEthersError('Operation timed out'))
@@ -79,14 +72,14 @@ async function activate(externalProvider: ExternalProvider) {
 
   provider.value = markRaw(_provider)
   signer.value = markRaw(_signer)
-  network.value = _network
+  network.value = markRaw(_network)
   address.value = _address
-  balance.value = _balance.toBigInt()
+  balance.value = _balance
 
   // Put it outside the timer as the lookup method can occasionally take longer than 5000ms
   // Question: what if people don't need this variable but it lead to more connecting time?
   try {
-    dnsAlias.value = await lookupDNS(_network?.chainId, _address)
+    dnsAlias.value = await lookupDNS(Number(_network?.chainId), _address)
   } catch (err: any) {
     throw new ActivateEthersError('Failed to look up DNS')
   }
@@ -98,8 +91,10 @@ async function activate(externalProvider: ExternalProvider) {
     updateBalanceInterval = setInterval(async () => {
       if (!signer.value) return
       try {
-        const _balance = await signer?.value.getBalance()
-        balance.value = _balance.toBigInt()
+        const _balance = await provider.value?.getBalance(address.value)
+        if (typeof _balance === 'bigint') {
+          balance.value = _balance
+        }
       } catch (error: any) {
         console.warn('Failed to update balance')
       }
@@ -149,7 +144,7 @@ export function useEthers() {
     isActivated,
     provider: provider as Ref<Web3Provider | null>, // for fixing index.d.ts compiled error, see issue/10:
     signer: signer as Ref<Signer | null>,
-    network,
+    network: network as Ref<Network | null>,
     address,
     dnsAlias,
     balance,

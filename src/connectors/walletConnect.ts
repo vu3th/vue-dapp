@@ -1,5 +1,5 @@
 import { Connector } from './connector'
-import { getAddress, hexValue } from 'ethers/lib/utils'
+import { getAddress, ethers } from 'ethers'
 import {
   ProviderNotFoundError,
   ProviderRpcError,
@@ -120,7 +120,7 @@ export class WalletConnectConnector extends Connector<
       throw new SwitchChainNotSupportedError()
     }
 
-    const id = hexValue(chainId)
+    const id = ethers.toQuantity(chainId)
 
     try {
       await this.#provider.request({
