@@ -1,3 +1,10 @@
+## [0.9.2](https://github.com/vu3th/vue-dapp/compare/v0.9.1...v0.9.2) (2023-07-25)
+
+
+### Bug Fixes
+
+* fix vue@3.3.4 warning about connectTimeout injection ([6ab78e4](https://github.com/vu3th/vue-dapp/commit/6ab78e4125d5f287b1e41f042ba1c7d56382be5f))
+
 ## [0.9.1](https://github.com/vu3th/vue-dapp/compare/v0.9.0...v0.9.1) (2023-07-03)
 
 
