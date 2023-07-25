@@ -23,9 +23,7 @@ export const VueDapp: Plugin = {
       availableNetworks.value = { ...NETWORK_DETAILS, ...options.networks }
     }
 
-    options?.connectTimeout &&
-      app.provide('connectTimeout', options?.connectTimeout)
-
+    app.provide('connectTimeout', options?.connectTimeout || undefined)
     app.provide('autoConnect', options?.autoConnect || false)
     if (options?.autoConnect && options?.persistDisconnect === false) {
       const { persistDisconnect } = useWallet()
