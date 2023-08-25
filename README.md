@@ -155,7 +155,7 @@ To see the demo code, check it out [here](https://github.com/vu3th/vue-dapp/blob
 
 ## Support 🙏
 
-Gitcoin Grants: https://gitcoin.co/grants/3987/vue-dapp
+Gitcoin Grants 18: https://explorer.gitcoin.co/#/round/10/0x8de918f0163b2021839a8d84954dd7e8e151326d/0x8de918f0163b2021839a8d84954dd7e8e151326d-43
 
 ## MIT license
 
