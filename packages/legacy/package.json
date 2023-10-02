@@ -1,13 +1,11 @@
 {
-  "name": "vue-dapp",
+  "name": "@vue-dapp/legacy",
   "version": "0.9.2",
   "description": "Vue 3 library for building Dapps on Ethereum",
   "repository": "https://github.com/vu3th/vue-dapp",
   "bugs": {
     "url": "https://github.com/vu3th/vue-dapp/issues"
   },
-  "private": true,
-  "packageManager": "pnpm@8.6.9",
   "homepage": "https://github.com/vu3th/vue-dapp#readme",
   "author": "Johnson Chen <https://twitter.com/chnejohnson>",
   "license": "MIT",
@@ -17,9 +15,6 @@
   "scripts": {
     "build": "rm -rf dist/ && rollup -c",
     "dev:dist": "rollup -w -c rollup.config.js",
-    "dev": "vite",
-    "build:demo": "vite build",
-    "serve:demo": "vite preview",
     "lint": "eslint './src/**/*.{js,ts}'",
     "prettier-check": "prettier -c --parser typescript \"{src,__tests__,e2e}/**/*.[jt]s?(x)\"",
     "format": "yarn run lint --write",
