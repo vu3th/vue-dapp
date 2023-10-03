@@ -5,7 +5,6 @@ import nodeStdlibBrowser from 'node-stdlib-browser'
 import inject from '@rollup/plugin-inject'
 
 export default defineConfig({
-  root: 'demo/',
   plugins: [vue()],
   resolve: {
     alias: {
