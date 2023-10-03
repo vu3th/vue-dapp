@@ -1,7 +1,5 @@
 import { mount } from '@vue/test-utils'
 import Board from '@/components/Board.vue'
-import Modal from '@/components/Modal.vue'
-import Loader from '@/components/Loader.vue'
 import { MetaMaskConnector, Connector } from '@/connectors'
 const connectors: Connector[] = [new MetaMaskConnector()]
 
@@ -17,7 +15,7 @@ describe('Board component', () => {
     // clean up
     document.body.outerHTML = ''
   })
-  it('should work with import on demand', () => {
+  it.skip('should work with import on demand', () => {
     // mount(Loader)
     // mount(Modal, {
     //   propsData: {

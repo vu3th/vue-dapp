@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
-import { defineComponent, nextTick, ref } from 'vue'
+import { defineComponent } from 'vue'
 import { useWallet } from '@/composables'
 
 // wip: refer to https://github.com/Mini-ghost/vorms/blob/main/packages/core/tests/composiable/useForm.test.ts
 
-const noop = () => {}
+// const noop = () => {}
 
 const setup = (setup: () => unknown) => {
   const Comp = defineComponent({
@@ -15,9 +15,9 @@ const setup = (setup: () => unknown) => {
   return mount(Comp)
 }
 
-const sleep = (ms?: number) => {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
+// const sleep = (ms?: number) => {
+//   return new Promise((resolve) => setTimeout(resolve, ms))
+// }
 
 describe('useWallet', () => {
   it('when initialize wallet state', () => {

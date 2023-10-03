@@ -1,50 +1,27 @@
 name: CI
 
 on:
-  push:
-    branches: [main, dev]
+    push:
+        branches: [main]
 
-  pull_request:
-    branches: [main, dev]
+    pull_request:
+        branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - uses: actions/cache@v2
-        with:
-          path: ~/.yarn
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
-      - run: npm install -g yarn
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
-      - run: yarn build:demo
-      - run: yarn build:docs
-  release:
-    name: Release
-    environment: release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16
-      - run: npm install -g yarn
-      - name: Install dependencies
-        run: yarn install --forzen-lockfile
-      - name: Build dist
-        run: yarn build
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: ${{ runner.os }}-node-
+            - run: npm install -g pnpm
+            - run: pnpm i
+            - run: pnpm -F vue-dapp build
+            - run: pnpm -F demo build
+            - run: pnpm -F docs build

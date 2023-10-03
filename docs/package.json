@@ -1,0 +1,16 @@
+{
+  "name": "@vue-dapp/docs",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "serve": "vitepress serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vitepress": "1.0.0-beta.2"
+  }
+}
