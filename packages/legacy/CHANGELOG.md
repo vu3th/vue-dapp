@@ -1,3 +1,7 @@
+# Changelog
+
+
+
 ## [0.9.2](https://github.com/vu3th/vue-dapp/compare/v0.9.1...v0.9.2) (2023-07-25)
 
 

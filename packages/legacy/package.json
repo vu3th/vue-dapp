@@ -1,6 +1,6 @@
 {
   "name": "vue-dapp",
-  "version": "0.11.0-alpha.1",
+  "version": "0.11.0-beta.0",
   "description": "Vue 3 library for building Dapps on Ethereum",
   "repository": "https://github.com/vu3th/vue-dapp",
   "bugs": {
@@ -21,7 +21,10 @@
     "test:types": "tsc --build tsconfig.json",
     "test:unit": "vitest --environment jsdom",
     "test": "yarn run test:types && yarn run test:unit",
-    "semantic-release": "semantic-release"
+    "release": "standard-version",
+    "release:patch": "standard-version --release-as patch",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major"
   },
   "files": [
     "dist/**/*",
@@ -66,8 +69,6 @@
     "@rollup/plugin-inject": "^5.0.3",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-replace": "^4.0.0",
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/git": "^10.0.1",
     "@types/jest": "^27.5.1",
     "@typescript-eslint/eslint-plugin": "^5.45.1",
     "@typescript-eslint/parser": "^5.45.1",
@@ -96,7 +97,7 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-typescript2": "^0.31.2",
     "rollup-plugin-vue": "^6.0.0",
-    "semantic-release": "^19.0.5",
+    "standard-version": "^9.5.0",
     "tailwindcss": "^3.2.4",
     "ts-jest": "^28.0.3",
     "tslib": "^2.4.0",
