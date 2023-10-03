@@ -14,7 +14,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "pnpm -F demo dev",
-    "build": "pnpm -F legacy build",
     "lint": "eslint './src/**/*.{js,ts}'",
     "prettier-check": "prettier -c --parser typescript \"{src,__tests__,e2e}/**/*.[jt]s?(x)\"",
     "format": "yarn run lint --write",
