@@ -22,7 +22,7 @@ jobs:
                   restore-keys: ${{ runner.os }}-node-
             - run: npm install -g pnpm
             - run: pnpm i
-            - run: pnpm -F legacy build
+            - run: pnpm -F vue-dapp build
             - run: pnpm -F demo build
             - run: pnpm -F docs build
     release:
@@ -40,7 +40,7 @@ jobs:
                   node-version: 16
             - run: npm install -g pnpm
             - name: Install dependencies
-              run: pnpm i --forzen-lockfile
+              run: pnpm i
             - name: Build dist
               run: yarn -F legacy build
             - name: Release
