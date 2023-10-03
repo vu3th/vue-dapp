@@ -1,6 +1,18 @@
 # Changelog
 
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.0](https://github.com/vu3th/vue-dapp/compare/v0.9.2...v0.11.0) (2023-10-03)
+
+
+### Bug Fixes
+
+* upgrade walletconnect dependencies ([2b3024b](https://github.com/vu3th/vue-dapp/commit/2b3024bf4612f25b9e4505ca8393da9925a94d76))
+
+### Chores
+* Migrate to monorepo from v0.9.2 (with ethers v5)
+* replace semantic-release with standard-version ([fa8b425](https://github.com/vu3th/vue-dapp/commit/fa8b4255abd39e7e52810740f61e3e8504c7dadb))
+* update funding link ([13ae9b8](https://github.com/vu3th/vue-dapp/commit/13ae9b8cccbc60fd576a7e91844c4570e07a3f00))
 
 ## [0.9.2](https://github.com/vu3th/vue-dapp/compare/v0.9.1...v0.9.2) (2023-07-25)
 
