@@ -1,17 +1,9 @@
 {
-  "include": [
-    "src/types/global.d.ts",
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "demo/**/*.ts",
-    "demo/**/*.d.ts",
-    "demo/**/*.tsx",
-    "demo/**/*.vue"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "baseUrl": ".",
-    "rootDir": ".",
+    "rootDir": "../",
     "outDir": "dist",
     "sourceMap": false,
     "noEmit": true,
@@ -42,9 +34,9 @@
       }
     ],
     "paths": {
-      "vue-dapp": ["./src/index.ts"],
-      "vue-dapp/*": ["./src/*"],
-      "@/*": ["./src/*"]
+      "vue-dapp": ["../packages/legacy/src/index.ts"],
+      "vue-dapp/*": ["../packages/legacy/src/*"],
+      "@/*": ["../packages/legacy/src/*"]
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "vue-dapp",
+  "name": "@vue-dapp/legacy",
   "version": "0.11.0",
   "description": "Vue 3 library for building Dapps on Ethereum",
   "repository": "https://github.com/vu3th/vue-dapp",
