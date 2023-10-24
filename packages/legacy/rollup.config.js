@@ -10,59 +10,59 @@ import path from 'path'
 import pkg from './package.json'
 
 export default [
-  {
-    input: 'src/index.ts',
-    output: [
-      {
-        file: pkg.main,
-        format: 'cjs',
-        sourcemap: true,
-      },
-      {
-        file: pkg.module,
-        format: 'esm',
-        sourcemap: true,
-      },
-    ],
-    plugins: [
-      vue({
-        target: 'browser',
-        preprocessStyles: true,
-        css: false,
-        compileTemplate: true,
-      }),
-      typescript({
-        tsconfig: path.resolve(__dirname, 'tsconfig.json'),
-        tsconfigOverride: {
-          compilerOptions: {
-            declaration: false,
-            declarationMap: false,
-          },
-          exclude: ['tests', 'demo'],
-        },
-      }),
-      replace({
-        NODE_ENV: JSON.stringify('production'),
-        'process.env.NODE_ENV': JSON.stringify('production'),
-        preventAssignment: true, // prevent build warning
-      }),
-      postcss(),
-      peerDepsExternal(),
-      json(), // for abi .json files
-    ],
-  },
-  {
-    input: 'src/index.ts',
-    output: [{ file: pkg.types, format: 'esm' }],
-    plugins: [
-      dts(),
-      vue({
-        target: 'browser',
-        preprocessStyles: true,
-        css: false,
-        compileTemplate: true,
-      }),
-      json(), // for abi .json files
-    ],
-  },
+	{
+		input: 'src/index.ts',
+		output: [
+			{
+				file: pkg.main,
+				format: 'cjs',
+				sourcemap: true,
+			},
+			{
+				file: pkg.module,
+				format: 'esm',
+				sourcemap: true,
+			},
+		],
+		plugins: [
+			vue({
+				target: 'browser',
+				preprocessStyles: true,
+				css: false,
+				compileTemplate: true,
+			}),
+			typescript({
+				tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+				tsconfigOverride: {
+					compilerOptions: {
+						declaration: false,
+						declarationMap: false,
+					},
+					exclude: ['tests', 'demo'],
+				},
+			}),
+			replace({
+				NODE_ENV: JSON.stringify('production'),
+				'process.env.NODE_ENV': JSON.stringify('production'),
+				preventAssignment: true, // prevent build warning
+			}),
+			postcss(),
+			peerDepsExternal(),
+			json(), // for abi .json files
+		],
+	},
+	{
+		input: 'src/index.ts',
+		output: [{ file: pkg.types, format: 'esm' }],
+		plugins: [
+			dts(),
+			vue({
+				target: 'browser',
+				preprocessStyles: true,
+				css: false,
+				compileTemplate: true,
+			}),
+			json(), // for abi .json files
+		],
+	},
 ]

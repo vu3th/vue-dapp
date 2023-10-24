@@ -1,40 +1,39 @@
 {
-  "name": "vue-dapp-monorepo",
-  "description": "Vue 3 library for building Dapps on Ethereum",
-  "repository": "https://github.com/vu3th/vue-dapp",
-  "bugs": {
-    "url": "https://github.com/vu3th/vue-dapp/issues"
-  },
-  "packageManager": "pnpm@8.6.9",
-  "homepage": "https://github.com/vu3th/vue-dapp#readme",
-  "author": "Johnson Chen <https://twitter.com/chnejohnson>",
-  "license": "MIT",
-  "scripts": {
-    "dev": "pnpm -F demo dev",
-    "build": "pnpm -F vue-dapp build",
-    "lint": "eslint './src/**/*.{js,ts}'",
-    "prettier-check": "prettier -c --parser typescript \"{src,__tests__,e2e}/**/*.[jt]s?(x)\"",
-    "format": "yarn run lint --write",
-    "prepare": "husky install"
-  },
-  "peerDependencies": {
-    "ethers": ">=5.6.8",
-    "vue": ">=3.2.0"
-  },
-  "devDependencies": {
-    "eslint": "^8.29.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "husky": "^8.0.1",
-    "jsdom": "^20.0.3",
-    "lint-staged": "^12.4.2",
-    "prettier": "^2.6.2",
-    "vite": "3.2.4",
-    "vitest": "^0.25.5"
-  },
-  "lint-staged": {
-    "**/*.{js,ts,json,scss,css,vue}": [
-      "prettier --write"
-    ]
-  }
+	"name": "vue-dapp-monorepo",
+	"description": "Vue 3 library for building Dapps on Ethereum",
+	"repository": "https://github.com/vu3th/vue-dapp",
+	"bugs": {
+		"url": "https://github.com/vu3th/vue-dapp/issues"
+	},
+	"packageManager": "pnpm@8.6.9",
+	"homepage": "https://github.com/vu3th/vue-dapp#readme",
+	"author": "Johnson Chen <https://twitter.com/chnejohnson>",
+	"license": "MIT",
+	"scripts": {
+		"dev": "pnpm -F demo dev",
+		"dev:app": "pnpm -F app dev",
+		"build": "pnpm -F vue-dapp build",
+		"format": "prettier --write \"**/*.{vue,ts,js,json}\"",
+		"prepare": "husky install"
+	},
+	"peerDependencies": {
+		"ethers": ">=5.6.8",
+		"vue": ">=3.2.0"
+	},
+	"devDependencies": {
+		"eslint": "^8.29.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"husky": "^8.0.1",
+		"jsdom": "^20.0.3",
+		"lint-staged": "^12.4.2",
+		"prettier": "^2.6.2",
+		"vite": "3.2.4",
+		"vitest": "^0.25.5"
+	},
+	"lint-staged": {
+		"**/*.{js,ts,json,scss,css,vue}": [
+			"prettier --write"
+		]
+	}
 }
