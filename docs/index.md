@@ -75,6 +75,7 @@ Step 4. Construct your connectors and use composable functions in your scripts:
 
 ```js
 import {
+    BitgetWalletConnector,
     MetaMaskConnector,
     WalletConnectConnector,
     CoinbaseWalletConnector,
@@ -89,6 +90,7 @@ setup()
         new MetaMaskConnector({
             appUrl: "http://localhost:3000",
         }),
+        new BitgetWalletConnector(),
         new WalletConnectConnector({
             qrcode: true,
             rpc: {

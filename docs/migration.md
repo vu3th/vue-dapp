@@ -33,7 +33,7 @@ App.vue
 app.use(VueDapp)
 
 // App.vue
-import { MetaMaskConnector, WalletConnectConnector, CoinbaseWalletConnector } from 'vue-dapp'
+import { BitgetWalletConnector, MetaMaskConnector, WalletConnectConnector, CoinbaseWalletConnector } from 'vue-dapp'
 
 const infuraId = ''
 
@@ -48,6 +48,7 @@ const connectors = [
       4: `https://rinkeby.infura.io/v3/${infuraId}`,
     },
   }),
+  new BitgetWalletConnector(),
   new CoinbaseWalletConnector({
     appName: 'Vue Dapp',
     jsonRpcUrl: `https://mainnet.infura.io/v3/${infuraId}`,

@@ -33,6 +33,7 @@
     "README.md"
   ],
   "peerDependencies": {
+    "@bitget-wallet/web3-sdk": "^0.0.8",
     "@coinbase/wallet-sdk": ">=3.1.0",
     "@gnosis.pm/safe-apps-provider": ">=0.15.1",
     "@gnosis.pm/safe-apps-sdk": ">=7.8.0",

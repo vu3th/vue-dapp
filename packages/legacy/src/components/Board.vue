@@ -6,6 +6,7 @@ import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
 import CoinbaseWalletIcon from './logos/CoinbaseWallet.vue'
 import GnosisSafeIcon from './logos/GnosisSafe.vue'
+import BitgetWalletIcon from './logos/BitgetWallet.vue'
 
 import { useBoard } from '../composables/useBoard'
 import { useWallet } from '../composables/useWallet'
@@ -19,6 +20,7 @@ export default defineComponent({
     WalletConnectIcon,
     CoinbaseWalletIcon,
     GnosisSafeIcon,
+    BitgetWalletIcon,
   },
   props: {
     connectors: {
@@ -103,6 +105,10 @@ export default defineComponent({
               v-if="connector.name === 'walletConnect'"
               class="logo"
             />
+            <BitgetWalletIcon
+              v-if="connector.name === 'bitgetWallet'"
+              class="logo"
+            />
             <CoinbaseWalletIcon
               v-if="connector.name === 'coinbaseWallet'"
               class="logo"
@@ -110,6 +116,7 @@ export default defineComponent({
             <GnosisSafeIcon v-if="connector.name === 'safe'" class="logo" />
 
             <div v-if="connector.name === 'metaMask'">MetaMask</div>
+            <div v-if="connector.name === 'bitgetWallet'">Bitget Wallet</div>
             <div v-if="connector.name === 'walletConnect'">WalletConnect</div>
             <div v-if="connector.name === 'coinbaseWallet'">
               Coinbase Wallet
