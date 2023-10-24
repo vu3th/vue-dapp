@@ -1,0 +1,48 @@
+@import "./vars.scss";
+
+.btn {
+  @apply min-w-[100px] bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded flex justify-center items-center;
+}
+
+.label {
+  @apply block text-gray-700 text-center mb-2;
+}
+
+.input {
+  @apply appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none;
+}
+
+.clickable {
+  @apply cursor-pointer hover:text-primary-dark;
+}
+
+a {
+  @apply text-secondary hover:text-secondary-dark;
+}
+
+.my-shadow {
+  /* offset-x | offset-y | blur-radius | color */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05), 0px 0px 10px rgba(0, 0, 0, 0.05);
+}
+
+.frosted-glass-effect {
+  background-color: #ffffffb2;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.page {
+  @apply w-full items-center flex flex-col gap-y-6 p-5;
+
+  .page-title {
+    @apply flex justify-center px-10;
+
+    > p {
+      @apply text-2xl;
+    }
+  }
+}
+
+.absolute-center {
+  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+}

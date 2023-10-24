@@ -7,12 +7,12 @@ import { useWallet } from '@/composables'
 // const noop = () => {}
 
 const setup = (setup: () => unknown) => {
-  const Comp = defineComponent({
-    setup,
-    template: `<div />`,
-  })
+	const Comp = defineComponent({
+		setup,
+		template: `<div />`,
+	})
 
-  return mount(Comp)
+	return mount(Comp)
 }
 
 // const sleep = (ms?: number) => {
@@ -20,13 +20,13 @@ const setup = (setup: () => unknown) => {
 // }
 
 describe('useWallet', () => {
-  it('when initialize wallet state', () => {
-    setup(() => {
-      const { wallet } = useWallet()
-      expect(wallet.connector).toEqual(null)
-      expect(wallet.error).toEqual('')
-      expect(wallet.provider).toEqual(null)
-      expect(wallet.status).toEqual('none')
-    })
-  })
+	it('when initialize wallet state', () => {
+		setup(() => {
+			const { wallet } = useWallet()
+			expect(wallet.connector).toEqual(null)
+			expect(wallet.error).toEqual('')
+			expect(wallet.provider).toEqual(null)
+			expect(wallet.status).toEqual('none')
+		})
+	})
 })

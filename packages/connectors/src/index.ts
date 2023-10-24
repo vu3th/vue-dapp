@@ -1,5 +1,5 @@
-export const foo = "foo"
+export const foo = 'foo'
 
 export function greeting() {
-  console.log("hello world")
+	console.log('hello world')
 }
