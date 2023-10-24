@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useBoard, useEthers, useWallet, shortenAddress } from '@vue-dapp/legacy'
+import { shortenAddress } from '@vue-dapp/core'
 import copy from 'copy-to-clipboard'
 import { useDappStore } from '@/stores/useDappStore'
 

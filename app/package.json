@@ -12,7 +12,8 @@
 	"dependencies": {
 		"@pinia-plugin-persistedstate/nuxt": "^1.1.2",
 		"@pinia/nuxt": "^0.5.0",
-		"@vue-dapp/legacy": "workspace:^",
+		"@vue-dapp/core": "workspace:^",
+		"@vue-dapp/walletconnect": "workspace:^",
 		"@vueuse/core": "^10.5.0",
 		"@vueuse/nuxt": "^10.5.0",
 		"@walletconnect/ethereum-provider": "^2.10.2",

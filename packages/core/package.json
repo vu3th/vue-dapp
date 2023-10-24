@@ -1,7 +1,7 @@
 {
-	"name": "@vue-dapp/connectors",
-	"version": "0.0.1",
-	"description": "My awesome typescript library",
+	"name": "@vue-dapp/core",
+	"version": "1.0.0",
+	"description": "",
 	"publishConfig": {
 		"access": "public"
 	},

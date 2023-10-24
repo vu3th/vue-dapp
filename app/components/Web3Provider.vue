@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { MetaMaskConnector, WalletConnectConnector, useEthersHooks } from '@vue-dapp/legacy'
+import { MetaMaskConnector } from '@vue-dapp/core'
+import { WalletConnectConnector } from '@vue-dapp/walletconnect'
+
 import { useDappStore } from '@/stores/useDappStore'
 import { storeToRefs } from 'pinia'
 
@@ -78,7 +80,7 @@ watch(isConnected, () => {
 	<div>
 		<slot />
 
-		<vd-board
+		<Board
 			:connectors="connectors"
 			dark
 			:autoConnectErrorHandler="autoConnectErrorHandler"
