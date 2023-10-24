@@ -109,9 +109,6 @@ export class BitgetWalletConnector extends Connector<
     // console.log('remove listener', event, handler)
   }
 
-  /**
-   * @todo: add addChain()
-   */
   async switchChain(chainId: number) {
     if (!this.#provider) throw new ProviderNotFoundError()
     const provider = this.#provider
@@ -125,18 +122,15 @@ export class BitgetWalletConnector extends Connector<
     } catch (error: unknown) {
       if ((<ProviderRpcError>error).code === 4902) {
         try {
-          // await provider.request({
-          //   method: 'wallet_addEthereumChain',
-          //   params: [
-          //     {
-          //       chainId: id,
-          //       chainName: chain.name,
-          //       nativeCurrency: chain.nativeCurrency,
-          //       rpcUrls: [chain.rpcUrls.default],
-          //       blockExplorerUrls: this.getBlockExplorerUrls(chain),
-          //     },
-          //   ],
-          // })
+          // Before switching a network that is not added, add the network first
+          await provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: id,
+              },
+            ],
+          })
         } catch (addError: unknown) {
           if (this.#isUserRejectedRequestError(addError)) {
             throw new UserRejectedRequestError(addError)
