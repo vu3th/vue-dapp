@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { MetaMaskConnector } from '@vue-dapp/core'
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
+import { Board } from '@vue-dapp/vd-board'
 
 import { useDappStore } from '@/stores/useDappStore'
 import { storeToRefs } from 'pinia'

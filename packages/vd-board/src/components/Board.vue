@@ -1,4 +1,5 @@
 <script lang="ts">
+import { computed, defineComponent, inject, onMounted, ref } from 'vue'
 import Modal from './Modal.vue'
 import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
@@ -7,6 +8,8 @@ import CoinbaseWalletIcon from './logos/CoinbaseWallet.vue'
 import GnosisSafeIcon from './logos/GnosisSafe.vue'
 
 import { Connector } from '@vue-dapp/core'
+import { useBoardStore, useWalletStore } from '../stores'
+import { storeToRefs } from 'pinia'
 
 export default defineComponent({
 	components: {
@@ -40,8 +43,10 @@ export default defineComponent({
 		},
 	},
 	setup(props) {
-		const { boardOpen, close } = useBoard()
-		const { connectWith, wallet, autoConnect } = useWallet()
+		const { close } = useBoardStore()
+		const { boardOpen } = storeToRefs(useBoardStore())
+		const { connectWith, autoConnect } = useWalletStore()
+		const { wallet } = storeToRefs(useWalletStore())
 
 		const walletItemClass = computed(() => (props.dark ? 'wallet-item--dark' : 'wallet-item'))
 
@@ -82,6 +87,29 @@ export default defineComponent({
 			onClickWallet,
 			close,
 		}
+	},
+	directives: {
+		'click-outside': {
+			beforeMount: (el: any, binding: any) => {
+				el.clickOutsideEvent = (event: MouseEvent) => {
+					event.stopPropagation()
+
+					if (event.target !== el && !el.contains(event.target)) {
+						binding.value(event)
+					}
+				}
+				const clickHandler = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
+				setTimeout(() => {
+					document.addEventListener(clickHandler, el.clickOutsideEvent)
+				}, 0)
+			},
+			unmounted: (el: any) => {
+				const clickOutsideEvent = el.clickOutsideEvent
+				delete el.clickOutsideEvent
+				const clickHandler = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
+				document.removeEventListener(clickHandler, clickOutsideEvent)
+			},
+		},
 	},
 })
 </script>

@@ -3,8 +3,9 @@ import { storeToRefs } from 'pinia'
 import { shortenAddress } from '@vue-dapp/core'
 import copy from 'copy-to-clipboard'
 import { useDappStore } from '@/stores/useDappStore'
+import { useBoardStore } from '@vue-dapp/vd-board'
 
-const { open } = useBoard()
+const { open } = useBoardStore()
 const { address, isActivated } = useEthers()
 const { disconnect, wallet } = useWallet()
 

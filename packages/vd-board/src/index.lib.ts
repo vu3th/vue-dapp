@@ -1,4 +1,4 @@
-import PiniaComponent from './components/PiniaComponent.vue'
+import Board from './components/Board.vue'
 
-export { PiniaComponent }
-export { useCount } from './stores/count'
+export { Board }
+export * from './stores'
