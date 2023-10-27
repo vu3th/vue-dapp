@@ -1,0 +1,32 @@
+{
+	"name": "@vue-dapp/vd-board",
+	"version": "1.0.0",
+	"files": [
+		"src",
+		"dist",
+		"public"
+	],
+	"main": "./dist/vd-board.umd.js",
+	"module": "./dist/vd-board.es.js",
+	"exports": {
+		".": {
+			"import": "./dist/vd-board.es.js",
+			"require": "./dist/vd-board.umd.js"
+		}
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"pinia": "^2.1.7",
+		"vue": "^3.3.6"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-vue": "^2.3.4",
+		"typescript": "^5.1.3",
+		"vite": "^2.9.16",
+		"vue-tsc": "^0.29.8"
+	}
+}
