@@ -12,9 +12,11 @@ export default defineConfig({
 	],
 	build: {
 		assetsDir: 'assets',
+		// Vite Library Mode https://vitejs.dev/guide/build.html#library-mode
 		lib: {
 			entry: path.resolve(__dirname, 'src/index.ts'),
-			name: 'vd-core',
+			name: '@vue-dapp/core',
+			fileName: 'core',
 		},
 		outDir: 'dist',
 		rollupOptions: {

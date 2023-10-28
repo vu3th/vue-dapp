@@ -1,4 +1,3 @@
-import { hexValue } from 'ethers/lib/utils'
 import type { NETWORK_DETAILS } from '../constants'
 import { Connector } from './connector'
 import {
@@ -8,9 +7,7 @@ import {
 	UserRejectedRequestError,
 	SwitchChainError,
 } from './errors'
-
-// import { useEthers } from '../composables/useEthers'
-import { normalizeChainId } from '../utils'
+import { normalizeChainId, toHex } from '../utils'
 
 /**
  * MetaMask
@@ -186,8 +183,8 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 
 	async switchChain(chainId: number) {
 		if (!this.#provider) throw new ProviderNotFoundError()
-		const id = hexValue(chainId)
-		// dev
+		const id = toHex(chainId)
+		// @todo
 		// const { availableNetworks } = useEthers() as any
 		const _availableNetworks = JSON.parse(JSON.stringify(availableNetworks.value))
 

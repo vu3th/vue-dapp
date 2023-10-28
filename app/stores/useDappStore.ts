@@ -1,4 +1,4 @@
-import { ethers, type Signer } from 'ethers'
+import { type Signer, JsonRpcProvider, Wallet } from 'ethers'
 import { defineStore } from 'pinia'
 import invariant from 'tiny-invariant'
 import { createPublicClient, type Chain, http, type PublicClient, type Abi, getAddress } from 'viem'
@@ -47,9 +47,9 @@ export const useDappStore = defineStore('dapp', {
 		explorerUrl(): string {
 			return this.chain.blockExplorers?.default.url || ''
 		},
-		provider(): ethers.providers.JsonRpcProvider {
+		provider(): JsonRpcProvider {
 			invariant(this.rpcUrl, 'rpcUrl')
-			return new ethers.providers.JsonRpcProvider(this.rpcUrl)
+			return new JsonRpcProvider(this.rpcUrl)
 		},
 		isConnected(state) {
 			if (!state.user.address || !state.user.signer) {
@@ -60,7 +60,7 @@ export const useDappStore = defineStore('dapp', {
 		signer(): Signer {
 			if (!this.isConnected) {
 				console.warn('No wallect connected, using hardhat account #12 as signer')
-				return new ethers.Wallet(HARDHAT_PRIV_KEY[12]).connect(this.provider)
+				return new Wallet(HARDHAT_PRIV_KEY[12]).connect(this.provider)
 			}
 			invariant(this.user.signer, 'user.signer')
 			return this.user.signer

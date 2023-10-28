@@ -7,9 +7,9 @@ import MetaMaskIcon from './logos/MetaMask.vue'
 import CoinbaseWalletIcon from './logos/CoinbaseWallet.vue'
 import GnosisSafeIcon from './logos/GnosisSafe.vue'
 
-import { Connector } from '@vue-dapp/core'
-import { useBoardStore, useWalletStore } from '../stores'
 import { storeToRefs } from 'pinia'
+import { Connector, useWalletStore } from '@vue-dapp/core'
+import { useBoardStore } from '../stores'
 
 export default defineComponent({
 	components: {
@@ -46,7 +46,7 @@ export default defineComponent({
 		const { close } = useBoardStore()
 		const { boardOpen } = storeToRefs(useBoardStore())
 		const { connectWith, autoConnect } = useWalletStore()
-		const { wallet } = storeToRefs(useWalletStore())
+		const { status } = storeToRefs(useWalletStore())
 
 		const walletItemClass = computed(() => (props.dark ? 'wallet-item--dark' : 'wallet-item'))
 
@@ -81,7 +81,7 @@ export default defineComponent({
 		return {
 			isAutoConnecting,
 			boardOpen,
-			wallet,
+			status,
 			connectors,
 			walletItemClass,
 			onClickWallet,
@@ -138,17 +138,17 @@ export default defineComponent({
 	</Modal>
 
 	<slot name="connecting">
-		<Modal :modalOpen="wallet.status === 'connecting' && !isAutoConnecting" :dark="dark">
-			<div class="loading-modal" v-if="wallet.status === 'connecting'">
+		<Modal :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
+			<div class="loading-modal" v-if="status === 'connecting'">
 				<p>Connecting...</p>
 				<p class="mt-4">Approve or reject request using your wallet</p>
 			</div>
 		</Modal>
 	</slot>
 
-	<slot name="loading">
-		<Modal :modalOpen="wallet.status === 'loading' && !isAutoConnecting" :dark="dark"></Modal>
-	</slot>
+	<!-- <slot name="loading">
+		<Modal :modalOpen="status === 'loading' && !isAutoConnecting" :dark="dark"></Modal>
+	</slot> -->
 </template>
 
 <style scoped>

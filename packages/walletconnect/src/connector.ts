@@ -1,5 +1,4 @@
-import { Connector } from '@vue-dapp/core'
-import { getAddress, hexValue } from 'ethers/lib/utils'
+import { Connector, toHex } from '@vue-dapp/core'
 import {
 	ProviderNotFoundError,
 	ProviderRpcError,
@@ -24,7 +23,7 @@ export class WalletConnectConnector extends Connector<EthereumProvider, Ethereum
 		const provider: any = await this.getProvider()
 		this.#provider = provider
 		const accounts = await provider.enable()
-		const account = getAddress(accounts[0])
+		const account = accounts[0]
 
 		return {
 			account,
@@ -112,7 +111,7 @@ export class WalletConnectConnector extends Connector<EthereumProvider, Ethereum
 			throw new SwitchChainNotSupportedError()
 		}
 
-		const id = hexValue(chainId)
+		const id = toHex(chainId)
 
 		try {
 			await this.#provider.request({

@@ -1,29 +1,38 @@
 <script setup lang="ts">
-import { MetaMaskConnector } from '@vue-dapp/core'
-import { WalletConnectConnector } from '@vue-dapp/walletconnect'
-import { Board } from '@vue-dapp/vd-board'
-
 import { useDappStore } from '@/stores/useDappStore'
 import { storeToRefs } from 'pinia'
+import { ethers } from 'ethers'
+
+import { MetaMaskConnector, useWalletStore } from '@vue-dapp/core'
+import { WalletConnectConnector } from '@vue-dapp/walletconnect'
+import { Board } from '@vue-dapp/vd-board'
 
 const dappStore = useDappStore()
 const { isConnected, user } = storeToRefs(dappStore)
 
-const { onActivated, onChanged, onDeactivated } = useEthersHooks()
+const { onActivated, onChanged, onDeactivated } = useWalletStore()
 
-onActivated(({ signer, address, network }) => {
+onActivated(async ({ address, provider }) => {
+	const ethersProvider = new ethers.BrowserProvider(provider)
+	const signer = await ethersProvider.getSigner()
+	const network = await ethersProvider.getNetwork()
+
 	dappStore.setUser({
 		address,
 		signer,
-		chainId: network.chainId,
+		chainId: Number(network.chainId),
 	})
 })
 
-onChanged(({ signer, address, network }) => {
+onChanged(async ({ address, provider }) => {
+	const ethersProvider = new ethers.BrowserProvider(provider)
+	const signer = await ethersProvider.getSigner()
+	const network = await ethersProvider.getNetwork()
+
 	dappStore.setUser({
 		address,
 		signer,
-		chainId: network.chainId,
+		chainId: Number(network.chainId),
 	})
 })
 

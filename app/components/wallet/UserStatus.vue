@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { shortenAddress } from '@vue-dapp/core'
+import { shortenAddress, useWalletStore } from '@vue-dapp/core'
 import copy from 'copy-to-clipboard'
 import { useDappStore } from '@/stores/useDappStore'
 import { useBoardStore } from '@vue-dapp/vd-board'
 
 const { open } = useBoardStore()
-const { address, isActivated } = useEthers()
-const { disconnect, wallet } = useWallet()
+
+const { disconnect } = useWalletStore()
+const { connector, status, address, isConnected } = storeToRefs(useWalletStore())
 
 const dappStore = useDappStore()
 const { isNetworkUnmatched } = storeToRefs(dappStore)
 
 async function onSwitchChain() {
 	try {
-		if (wallet.connector) {
-			await wallet.connector.switchChain?.(dappStore.chainId)
+		if (connector.value) {
+			await connector.value.switchChain?.(dappStore.chainId)
 		}
 	} catch (err: any) {
 		console.error(err)
@@ -25,7 +26,7 @@ async function onSwitchChain() {
 
 <template>
 	<div>
-		<div v-if="isActivated" class="flex items-center flex-col">
+		<div v-if="isConnected" class="flex items-center flex-col">
 			<div
 				class="h-[36px] px-4 rounded-3xl sm:inline-flex items-center gap-x-2 bg-gray-100"
 				:class="isNetworkUnmatched ? 'border border-red-500' : ''"
@@ -51,9 +52,9 @@ async function onSwitchChain() {
 			</div>
 		</div>
 
-		<BaseButton class="rounded-3xl w-auto" v-else @click="open()" :disabled="wallet.status === 'connecting'">
-			{{ wallet.status === 'connecting' ? 'Connecting...' : wallet.status === 'loading' ? 'Loading...' : '' }}
-			<Icon name="i-octicon-plug-24" v-if="wallet.status !== 'connecting' && wallet.status !== 'loading'" />
+		<BaseButton class="rounded-3xl w-auto" v-else @click="open()" :disabled="status === 'connecting'">
+			{{ status === 'connecting' ? 'Connecting...' : '' }}
+			<Icon name="i-octicon-plug-24" v-if="status !== 'connecting'" />
 		</BaseButton>
 	</div>
 </template>

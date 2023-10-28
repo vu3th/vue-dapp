@@ -20,7 +20,7 @@
 		"@walletconnect/ethereum-provider": "^2.10.2",
 		"@walletconnect/modal": "^2.6.2",
 		"copy-to-clipboard": "^3.3.3",
-		"ethers": "5.7.2",
+		"ethers": "6.8.0",
 		"nuxt-icon": "^0.5.0",
 		"pinia": "^2.1.7",
 		"siwe": "^2.1.4",

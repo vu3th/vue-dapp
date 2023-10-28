@@ -1,10 +1,14 @@
 import { defineStore } from 'pinia'
 
-export const useBoardStore = defineStore({
-	id: 'vd-board',
-	state: () => ({
+type BoardStoreState = {
+	boardOpen: boolean
+}
+
+export const useBoardStore = defineStore('vd-board', {
+	state: (): BoardStoreState => ({
 		boardOpen: false,
 	}),
+	getters: {},
 	actions: {
 		open() {
 			this.boardOpen = true
