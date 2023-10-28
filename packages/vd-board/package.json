@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/vd-board",
-	"version": "1.0.0",
+	"version": "1.0.0-alpha.1",
 	"type": "module",
 	"files": [
 		"dist"
@@ -13,6 +13,9 @@
 			"import": "./dist/vd-board.js",
 			"require": "./dist/vd-board.umd.cjs"
 		}
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"scripts": {
 		"dev": "vite",

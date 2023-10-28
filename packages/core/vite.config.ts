@@ -25,7 +25,7 @@ export default defineConfig({
 				dir: 'dist',
 				globals: {
 					vue: 'Vue',
-					pinia: 'Pinia',
+					pinia: 'pinia',
 				},
 			},
 		},

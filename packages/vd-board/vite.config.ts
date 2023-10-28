@@ -26,7 +26,8 @@ export default defineConfig({
 				dir: 'dist',
 				globals: {
 					vue: 'Vue',
-					pinia: 'Pinia',
+					pinia: 'pinia',
+					'@vue-dapp/core': 'core',
 				},
 			},
 		},
