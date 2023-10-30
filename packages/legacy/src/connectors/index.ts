@@ -1,5 +1,6 @@
 export * from './errors'
 export * from './connector'
+export * from './bitgetWallet'
 export * from './metaMask'
 export * from './walletConnect'
 export * from './coinbaseWallet'
