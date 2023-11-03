@@ -1,4 +1,5 @@
 import type { CoinbaseWalletProvider } from '@coinbase/wallet-sdk'
+import type { EIP1193Provider } from '@bitget-wallet/web3-sdk'
 import { providers } from 'ethers'
 
 export type ConnectorData<Provider = any> = {
@@ -6,7 +7,10 @@ export type ConnectorData<Provider = any> = {
 	provider: Provider
 }
 
-export abstract class Connector<Provider = providers.ExternalProvider | CoinbaseWalletProvider, Options = any> {
+export abstract class Connector<
+	Provider = providers.ExternalProvider | CoinbaseWalletProvider | EIP1193Provider,
+	Options = any,
+> {
 	// Connector name
 	abstract readonly name: string
 	// Options to pass to the third-party provider
