@@ -33,18 +33,33 @@
 
 Brief versions and functionalities are as follows:
 
+- v0.12.x: Add bitget wallet
+- v0.11.x: Uses ethers v5 with WalletConnect dependencies update.
 - v0.10.x: Uses ethers v6 and supports WalletConnect v2.
 - v0.9.x: Uses ethers v5 and supports WalletConnect v2.
 - Before v0.8.x: Uses ethers v5 and does not support WalletConnect v2.
 
-I recommend keeping an eye on [vue-dapp-starter](https://github.com/vu3th/vue3-dapp-starter), as it strives to maintain a development-friendly version whenever possible.
+I recommend keeping an eye on [vue3-dapp-starter](https://github.com/vu3th/vue3-dapp-starter) and [nuxt-dapp](https://github.com/vu3th/nuxt-dapp), as it strives to maintain a development-friendly version whenever possible.
 
-Please be cautious when using the documentation below, as it hasn't been updated for some time.
+Please be cautious when using the documentation below, as it has not been updated for some time.
 
-- [Documentation](https://vue-dapp-docs.netlify.app/)
-- [Migrating to v0.5.x and beyond](https://vue-dapp-docs.netlify.app/migration)
+- [Documentation (v0.9.x)](https://vue-dapp-docs.netlify.app/)
+- [Migrating to v0.5.x ~ v0.9.x](https://vue-dapp-docs.netlify.app/migration)
 
-## Installation
+## Packages
+
+| Package                 | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| @vue-dapp/core          | useWalletStore, connector, utils, and metamask... |
+| @vue-dapp/vd-board      | Vue components for connecting wallet              |
+| @vue-dapp/walletconnect | WalletConnect integration                         |
+| @vue-dapp/legacy        | vue-dapp version below v1                         |
+| @vue-dapp/docs          | documentation                                     |
+| @vue-dapp/app           | Nuxt 3 demo for v1                                |
+| @vue-dapp/demo          | Vue 3 demo for @vue-dapp/legacy                   |
+
+
+## Installation (below v0.10.x)
 
 ```bash
 yarn add ethers vue-dapp
