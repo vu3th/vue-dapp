@@ -66,12 +66,6 @@ importers:
       '@vueuse/nuxt':
         specifier: ^10.5.0
         version: 10.5.0(nuxt@3.8.0)(vue@3.3.6)
-      '@walletconnect/ethereum-provider':
-        specifier: ^2.10.2
-        version: 2.10.2(@walletconnect/modal@2.6.2)
-      '@walletconnect/modal':
-        specifier: ^2.6.2
-        version: 2.6.2(react@18.2.0)
       copy-to-clipboard:
         specifier: ^3.3.3
         version: 3.3.3
@@ -469,9 +463,6 @@ importers:
 
   packages/walletconnect:
     dependencies:
-      '@vue-dapp/core':
-        specifier: workspace:^
-        version: link:../core
       '@walletconnect/ethereum-provider':
         specifier: '>=2.8.5'
         version: 2.10.2(@walletconnect/modal@2.6.2)
@@ -479,12 +470,21 @@ importers:
         specifier: '>=2.5.6'
         version: 2.6.2(react@18.2.0)
     devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: 4.4.0
+        version: 4.4.0(vite@4.5.0)(vue@3.3.7)
+      '@vue-dapp/core':
+        specifier: workspace:^
+        version: link:../core
       '@walletconnect/types':
         specifier: ^2.9.0
         version: 2.10.2
       typescript:
         specifier: ^5.1.3
         version: 5.2.2
+      vite:
+        specifier: 4.5.0
+        version: 4.5.0(sass@1.69.4)
 
 packages:
 
@@ -4171,7 +4171,7 @@ packages:
       vue: ^3.2.25
     dependencies:
       vite: 4.5.0(sass@1.69.4)
-      vue: 3.3.7(typescript@5.1.3)
+      vue: 3.3.7(typescript@5.2.2)
     dev: true
 
   /@vitest/expect@0.28.5:
@@ -4513,7 +4513,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.3.7
       '@vue/shared': 3.3.7
-      vue: 3.3.7(typescript@5.1.3)
+      vue: 3.3.7(typescript@5.2.2)
     dev: true
 
   /@vue/shared@3.3.6:
@@ -15758,6 +15758,22 @@ packages:
       '@vue/server-renderer': 3.3.7(vue@3.3.7)
       '@vue/shared': 3.3.7
       typescript: 5.1.3
+    dev: true
+
+  /vue@3.3.7(typescript@5.2.2):
+    resolution: {integrity: sha512-YEMDia1ZTv1TeBbnu6VybatmSteGOS3A3YgfINOfraCbf85wdKHzscD6HSS/vB4GAtI7sa1XPX7HcQaJ1l24zA==}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/compiler-dom': 3.3.7
+      '@vue/compiler-sfc': 3.3.7
+      '@vue/runtime-dom': 3.3.7
+      '@vue/server-renderer': 3.3.7(vue@3.3.7)
+      '@vue/shared': 3.3.7
+      typescript: 5.2.2
     dev: true
 
   /w3c-xmlserializer@4.0.0:
