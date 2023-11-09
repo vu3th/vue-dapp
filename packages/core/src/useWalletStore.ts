@@ -1,6 +1,7 @@
 import { computed, markRaw, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { Connector, ConnectorNotFoundError, ConnectError } from './connectors'
+import { Connector } from './types'
+import { ConnectorNotFoundError, ConnectError } from './errors'
 import { WalletProvider } from './types'
 import invariant from 'tiny-invariant'
 

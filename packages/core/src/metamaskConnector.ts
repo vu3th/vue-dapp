@@ -1,5 +1,4 @@
-import type { NETWORK_DETAILS } from '../constants'
-import { Connector } from './connector'
+import { Connector, WalletProvider } from './types'
 import {
 	AddChainError,
 	ProviderRpcError,
@@ -7,7 +6,13 @@ import {
 	UserRejectedRequestError,
 	SwitchChainError,
 } from './errors'
-import { normalizeChainId, toHex } from '../utils'
+import { normalizeChainId, toHex } from './utils'
+
+declare global {
+	interface Window {
+		ethereum?: WalletProvider
+	}
+}
 
 /**
  * MetaMask
@@ -181,12 +186,9 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		this.#provider.removeListener(event, handler)
 	}
 
-	async switchChain(chainId: number) {
+	async switchChain(chainId: number, networkDetails: NetworkDetails) {
 		if (!this.#provider) throw new ProviderNotFoundError()
 		const id = toHex(chainId)
-		// @todo
-		// const { availableNetworks } = useEthers() as any
-		const _availableNetworks = JSON.parse(JSON.stringify(availableNetworks.value))
 
 		try {
 			await this.#provider.request({
@@ -196,9 +198,7 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		} catch (err: unknown) {
 			if ((<ProviderRpcError>err).code === 4902) {
 				try {
-					await this.addChain(
-						_availableNetworks[chainId as keyof typeof NETWORK_DETAILS] as AddEthereumChainParameter,
-					)
+					await this.addChain(networkDetails)
 				} catch (err: unknown) {
 					if (this.#isUserRejectedRequestError(err)) {
 						throw new UserRejectedRequestError(err)
@@ -213,7 +213,7 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		}
 	}
 
-	async addChain(networkDetails: AddEthereumChainParameter) {
+	async addChain(networkDetails: NetworkDetails) {
 		if (!this.#provider) throw new ProviderNotFoundError()
 		try {
 			this.#provider.request({
@@ -231,7 +231,7 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 }
 
 // Refer to https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
-export interface AddEthereumChainParameter {
+export interface NetworkDetails {
 	chainId: string // A 0x-prefixed hexadecimal string
 	chainName: string
 	nativeCurrency: {
