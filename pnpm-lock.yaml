@@ -284,7 +284,7 @@ importers:
         version: 5.1.3
       vite:
         specifier: ^4.5.0
-        version: 4.5.0(sass@1.69.4)
+        version: 4.5.0(@types/node@20.8.7)
       vite-plugin-dts:
         specifier: ^3.6.2
         version: 3.6.2(typescript@5.1.3)(vite@4.5.0)
@@ -447,7 +447,7 @@ importers:
         version: 5.2.2
       vite:
         specifier: ^4.5.0
-        version: 4.5.0(sass@1.69.4)
+        version: 4.5.0(@types/node@20.8.7)
       vite-plugin-dts:
         specifier: ^3.6.2
         version: 3.6.2(typescript@5.2.2)(vite@4.5.0)
@@ -484,7 +484,7 @@ importers:
         version: 5.2.2
       vite:
         specifier: 4.5.0
-        version: 4.5.0(sass@1.69.4)
+        version: 4.5.0(@types/node@20.8.7)
 
 packages:
 
@@ -4160,7 +4160,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.5.0(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)
       vue: 3.3.6(typescript@5.2.2)
 
   /@vitejs/plugin-vue@4.4.0(vite@4.5.0)(vue@3.3.7):
@@ -4170,8 +4170,8 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.5.0(sass@1.69.4)
-      vue: 3.3.7(typescript@5.2.2)
+      vite: 4.5.0(@types/node@20.8.7)
+      vue: 3.3.7(typescript@5.1.3)
     dev: true
 
   /@vitest/expect@0.28.5:
@@ -4513,7 +4513,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.3.7
       '@vue/shared': 3.3.7
-      vue: 3.3.7(typescript@5.2.2)
+      vue: 3.3.7(typescript@5.1.3)
     dev: true
 
   /@vue/shared@3.3.6:
@@ -15108,7 +15108,7 @@ packages:
       debug: 4.3.4(supports-color@9.4.0)
       kolorist: 1.8.0
       typescript: 5.1.3
-      vite: 4.5.0(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)
       vue-tsc: 1.8.22(typescript@5.1.3)
     transitivePeerDependencies:
       - '@types/node'
@@ -15132,7 +15132,7 @@ packages:
       debug: 4.3.4(supports-color@9.4.0)
       kolorist: 1.8.0
       typescript: 5.2.2
-      vite: 4.5.0(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)
       vue-tsc: 1.8.22(typescript@5.2.2)
     transitivePeerDependencies:
       - '@types/node'
@@ -15183,7 +15183,7 @@ packages:
     peerDependencies:
       vite: ^2.0.0
     dependencies:
-      vite: 4.5.0(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)
     dev: true
 
   /vite-plugin-vue-inspector@4.0.0(vite@4.5.0):
@@ -15271,7 +15271,6 @@ packages:
       rollup: 3.29.4
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /vite@4.5.0(sass@1.69.4):
     resolution: {integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==}
@@ -15323,7 +15322,7 @@ packages:
       mark.js: 8.11.1
       minisearch: 6.1.0
       shiki: 0.14.5
-      vite: 4.5.0(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)
       vue: 3.3.6(typescript@5.2.2)
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -15758,22 +15757,6 @@ packages:
       '@vue/server-renderer': 3.3.7(vue@3.3.7)
       '@vue/shared': 3.3.7
       typescript: 5.1.3
-    dev: true
-
-  /vue@3.3.7(typescript@5.2.2):
-    resolution: {integrity: sha512-YEMDia1ZTv1TeBbnu6VybatmSteGOS3A3YgfINOfraCbf85wdKHzscD6HSS/vB4GAtI7sa1XPX7HcQaJ1l24zA==}
-    peerDependencies:
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@vue/compiler-dom': 3.3.7
-      '@vue/compiler-sfc': 3.3.7
-      '@vue/runtime-dom': 3.3.7
-      '@vue/server-renderer': 3.3.7(vue@3.3.7)
-      '@vue/shared': 3.3.7
-      typescript: 5.2.2
     dev: true
 
   /w3c-xmlserializer@4.0.0:

@@ -93,6 +93,7 @@ watch(isConnected, () => {
 		<Board
 			:connectors="connectors"
 			dark
+			autoConnect
 			:autoConnectErrorHandler="autoConnectErrorHandler"
 			:connectErrorHandler="connectErrorHandler"
 		/>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, inject, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import Modal from './Modal.vue'
 import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
@@ -31,6 +31,16 @@ export default defineComponent({
 			required: false,
 			default: false,
 		},
+		autoConnect: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		connectTimeout: {
+			type: Number,
+			required: false,
+			default: 0,
+		},
 		connectErrorHandler: {
 			type: Function,
 			required: false,
@@ -53,8 +63,8 @@ export default defineComponent({
 		const connectors = props.connectors as Connector[]
 
 		const isAutoConnecting = ref(false)
-		const isAutoConnect = inject('autoConnect') || true
-		const connectTimeout = (inject('connectTimeout') as number | undefined) || 0
+		const isAutoConnect = props.autoConnect
+		const connectTimeout = props.connectTimeout
 
 		onMounted(async () => {
 			if (isAutoConnect) {
