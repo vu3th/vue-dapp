@@ -1,5 +1,6 @@
-import { Connector, toHex } from '@vue-dapp/core'
 import {
+	Connector,
+	toHex,
 	ProviderNotFoundError,
 	ProviderRpcError,
 	SwitchChainError,

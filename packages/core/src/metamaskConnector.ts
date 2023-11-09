@@ -243,3 +243,5 @@ export interface NetworkDetails {
 	blockExplorerUrls?: string[]
 	iconUrls?: string[] // Currently ignored.
 }
+
+export { Connector } from './types'
