@@ -84,6 +84,7 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		this.#provider = provider
 
 		let accounts
+		let chainId: number
 
 		try {
 			if (timeout) {
@@ -104,6 +105,10 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 					params: [{ eth_accounts: {} }],
 				})
 			}
+
+			chainId = (await this.#provider.request({
+				method: 'eth_chainId',
+			})) as number
 		} catch (error: any) {
 			throw new Error(`Failed to request MetaMask${error.message ? ': ' + error.message : ''}`)
 		}
@@ -111,8 +116,9 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		const account = accounts[0]
 
 		return {
-			account,
 			provider,
+			account,
+			chainId,
 		}
 	}
 

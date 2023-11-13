@@ -1,13 +1,11 @@
-/**
- * copied from ethers.js
- */
 export type WalletProvider = {
 	request(request: { method: string; params?: Array<any> | Record<string, any> }): Promise<any>
 }
 
 export type ConnectorData<Provider = any> = {
-	account: string
 	provider: Provider
+	account: string
+	chainId: number
 }
 
 export abstract class Connector<Provider = WalletProvider, Options = any> {

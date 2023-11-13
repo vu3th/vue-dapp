@@ -1,20 +1,27 @@
-import { computed, markRaw, ref, watch } from 'vue'
+import { computed, markRaw, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { Connector } from './types'
 import { ConnectorNotFoundError, ConnectError } from './errors'
 import { WalletProvider } from './types'
 import invariant from 'tiny-invariant'
+import { normalizeChainId } from './utils'
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'connected'
 
-export type HookContext = {
+export type WalletState = {
 	provider: WalletProvider
 	address: string
+	chainId: number
 }
 
-export type OnActivatedHook = (context: HookContext) => void
-export type OnChangedHook = (context: HookContext) => void
+export type OnActivatedHook = (context: WalletState) => void
+export type OnChangedHook = (context: WalletState) => void
 export type OnDeactivatedHook = () => void
+
+// feat: callbacks
+export type OnDisconnectCallback = (...args: any[]) => void
+export type OnAccountsChangedCallback = (accounts: string[]) => void
+export type OnChainChangedCallback = (chainId: number) => void
 
 /**
  * Pinia Setup Store
@@ -22,11 +29,20 @@ export type OnDeactivatedHook = () => void
  *  - dealing with SSR https://pinia.vuejs.org/cookbook/composables.html#SSR
  */
 export const useWalletStore = defineStore('vd-wallet', () => {
-	const connector = ref<Connector | null>(null)
-	const provider = ref<WalletProvider | null>(null)
 	const status = ref<ConnectionStatus>('idle')
-	const address = ref('')
 	const error = ref('')
+
+	const connector = ref<Connector | null>(null)
+
+	// wallet state
+	const provider = ref<WalletProvider | null>(null)
+	const address = ref('')
+	const chainId = ref(-1)
+
+	// feat: callbacks
+	const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
+	const onAccountsChangedCallback = ref<OnAccountsChangedCallback | null>(null)
+	const onChainChangedCallback = ref<OnChainChangedCallback | null>(null)
 
 	const isConnected = computed(() => status.value === 'connected')
 
@@ -37,11 +53,12 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		try {
 			if (!_connector) throw new ConnectorNotFoundError()
 
-			const { provider: _provider, account } = await _connector.connect(timeout)
+			const { provider: _provider, account, chainId: _chainId } = await _connector.connect(timeout)
 
 			connector.value = markRaw(_connector)
 			provider.value = markRaw(_provider)
 			address.value = account
+			chainId.value = normalizeChainId(_chainId)
 		} catch (err: any) {
 			await disconnect() // will also resetWallet()
 			error.value = err.message
@@ -49,6 +66,54 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		}
 
 		status.value = 'connected'
+
+		// feat: callbacks
+		connector.value.onDisconnect((...args: any[]) => {
+			onDisconnectCallback.value && onDisconnectCallback.value(...args)
+			/**
+			 * Exclude metamask to disconnect on this event
+			 * @note MetaMask disconnect event would be triggered when the specific chain changed (like L2 network),
+			 * so if we disconnect in this case, it would fail to reactivate ethers when chain changed
+			 * because the wallet state was cleared.
+			 * @todo better solution
+			 */
+			if (connector.value?.name === 'metaMask') {
+				return
+			}
+			disconnect()
+		})
+
+		connector.value.onAccountsChanged(async (accounts: string[]) => {
+			onAccountsChangedCallback.value && onAccountsChangedCallback.value(accounts)
+			updateWalletState({
+				address: accounts[0],
+			})
+		})
+
+		connector.value.onChainChanged(async (_chainId: number) => {
+			onChainChangedCallback.value && onChainChangedCallback.value(normalizeChainId(_chainId))
+			updateWalletState({
+				chainId: normalizeChainId(_chainId),
+			})
+		})
+
+		function updateWalletState(data: {
+			provider?: WalletState['provider']
+			address?: WalletState['address']
+			chainId?: WalletState['chainId']
+		}) {
+			if (data.provider) {
+				provider.value = data.provider
+			}
+
+			if (data.address) {
+				address.value = data.address
+			}
+
+			if (data.chainId) {
+				chainId.value = data.chainId
+			}
+		}
 	}
 
 	async function disconnect() {
@@ -85,13 +150,15 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 
 	watch(isConnected, (val, oldVal) => {
 		if (val && !oldVal) {
-			invariant(address.value, 'VueDappError: useWalletStore-watch-isConnected-address')
 			invariant(provider.value, 'VueDappError: useWalletStore-watch-isConnected-provider')
+			invariant(address.value, 'VueDappError: useWalletStore-watch-isConnected-address')
+			invariant(chainId.value, 'VueDappError: useWalletStore-watch-isConnected-chainId')
 
 			onActivatedHook.value &&
 				onActivatedHook.value({
 					provider: provider.value,
 					address: address.value,
+					chainId: chainId.value,
 				})
 		}
 	})
@@ -102,10 +169,24 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 				onChangedHook.value({
 					provider: val,
 					address: address.value,
+					chainId: chainId.value,
 				})
 		} else if (oldVal && !val) {
 			onDeactivatedHook.value && onDeactivatedHook.value()
 		}
+	})
+
+	watch(chainId, () => {
+		invariant(provider.value, 'VueDappError: useWalletStore-watch-chainId-provider')
+		invariant(address.value, 'VueDappError: useWalletStore-watch-chainId-address')
+		invariant(chainId.value, 'VueDappError: useWalletStore-watch-chainId-chainId')
+
+		onChangedHook.value &&
+			onChangedHook.value({
+				provider: provider.value,
+				address: address.value,
+				chainId: chainId.value,
+			})
 	})
 
 	const onActivated = (hook: OnActivatedHook) => (onActivatedHook.value = hook)
