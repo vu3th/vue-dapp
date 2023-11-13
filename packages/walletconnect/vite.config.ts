@@ -18,17 +18,16 @@ export default defineConfig({
 		// Vite Library Mode https://vitejs.dev/guide/build.html#library-mode
 		lib: {
 			entry: path.resolve(__dirname, 'src/index.ts'),
-			name: name,
+			name: pkg.name,
 			fileName: name,
 		},
 		outDir: 'dist',
 		rollupOptions: {
-			external: ['vue', 'pinia'],
+			external: ['vue'],
 			output: {
 				dir: 'dist',
 				globals: {
 					vue: 'vue',
-					pinia: 'pinia',
 				},
 			},
 		},
