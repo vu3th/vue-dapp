@@ -1,4 +1,4 @@
-import { computed, markRaw, reactive, ref, watch } from 'vue'
+import { computed, markRaw, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { Connector } from './types'
 import { ConnectorNotFoundError, ConnectError } from './errors'
@@ -14,9 +14,9 @@ export type WalletState = {
 	chainId: number
 }
 
-export type OnActivatedHook = (context: WalletState) => void
+export type OnConnectedHook = (context: WalletState) => void
 export type OnChangedHook = (context: WalletState) => void
-export type OnDeactivatedHook = () => void
+export type OnDisconnectHook = () => void
 
 // feat: callbacks
 export type OnDisconnectCallback = (...args: any[]) => void
@@ -33,8 +33,6 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 	const error = ref('')
 
 	const connector = ref<Connector | null>(null)
-
-	// wallet state
 	const provider = ref<WalletProvider | null>(null)
 	const address = ref('')
 	const chainId = ref(-1)
@@ -110,7 +108,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 				address.value = data.address
 			}
 
-			if (data.chainId) {
+			if (data.chainId && data.chainId > 0) {
 				chainId.value = data.chainId
 			}
 		}
@@ -144,8 +142,8 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 
 	// ========================= hooks =========================
 
-	const onActivatedHook = ref<OnActivatedHook | null>(null)
-	const onDeactivatedHook = ref<OnDeactivatedHook | null>(null)
+	const onConnectedHook = ref<OnConnectedHook | null>(null)
+	const onDisconnectHook = ref<OnDisconnectHook | null>(null)
 	const onChangedHook = ref<OnChangedHook | null>(null)
 
 	watch(isConnected, (val, oldVal) => {
@@ -154,25 +152,29 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 			invariant(address.value, 'VueDappError: useWalletStore-watch-isConnected-address')
 			invariant(chainId.value, 'VueDappError: useWalletStore-watch-isConnected-chainId')
 
-			onActivatedHook.value &&
-				onActivatedHook.value({
+			onConnectedHook.value &&
+				onConnectedHook.value({
 					provider: provider.value,
 					address: address.value,
 					chainId: chainId.value,
 				})
+		} else {
+			onDisconnectHook.value && onDisconnectHook.value()
 		}
 	})
 
-	watch(provider, (val, oldVal) => {
+	watch(address, (val, oldVal) => {
 		if (oldVal && val) {
+			invariant(provider.value, 'VueDappError: useWalletStore-watch-address-provider')
+			invariant(address.value, 'VueDappError: useWalletStore-watch-address-address')
+			invariant(chainId.value, 'VueDappError: useWalletStore-watch-address-chainId')
+
 			onChangedHook.value &&
 				onChangedHook.value({
-					provider: val,
+					provider: provider.value,
 					address: address.value,
 					chainId: chainId.value,
 				})
-		} else if (oldVal && !val) {
-			onDeactivatedHook.value && onDeactivatedHook.value()
 		}
 	})
 
@@ -189,9 +191,9 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 			})
 	})
 
-	const onActivated = (hook: OnActivatedHook) => (onActivatedHook.value = hook)
+	const onActivated = (hook: OnConnectedHook) => (onConnectedHook.value = hook)
 	const onChanged = (hook: OnChangedHook) => (onChangedHook.value = hook)
-	const onDeactivated = (hook: OnDeactivatedHook) => (onDeactivatedHook.value = hook)
+	const onDeactivated = (hook: OnDisconnectHook) => (onDisconnectHook.value = hook)
 
 	return {
 		// state
@@ -208,9 +210,14 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		resetWallet,
 		autoConnect,
 
-		// hooks
+		// hooks (for watcher)
 		onActivated,
 		onDeactivated,
 		onChanged,
+
+		// callbacks (for listener)
+		onDisconnectCallback,
+		onAccountsChangedCallback,
+		onChainChangedCallback,
 	}
 })
