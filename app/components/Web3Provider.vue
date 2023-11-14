@@ -13,6 +13,7 @@ const { isConnected, user } = storeToRefs(dappStore)
 const { onActivated, onChanged, onDeactivated } = useWalletStore()
 
 onActivated(async ({ address, provider, chainId }) => {
+	console.log('onActivated')
 	const ethersProvider = new ethers.BrowserProvider(provider)
 	const signer = await ethersProvider.getSigner()
 
@@ -24,6 +25,8 @@ onActivated(async ({ address, provider, chainId }) => {
 })
 
 onChanged(async ({ address, provider, chainId }) => {
+	console.log('onChanged')
+
 	const ethersProvider = new ethers.BrowserProvider(provider)
 	const signer = await ethersProvider.getSigner()
 
@@ -35,6 +38,8 @@ onChanged(async ({ address, provider, chainId }) => {
 })
 
 onDeactivated(() => {
+	console.log('onDeactivated')
+
 	dappStore.resetUser()
 })
 
