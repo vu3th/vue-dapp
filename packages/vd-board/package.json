@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/vd-board",
-	"version": "1.0.0-alpha.2",
+	"version": "1.0.0-alpha.3",
 	"type": "module",
 	"files": [
 		"dist"
