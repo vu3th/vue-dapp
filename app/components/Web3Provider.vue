@@ -6,6 +6,7 @@ import { ethers } from 'ethers'
 import { MetaMaskConnector, useWalletStore } from '@vue-dapp/core'
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
 import { Board } from '@vue-dapp/vd-board'
+import '@vue-dapp/vd-board/dist/style.css'
 
 const dappStore = useDappStore()
 const { isConnected, user } = storeToRefs(dappStore)

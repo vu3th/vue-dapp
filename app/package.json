@@ -34,7 +34,6 @@
 		"postcss": "^8.4.20",
 		"postcss-custom-properties": "^13.3.2",
 		"sass": "^1.69.3",
-		"vite-plugin-node-polyfills": "^0.15.0",
 		"vue": "^3.3.4",
 		"vue-router": "^4.2.5"
 	}
