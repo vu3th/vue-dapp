@@ -11,7 +11,8 @@ import '@vue-dapp/vd-board/dist/style.css'
 const dappStore = useDappStore()
 const { isConnected, user } = storeToRefs(dappStore)
 
-const { onActivated, onChanged, onDeactivated } = useWalletStore()
+const { onActivated, onChanged, onDeactivated, setDumb } = useWalletStore()
+setDumb(false)
 
 onActivated(async ({ address, provider, chainId }) => {
 	console.log('onActivated')

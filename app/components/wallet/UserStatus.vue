@@ -8,7 +8,7 @@ import { useBoardStore } from '@vue-dapp/vd-board'
 const { open } = useBoardStore()
 
 const { disconnect } = useWalletStore()
-const { connector, status, address, isConnected } = storeToRefs(useWalletStore())
+const { connector, status, address, isConnected, dumb } = storeToRefs(useWalletStore())
 
 const dappStore = useDappStore()
 const { isNetworkUnmatched } = storeToRefs(dappStore)

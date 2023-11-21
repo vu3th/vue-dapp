@@ -1,10 +1,11 @@
 import { computed, markRaw, ref, toRaw, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { Connector } from './types'
-import { ConnectorNotFoundError, ConnectError } from './errors'
+import { ConnectorNotFoundError, ConnectError, AutoConnectError } from './errors'
 import { WalletProvider } from './types'
 import invariant from 'tiny-invariant'
 import { normalizeChainId } from './utils'
+import { MetaMaskConnector } from './metamaskConnector'
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'connected'
 
@@ -31,6 +32,11 @@ export type OnChainChangedCallback = (chainId: number) => void
 export const useWalletStore = defineStore('vd-wallet', () => {
 	const status = ref<ConnectionStatus>('idle')
 	const error = ref('')
+
+	const dumb = ref(true)
+	function setDumb(isDumb: boolean) {
+		dumb.value = isDumb
+	}
 
 	const connector = ref<Connector | null>(null)
 	const provider = ref<WalletProvider | null>(null)
@@ -64,6 +70,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		}
 
 		status.value = 'connected'
+		localStorage.removeItem('VUE_DAPP__hasDisconnected')
 
 		// feat: callbacks
 		connector.value.onDisconnect((...args: any[]) => {
@@ -102,8 +109,8 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 			}
 		}
 		resetWallet()
-		// @todo
-		// persistDisconnect.value && localStorage.setItem('VUE_DAPP__hasDisconnected', 'true')
+
+		localStorage.setItem('VUE_DAPP__hasDisconnected', 'true')
 	}
 
 	async function resetWallet() {
@@ -113,9 +120,28 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		address.value = ''
 	}
 
-	// @todo
-	function autoConnect(connectors: Connector[]) {
-		console.log('autoConnect')
+	async function autoConnect(connectors: Connector[]) {
+		if (localStorage.getItem('VUE_DAPP__hasDisconnected')) {
+			!dumb.value && console.warn('No auto-connect: has disconnected') // eslint-disable-line
+			return
+		}
+
+		const metamask = connectors.find(conn => conn.name === 'metaMask') as MetaMaskConnector | undefined
+
+		if (metamask) {
+			try {
+				const isConnected = await MetaMaskConnector.checkConnection()
+				if (isConnected) {
+					await connectWith(metamask)
+				} else if (!dumb.value) {
+					console.warn('No auto-connect to MetaMask: not connected')
+				}
+			} catch (err: any) {
+				throw new AutoConnectError(err)
+			}
+		} else if (!dumb.value) {
+			console.warn('No auto-connect to MetaMask: connector not found')
+		}
 	}
 
 	// ========================= hooks =========================
@@ -177,12 +203,13 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 
 	return {
 		// state
+		isConnected,
+		error,
+
 		provider,
 		connector,
 		status,
 		address,
-		error,
-		isConnected,
 
 		// wallet functions
 		connectWith,
@@ -199,5 +226,8 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		onDisconnectCallback,
 		onAccountsChangedCallback,
 		onChainChangedCallback,
+
+		// others
+		setDumb,
 	}
 })
