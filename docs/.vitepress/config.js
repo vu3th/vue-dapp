@@ -18,12 +18,12 @@ module.exports = {
 		repo: 'chnejohnson/vue-dapp',
 		nav: [
 			{
-				text: 'v0.7.1',
+				text: 'v1.0.0-alpha',
 				link: 'https://github.com/vu3th/vue-dapp/releases',
 			},
 			{
 				text: 'Demo',
-				link: 'https://vuedapp.vercel.app/',
+				link: 'https://vue-dapp.vercel.app/',
 			},
 		],
 		sidebar: [
@@ -34,21 +34,17 @@ module.exports = {
 						text: 'Getting Started',
 						link: '/',
 					},
+					// {
+					// 	text: 'Migrating to v1',
+					// 	link: '/migration',
+					// },
 					{
-						text: 'Migrating to v0.5.x',
-						link: '/migration',
-					},
-					{
-						text: 'Configurations',
-						link: '/configurations',
+						text: 'Examples',
+						link: '/examples',
 					},
 					{
 						text: 'Contributing',
 						link: '/contributing',
-					},
-					{
-						text: 'Resources',
-						link: '/resources',
 					},
 				],
 			},
@@ -56,44 +52,8 @@ module.exports = {
 				text: 'API',
 				items: [
 					{
-						text: 'Plugin Options',
-						link: '/api/plugin-options',
-					},
-					{
-						text: 'Components',
-						link: '/api/components',
-					},
-					{
-						text: 'Connectors',
-						link: '/api/connectors',
-					},
-					{
-						text: 'Constants',
-						link: '/api/constants',
-					},
-					{
-						text: 'Directives',
-						link: '/api/directives',
-					},
-					{
-						text: 'useWallet',
-						link: '/api/use-wallet',
-					},
-					{
-						text: 'useEthers',
-						link: '/api/use-ethers',
-					},
-					{
-						text: 'useEthersHooks',
-						link: '/api/use-ethers-hooks',
-					},
-					{
-						text: 'useMulticall',
-						link: '/api/use-multicall',
-					},
-					{
-						text: 'Utilities',
-						link: '/api/utilities',
+						text: '@vue-dapp/vd-board',
+						link: '/api/vd-board.md',
 					},
 				],
 			},
