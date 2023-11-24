@@ -17,8 +17,6 @@
 		"@vue-dapp/walletconnect": "workspace:^",
 		"@vueuse/core": "^10.5.0",
 		"@vueuse/nuxt": "^10.5.0",
-		"@walletconnect/ethereum-provider": "^2.10.2",
-		"@walletconnect/modal": "^2.6.2",
 		"copy-to-clipboard": "^3.3.3",
 		"ethers": "6.8.0",
 		"nuxt-icon": "^0.5.0",
@@ -36,7 +34,6 @@
 		"postcss": "^8.4.20",
 		"postcss-custom-properties": "^13.3.2",
 		"sass": "^1.69.3",
-		"vite-plugin-node-polyfills": "^0.15.0",
 		"vue": "^3.3.4",
 		"vue-router": "^4.2.5"
 	}

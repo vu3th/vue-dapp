@@ -1,5 +1,6 @@
-import { Connector, toHex } from '@vue-dapp/core'
 import {
+	Connector,
+	toHex,
 	ProviderNotFoundError,
 	ProviderRpcError,
 	SwitchChainError,
@@ -25,9 +26,13 @@ export class WalletConnectConnector extends Connector<EthereumProvider, Ethereum
 		const accounts = await provider.enable()
 		const account = accounts[0]
 
+		// @todo get chainId by provider
+		const chainId = -1
+
 		return {
-			account,
 			provider,
+			account,
+			chainId,
 		}
 	}
 

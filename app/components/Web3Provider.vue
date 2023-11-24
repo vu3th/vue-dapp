@@ -6,37 +6,42 @@ import { ethers } from 'ethers'
 import { MetaMaskConnector, useWalletStore } from '@vue-dapp/core'
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
 import { Board } from '@vue-dapp/vd-board'
+import '@vue-dapp/vd-board/dist/style.css'
 
 const dappStore = useDappStore()
 const { isConnected, user } = storeToRefs(dappStore)
 
-const { onActivated, onChanged, onDeactivated } = useWalletStore()
+const { onActivated, onChanged, onDeactivated, setDumb } = useWalletStore()
+setDumb(false)
 
-onActivated(async ({ address, provider }) => {
+onActivated(async ({ address, provider, chainId }) => {
+	console.log('onActivated')
 	const ethersProvider = new ethers.BrowserProvider(provider)
 	const signer = await ethersProvider.getSigner()
-	const network = await ethersProvider.getNetwork()
 
 	dappStore.setUser({
 		address,
 		signer,
-		chainId: Number(network.chainId),
+		chainId,
 	})
 })
 
-onChanged(async ({ address, provider }) => {
+onChanged(async ({ address, provider, chainId }) => {
+	console.log('onChanged')
+
 	const ethersProvider = new ethers.BrowserProvider(provider)
 	const signer = await ethersProvider.getSigner()
-	const network = await ethersProvider.getNetwork()
 
 	dappStore.setUser({
 		address,
 		signer,
-		chainId: Number(network.chainId),
+		chainId,
 	})
 })
 
 onDeactivated(() => {
+	console.log('onDeactivated')
+
 	dappStore.resetUser()
 })
 
@@ -93,6 +98,7 @@ watch(isConnected, () => {
 		<Board
 			:connectors="connectors"
 			dark
+			autoConnect
 			:autoConnectErrorHandler="autoConnectErrorHandler"
 			:connectErrorHandler="connectErrorHandler"
 		/>

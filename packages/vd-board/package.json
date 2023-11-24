@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/vd-board",
-	"version": "1.0.0-alpha.2",
+	"version": "1.0.0-alpha.4",
 	"type": "module",
 	"files": [
 		"dist"
@@ -12,7 +12,8 @@
 		".": {
 			"import": "./dist/vd-board.js",
 			"require": "./dist/vd-board.umd.cjs"
-		}
+		},
+		"./dist/style.css": "./dist/style.css"
 	},
 	"publishConfig": {
 		"access": "public"
@@ -20,6 +21,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
+		"watch": "vite build --watch",
 		"preview": "vite preview"
 	},
 	"devDependencies": {
@@ -29,7 +31,6 @@
 		"typescript": "^5.1.3",
 		"vite": "^4.5.0",
 		"vite-plugin-dts": "^3.6.2",
-		"vite-plugin-style-inject": "^0.0.1",
 		"vue": "^3.3.6",
 		"vue-tsc": "^0.29.8"
 	},

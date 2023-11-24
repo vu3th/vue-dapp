@@ -17,7 +17,7 @@ export async function checkInfuraId(infuraId: string) {
 	return data.result
 }
 
-export function checkChainId(chainId: number) {
-	// const { availableNetworks } = useEthers()
-	// return chainId in availableNetworks.value
-}
+// export function checkChainId(chainId: number) {
+// 	// const { availableNetworks } = useEthers()
+// 	// return chainId in availableNetworks.value
+// }

@@ -2,6 +2,9 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import dts from 'vite-plugin-dts'
+import pkg from './package.json'
+
+const name = pkg.name.split('/').pop()
 
 export default defineConfig({
 	plugins: [
@@ -12,20 +15,19 @@ export default defineConfig({
 	],
 	build: {
 		assetsDir: 'assets',
+		// Vite Library Mode https://vitejs.dev/guide/build.html#library-mode
 		lib: {
 			entry: path.resolve(__dirname, 'src/index.ts'),
-			name: '@vue-dapp/vd-board',
-			fileName: 'vd-board',
+			name: pkg.name,
+			fileName: name,
 		},
 		outDir: 'dist',
 		rollupOptions: {
-			external: ['vue', 'pinia', '@vue-dapp/core'],
+			external: ['vue'],
 			output: {
 				dir: 'dist',
 				globals: {
 					vue: 'vue',
-					pinia: 'pinia',
-					'@vue-dapp/core': 'core',
 				},
 			},
 		},
