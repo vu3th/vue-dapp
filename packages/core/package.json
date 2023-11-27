@@ -1,8 +1,25 @@
 {
 	"name": "@vue-dapp/core",
 	"version": "1.0.0-alpha.8",
-	"description": "",
-	"type": "module",
+	"description": "Vue 3 library for building Dapps on Ethereum",
+	"repository": "https://github.com/vu3th/vue-dapp",
+	"bugs": {
+		"url": "https://github.com/vu3th/vue-dapp/issues"
+	},
+	"packageManager": "^pnpm@8.6.9",
+	"homepage": "https://github.com/vu3th/vue-dapp",
+	"author": "Johnson Chen <https://twitter.com/chnejohnson>",
+	"license": "MIT",
+	"keywords": [
+		"vue",
+		"vue3",
+		"dapp",
+		"web3",
+		"ethereum",
+		"crypto",
+		"wallet",
+		"composable"
+	],
 	"files": [
 		"dist"
 	],
@@ -23,7 +40,6 @@
 		"watch": "vite build --watch",
 		"test": "vitest"
 	},
-	"license": "MIT",
 	"dependencies": {
 		"tiny-invariant": "^1.3.1"
 	},

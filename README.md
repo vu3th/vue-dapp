@@ -17,8 +17,6 @@
   </a>
 </p>
 
-# Vue Dapp
-
 Vue Dapp v1 is working in progress, see [Discussion#141](https://github.com/vu3th/vue-dapp/discussions/141). I would probably release a stable version by the end of 2023.
 
 I recommend keeping an eye on [vue3-dapp-starter](https://github.com/vu3th/vue3-dapp-starter) and [nuxt-dapp](https://github.com/vu3th/nuxt-dapp), as it strives to maintain a development-friendly version whenever possible.
@@ -29,11 +27,11 @@ I recommend keeping an eye on [vue3-dapp-starter](https://github.com/vu3th/vue3-
 library
 
 
-| Name                    | Description                                       | Version                                                                                                                         | Size                                                                                                                                                             |
-| ----------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| @vue-dapp/core          | useWalletStore, connector, utils, and metamask... | <a href="https://www.npmjs.com/package/@vue-dapp/core"><img src="https://badgen.net/npm/v/vue-dapp" alt="Version"></a>          | <a href="https://bundlephobia.com/package/@vue-dapp/core"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/core" alt="Size"></a>                   |
-| @vue-dapp/vd-board      | Vue components for connecting wallet              | <a href="https://www.npmjs.com/package/@vue-dapp/vd-board"><img src="https://badgen.net/npm/v/vue-dapp" alt="Version"></a>      | <a href="https://bundlephobia.com/package/@vue-dapp/vd-board"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/vd-board" alt="Size"></a>           |
-| @vue-dapp/walletconnect | WalletConnect integration                         | <a href="https://www.npmjs.com/package/@vue-dapp/walletconnect"><img src="https://badgen.net/npm/v/vue-dapp" alt="Version"></a> | <a href="https://bundlephobia.com/package/@vue-dapp/walletconnect"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/walletconnect" alt="Size"></a> |
+| Name                    | Description                                       | Version                                                                                                                                        | Size                                                                                                                                                             |
+| ----------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| @vue-dapp/core          | useWalletStore, connector, utils, and metamask... | <a href="https://www.npmjs.com/package/@vue-dapp/core"><img src="https://badgen.net/npm/v/@vue-dapp/core" alt="Version"></a>                   | <a href="https://bundlephobia.com/package/@vue-dapp/core"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/core" alt="Size"></a>                   |
+| @vue-dapp/vd-board      | Vue components for connecting wallet              | <a href="https://www.npmjs.com/package/@vue-dapp/vd-board"><img src="https://badgen.net/npm/v/@vue-dapp/vd-board" alt="Version"></a>           | <a href="https://bundlephobia.com/package/@vue-dapp/vd-board"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/vd-board" alt="Size"></a>           |
+| @vue-dapp/walletconnect | WalletConnect integration                         | <a href="https://www.npmjs.com/package/@vue-dapp/walletconnect"><img src="https://badgen.net/npm/v/@vue-dapp/walletconnect" alt="Version"></a> | <a href="https://bundlephobia.com/package/@vue-dapp/walletconnect"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/walletconnect" alt="Size"></a> |
 
 
 
