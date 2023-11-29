@@ -26,4 +26,3 @@ const { open } = useBoardStore()
 		/>
 	</div>
 </template>
-./stores/useBoardStore

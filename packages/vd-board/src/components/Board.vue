@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import Modal from './Modal.vue'
 import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
@@ -75,6 +75,15 @@ export default defineComponent({
 					props.autoConnectErrorHandler && props.autoConnectErrorHandler(err)
 				} finally {
 					isAutoConnecting.value = false
+				}
+			}
+		})
+
+		// feat: autoconnect metaMask if it's the only connector
+		watch(boardOpen, async () => {
+			if (boardOpen.value) {
+				if (connectors.length === 1 && connectors[0].name === 'metaMask') {
+					await onClickWallet(connectors[0])
 				}
 			}
 		})
