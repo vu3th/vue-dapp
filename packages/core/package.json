@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/core",
-	"version": "1.0.0-alpha.8",
+	"version": "1.0.0-alpha.9",
 	"description": "Vue 3 library for building Dapps on Ethereum",
 	"repository": "https://github.com/vu3th/vue-dapp",
 	"bugs": {
@@ -24,11 +24,11 @@
 		"dist"
 	],
 	"main": "./dist/core.umd.cjs",
-	"module": "./dist/core.js",
+	"module": "./dist/core.mjs",
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./dist/core.js",
+			"import": "./dist/core.mjs",
 			"require": "./dist/core.umd.cjs"
 		}
 	},

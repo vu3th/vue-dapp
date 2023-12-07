@@ -192,6 +192,27 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		this.#provider.removeListener(event, handler)
 	}
 
+	async addERC20Token(options: AddERC20TokenOptions) {
+		if (!this.#provider) throw new ProviderNotFoundError()
+		try {
+			await this.#provider.request({
+				method: 'wallet_watchAsset',
+				params: {
+					// @ts-ignore
+					type: 'ERC20',
+					options: {
+						address: options.address,
+						symbol: options.symbol,
+						decimals: options.decimals,
+						image: options.image,
+					},
+				},
+			})
+		} catch (err: unknown) {
+			throw new Error('Failed to add ERC20 token to MetaMask')
+		}
+	}
+
 	async switchChain(chainId: number, networkDetails: NetworkDetails) {
 		if (!this.#provider) throw new ProviderNotFoundError()
 		const id = toHex(chainId)
@@ -251,3 +272,10 @@ export interface NetworkDetails {
 }
 
 export { Connector } from './types'
+
+export type AddERC20TokenOptions = {
+	address: string
+	symbol: string
+	decimals?: number
+	image?: string
+}
