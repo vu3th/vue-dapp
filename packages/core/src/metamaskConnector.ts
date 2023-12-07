@@ -192,6 +192,9 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		this.#provider.removeListener(event, handler)
 	}
 
+	/**
+	 * docs: https://docs.metamask.io/wallet/reference/wallet_watchasset/
+	 */
 	async addERC20Token(options: AddERC20TokenOptions) {
 		if (!this.#provider) throw new ProviderNotFoundError()
 		try {
@@ -213,6 +216,9 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		}
 	}
 
+	/**
+	 * docs: https://docs.metamask.io/wallet/reference/wallet_switchethereumchain/
+	 */
 	async switchChain(chainId: number, networkDetails: NetworkDetails) {
 		if (!this.#provider) throw new ProviderNotFoundError()
 		const id = toHex(chainId)
