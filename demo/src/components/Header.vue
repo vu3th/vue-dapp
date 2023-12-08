@@ -9,7 +9,7 @@
 					</div>
 					<!-- right -->
 					<div class="flex space-x-6 text-lg justify-center items-center">
-						<a href="https://vue-dapp-docs.netlify.app/" target="_blank" class="hover:text-gray-500">
+						<a href="https://vue-dapp-docs.vercel.app/" target="_blank" class="hover:text-gray-500">
 							Documentation
 						</a>
 						<a href="https://github.com/vu3th/vue-dapp" target="_blank">

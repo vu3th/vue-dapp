@@ -1,5 +1,5 @@
 <p align="center">
-   <a href="https://vue-dapp-docs.netlify.app/">
+   <a href="https://vue-dapp-docs.vercel.app/">
     <img src="https://github.com/vu3th/vue-dapp/blob/main/demo/src/assets/logo.png" alt="VueDapp Brand" style="max-width:100%;" width="400">
   </a>
 </p>
