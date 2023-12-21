@@ -26,8 +26,8 @@ export class WalletConnectConnector extends Connector<EthereumProvider, Ethereum
 		const accounts = await provider.enable()
 		const account = accounts[0]
 
-		// @todo get chainId by provider
-		const chainId = -1
+		// EthereumProvider's public state: https://github.com/WalletConnect/walletconnect-monorepo/blob/91af38edc2d2a99bae0b5b32f92607d221b74364/providers/ethereum-provider/src/EthereumProvider.ts#L221C10-L221C17
+		const chainId = provider.chainId
 
 		return {
 			provider,
@@ -37,6 +37,7 @@ export class WalletConnectConnector extends Connector<EthereumProvider, Ethereum
 	}
 
 	async getProvider() {
+		// @todo how about no dynamic import?
 		const { EthereumProvider } = await import('@walletconnect/ethereum-provider')
 		const provider = await EthereumProvider.init({
 			...this.options,
