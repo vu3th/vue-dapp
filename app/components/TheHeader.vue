@@ -45,8 +45,8 @@ function menuActiveClass(path: string) {
 			</div>
 
 			<div class="flex items-center gap-x-5">
-				<NetworkStatus />
-				<UserStatus />
+				<NetworkSelect />
+				<ConnectButton />
 			</div>
 		</header>
 
@@ -58,7 +58,7 @@ function menuActiveClass(path: string) {
 						<Icon name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
 					</div>
 
-					<div>
+					<div class="hidden sm:block">
 						<NuxtLink class="" to="/"> {{ APP_NAME }} </NuxtLink>
 					</div>
 				</div>
@@ -89,8 +89,8 @@ function menuActiveClass(path: string) {
 			</div>
 
 			<div class="flex gap-x-2">
-				<NetworkStatus />
-				<UserStatus />
+				<NetworkSelect />
+				<ConnectButton />
 			</div>
 		</header>
 	</div>
