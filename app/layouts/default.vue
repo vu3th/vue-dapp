@@ -5,6 +5,7 @@
 		<Web3Provider>
 			<TheHeader />
 			<slot />
+			<TheFooter />
 		</Web3Provider>
 	</div>
 </template>

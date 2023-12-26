@@ -8,6 +8,7 @@ import { networkMap, type AppNetwork } from '@/constants'
 export type DappState = {
 	user: User
 	network: AppNetwork
+	blockNumber: number
 }
 export type User = {
 	signer: Signer | null
@@ -27,6 +28,7 @@ export const useDappStore = defineStore('dapp', {
 			chainId: -1,
 		},
 		network: 'mainnet',
+		blockNumber: 0,
 	}),
 	getters: {
 		chain(state): Chain {
@@ -95,6 +97,11 @@ export const useDappStore = defineStore('dapp', {
 				}),
 				multicallAddress: getAddress(this.multicallAddress),
 			})
+		},
+		async fetchBlockNumber() {
+			const num = await this.provider.getBlockNumber()
+			this.blockNumber = num
+			return num
 		},
 	},
 	persist: {

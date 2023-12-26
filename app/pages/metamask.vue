@@ -17,9 +17,8 @@ function onClickAddERC20Token() {
 </script>
 
 <template>
-	<div>/metamask</div>
-	<div>
-		<button class="btn" @click="onClickAddERC20Token">Add ERC20 Token</button>
+	<div class="flex flex-col items-center p-5 gap-2">
+		<BaseButton @click="onClickAddERC20Token">Add ERC20 Token</BaseButton>
 	</div>
 </template>
 
