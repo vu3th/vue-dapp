@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/core",
-	"version": "1.0.0-alpha.9",
+	"version": "1.0.0-beta.0",
 	"description": "Vue 3 library for building Dapps on Ethereum",
 	"repository": "https://github.com/vu3th/vue-dapp",
 	"bugs": {
