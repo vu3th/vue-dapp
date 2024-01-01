@@ -7,7 +7,7 @@
   Vue Dapp
 </h2>
 <p align="center">
-  Vue 3 library for building Dapps on Ethereum.
+  Vue library for building Dapps
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
   </a>
 </p>
 
-Vue Dapp v1 is working in progress, see [Discussion#141](https://github.com/vu3th/vue-dapp/discussions/141). I would probably release a stable version by the end of 2023.
+Notice that Vue Dapp v1 is working in progress. I expect to release a stable version by June 30, 2024.
 
 I recommend keeping an eye on [vue3-dapp-starter](https://github.com/vu3th/vue3-dapp-starter) and [nuxt-dapp](https://github.com/vu3th/nuxt-dapp), as it strives to maintain a development-friendly version whenever possible.
 
