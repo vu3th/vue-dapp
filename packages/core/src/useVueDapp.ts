@@ -15,14 +15,26 @@ export type OnAccountOrChainIdChangedCB = (context: WalletContext) => void
 export type OnDisconnectedCB = () => void
 export type OnWalletUpdatedCB = (context: WalletContext) => void
 
-export function useVueDapp() {
+export function useVueDapp(pinia: any) {
+	const walletStore = useWalletStore(pinia)
 	const {
 		isConnected: _isConnected,
 		address: _address,
 		chainId: _chainId,
 		provider: _provider,
-		// @note useWalletStore might not work because lacking of pinia instance
-	} = storeToRefs(useWalletStore())
+		error,
+		status,
+	} = storeToRefs(walletStore)
+	const {
+		connectWith,
+		disconnect,
+		resetWallet,
+		autoConnect,
+		onDisconnectCallback,
+		onAccountsChangedCallback,
+		onChainChangedCallback,
+		setDumb,
+	} = walletStore
 
 	const isConnected = computed(() => _isConnected.value)
 	const address = computed(() => _address.value)
@@ -84,7 +96,7 @@ export function useVueDapp() {
 	}
 
 	function onDisconnected(callback: OnDisconnectedCB) {
-		const { isConnected } = storeToRefs(useWalletStore())
+		const { isConnected } = storeToRefs(useWalletStore(pinia))
 
 		watch(isConnected, (val, oldVal) => {
 			if (!val && oldVal) {
@@ -98,9 +110,22 @@ export function useVueDapp() {
 		address,
 		chainId,
 		provider,
+
+		error,
+		status,
+
 		onConnected,
 		onAccountOrChainIdChanged,
 		onWalletUpdated,
 		onDisconnected,
+
+		connectWith,
+		disconnect,
+		resetWallet,
+		autoConnect,
+		onDisconnectCallback,
+		onAccountsChangedCallback,
+		onChainChangedCallback,
+		setDumb,
 	}
 }

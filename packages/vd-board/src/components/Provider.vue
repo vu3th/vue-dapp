@@ -2,8 +2,9 @@
 import { useVueDapp, WalletContext, Connector, MetaMaskConnector } from '@vue-dapp/core'
 import Board from './Board.vue'
 
-withDefaults(
+const props = withDefaults(
 	defineProps<{
+		pinia: any
 		connectors?: Connector[]
 	}>(),
 	{
@@ -16,7 +17,7 @@ const emit = defineEmits<{
 	(e: 'disconnect'): void
 }>()
 
-const { onWalletUpdated, onDisconnected } = useVueDapp()
+const { onWalletUpdated, onDisconnected } = useVueDapp(props.pinia)
 
 onWalletUpdated(async ({ address, provider, chainId }) => {
 	emit('connect', {
