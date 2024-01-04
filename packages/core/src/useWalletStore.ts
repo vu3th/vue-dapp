@@ -1,23 +1,12 @@
-import { computed, markRaw, ref, toRaw, watch } from 'vue'
+import { computed, markRaw, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { Connector } from './types'
 import { ConnectorNotFoundError, ConnectError, AutoConnectError } from './errors'
 import { WalletProvider } from './types'
-import invariant from 'tiny-invariant'
 import { normalizeChainId } from './utils'
 import { MetaMaskConnector } from './metamaskConnector'
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'connected'
-
-export type HookContext = {
-	provider: WalletProvider
-	address: string
-	chainId: number
-}
-
-export type OnConnectedHook = (context: HookContext) => void
-export type OnChangedHook = (context: HookContext) => void
-export type OnDisconnectHook = () => void
 
 // feat: callbacks
 export type OnDisconnectCallback = (...args: any[]) => void
@@ -118,6 +107,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		provider.value = null
 		status.value = 'idle'
 		address.value = ''
+		chainId.value = -1
 	}
 
 	async function autoConnect(connectors: Connector[]) {
@@ -144,63 +134,6 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		}
 	}
 
-	// ========================= hooks =========================
-
-	const onConnectedHook = ref<OnConnectedHook | null>(null)
-	const onDisconnectHook = ref<OnDisconnectHook | null>(null)
-	const onChangedHook = ref<OnChangedHook | null>(null)
-
-	watch(isConnected, (val, oldVal) => {
-		if (val && !oldVal) {
-			invariant(provider.value, 'VueDappError: useWalletStore-watch-isConnected-provider')
-			invariant(address.value, 'VueDappError: useWalletStore-watch-isConnected-address')
-			invariant(chainId.value, 'VueDappError: useWalletStore-watch-isConnected-chainId')
-
-			onConnectedHook.value &&
-				onConnectedHook.value({
-					provider: toRaw(provider.value),
-					address: toRaw(address.value),
-					chainId: toRaw(chainId.value),
-				})
-		} else {
-			onDisconnectHook.value && onDisconnectHook.value()
-		}
-	})
-
-	watch(address, (val, oldVal) => {
-		if (oldVal && val) {
-			invariant(provider.value, 'VueDappError: useWalletStore-watch-address-provider')
-			invariant(address.value, 'VueDappError: useWalletStore-watch-address-address')
-			invariant(chainId.value, 'VueDappError: useWalletStore-watch-address-chainId')
-
-			onChangedHook.value &&
-				onChangedHook.value({
-					provider: toRaw(provider.value),
-					address: toRaw(address.value),
-					chainId: toRaw(chainId.value),
-				})
-		}
-	})
-
-	watch(chainId, (val, oldVal) => {
-		if (val && oldVal > 0) {
-			invariant(provider.value, 'VueDappError: useWalletStore-watch-chainId-provider')
-			invariant(address.value, 'VueDappError: useWalletStore-watch-chainId-address')
-			invariant(chainId.value, 'VueDappError: useWalletStore-watch-chainId-chainId')
-
-			onChangedHook.value &&
-				onChangedHook.value({
-					provider: toRaw(provider.value),
-					address: toRaw(address.value),
-					chainId: toRaw(chainId.value),
-				})
-		}
-	})
-
-	const onActivated = (hook: OnConnectedHook) => (onConnectedHook.value = hook)
-	const onChanged = (hook: OnChangedHook) => (onChangedHook.value = hook)
-	const onDeactivated = (hook: OnDisconnectHook) => (onDisconnectHook.value = hook)
-
 	return {
 		// state
 		isConnected,
@@ -210,17 +143,13 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		connector,
 		status,
 		address,
+		chainId,
 
 		// wallet functions
 		connectWith,
 		disconnect,
 		resetWallet,
 		autoConnect,
-
-		// hooks (for watcher)
-		onActivated,
-		onDeactivated,
-		onChanged,
 
 		// callbacks (for listener)
 		onDisconnectCallback,

@@ -1,173 +1,134 @@
-<script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from 'vue'
 import Modal from './Modal.vue'
-import Loader from './Loader.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
 import MetaMaskIcon from './logos/MetaMask.vue'
 import CoinbaseWalletIcon from './logos/CoinbaseWallet.vue'
 import GnosisSafeIcon from './logos/GnosisSafe.vue'
-
-import { storeToRefs } from 'pinia'
-import { Connector, useWalletStore } from '@vue-dapp/core'
+import { useWalletStore, type Connector } from '@vue-dapp/core'
 import { useBoardStore } from '../stores'
+import { storeToRefs } from 'pinia'
 
-export default defineComponent({
-	components: {
-		Modal,
-		Loader,
-		MetaMaskIcon,
-		WalletConnectIcon,
-		CoinbaseWalletIcon,
-		GnosisSafeIcon,
+const props = withDefaults(
+	defineProps<{
+		connectors: Connector[]
+		dark?: boolean
+		autoConnect?: boolean
+		connectTimeout?: number
+		autoConnectMetamaskIfSolo?: boolean
+		connectErrorHandler?: (err: any) => void
+		autoConnectErrorHandler?: (err: any) => void
+	}>(),
+	{
+		dark: false,
+		autoConnect: false,
+		connectTimeout: 0,
+		autoConnectMetamaskIfSolo: false,
+		connectErrorHandler: () => {},
+		autoConnectErrorHandler: () => {},
 	},
-	props: {
-		connectors: {
-			type: Array,
-			required: true,
-			default: [],
-		},
-		dark: {
-			type: Boolean,
-			required: false,
-			default: false,
-		},
-		autoConnect: {
-			type: Boolean,
-			required: false,
-			default: false,
-		},
-		connectTimeout: {
-			type: Number,
-			required: false,
-			default: 0,
-		},
-		connectErrorHandler: {
-			type: Function,
-			required: false,
-			default: undefined,
-		},
-		autoConnectErrorHandler: {
-			type: Function,
-			required: false,
-			default: undefined,
-		},
-	},
-	setup(props) {
-		const { close } = useBoardStore()
-		const { boardOpen } = storeToRefs(useBoardStore())
-		const { connectWith, autoConnect } = useWalletStore()
-		const { status } = storeToRefs(useWalletStore())
+)
 
-		const walletItemClass = computed(() => (props.dark ? 'wallet-item--dark' : 'wallet-item'))
+const { close } = useBoardStore()
+const { boardOpen } = storeToRefs(useBoardStore())
+const { connectWith, autoConnect } = useWalletStore()
+const { status } = storeToRefs(useWalletStore())
 
-		const connectors = props.connectors as Connector[]
+const walletItemClass = computed(() => (props.dark ? 'wallet-item--dark' : 'wallet-item'))
 
-		const isAutoConnecting = ref(false)
-		const isAutoConnect = props.autoConnect
-		const connectTimeout = props.connectTimeout
+const connectors = props.connectors as Connector[]
 
-		onMounted(async () => {
-			if (isAutoConnect) {
-				try {
-					isAutoConnecting.value = true
-					await autoConnect(connectors)
-				} catch (err: any) {
-					props.autoConnectErrorHandler && props.autoConnectErrorHandler(err)
-				} finally {
-					isAutoConnecting.value = false
-				}
-			}
-		})
+const isAutoConnecting = ref(false)
+const isAutoConnect = props.autoConnect
+const connectTimeout = props.connectTimeout
 
-		// feat: autoconnect metaMask if it's the only connector
-		watch(boardOpen, async () => {
-			if (boardOpen.value) {
-				if (connectors.length === 1 && connectors[0].name === 'metaMask') {
-					await onClickWallet(connectors[0])
-				}
-			}
-		})
-
-		const onClickWallet = async (connector: Connector) => {
-			try {
-				close()
-				await connectWith(connector, connectTimeout)
-			} catch (err: any) {
-				props.connectErrorHandler && props.connectErrorHandler(err)
-			}
+onMounted(async () => {
+	if (isAutoConnect) {
+		try {
+			isAutoConnecting.value = true
+			await autoConnect(connectors)
+		} catch (err: any) {
+			props.autoConnectErrorHandler && props.autoConnectErrorHandler(err)
+		} finally {
+			isAutoConnecting.value = false
 		}
-
-		return {
-			isAutoConnecting,
-			boardOpen,
-			status,
-			connectors,
-			walletItemClass,
-			onClickWallet,
-			close,
-		}
-	},
-	directives: {
-		'click-outside': {
-			beforeMount: (el: any, binding: any) => {
-				el.clickOutsideEvent = (event: MouseEvent) => {
-					event.stopPropagation()
-
-					if (event.target !== el && !el.contains(event.target)) {
-						binding.value(event)
-					}
-				}
-				const clickHandler = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
-				setTimeout(() => {
-					document.addEventListener(clickHandler, el.clickOutsideEvent)
-				}, 0)
-			},
-			unmounted: (el: any) => {
-				const clickOutsideEvent = el.clickOutsideEvent
-				delete el.clickOutsideEvent
-				const clickHandler = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
-				document.removeEventListener(clickHandler, clickOutsideEvent)
-			},
-		},
-	},
+	}
 })
+
+// feat: autoconnect metaMask if it's the only connector
+watch(boardOpen, async () => {
+	if (props.autoConnectMetamaskIfSolo && boardOpen.value) {
+		if (connectors.length === 1 && connectors[0].name === 'metaMask') {
+			await onClickWallet(connectors[0])
+		}
+	}
+})
+
+const onClickWallet = async (connector: Connector) => {
+	try {
+		close()
+		await connectWith(connector, connectTimeout)
+	} catch (err: any) {
+		props.connectErrorHandler && props.connectErrorHandler(err)
+	}
+}
+
+const vClickOutside = {
+	beforeMount: (el: any, binding: any) => {
+		el.clickOutsideEvent = (event: MouseEvent) => {
+			event.stopPropagation()
+
+			if (event.target !== el && !el.contains(event.target)) {
+				binding.value(event)
+			}
+		}
+		const clickHandler = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
+		setTimeout(() => {
+			document.addEventListener(clickHandler, el.clickOutsideEvent)
+		}, 0)
+	},
+	unmounted: (el: any) => {
+		const clickOutsideEvent = el.clickOutsideEvent
+		delete el.clickOutsideEvent
+		const clickHandler = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
+		document.removeEventListener(clickHandler, clickOutsideEvent)
+	},
+}
 </script>
 
 <template>
-	<Modal :modalOpen="boardOpen" @close="close" :dark="dark">
-		<div v-click-outside="close">
-			<div v-for="(connector, i) in connectors" :key="connector.name">
-				<div :class="walletItemClass" @click="onClickWallet(connector)">
-					<div class="item">
-						<!-- TODO: refactor these v-if -->
-						<MetaMaskIcon v-if="connector.name === 'metaMask'" class="logo" />
-						<WalletConnectIcon v-if="connector.name === 'walletConnect'" class="logo" />
-						<CoinbaseWalletIcon v-if="connector.name === 'coinbaseWallet'" class="logo" />
-						<GnosisSafeIcon v-if="connector.name === 'safe'" class="logo" />
+	<div>
+		<Modal :modalOpen="boardOpen" @close="close" :dark="dark">
+			<div v-click-outside="close">
+				<div v-for="(connector, i) in connectors" :key="connector.name">
+					<div :class="walletItemClass" @click="onClickWallet(connector)">
+						<div class="item">
+							<!-- TODO: refactor these v-if -->
+							<MetaMaskIcon v-if="connector.name === 'metaMask'" class="logo" />
+							<WalletConnectIcon v-if="connector.name === 'walletConnect'" class="logo" />
+							<CoinbaseWalletIcon v-if="connector.name === 'coinbaseWallet'" class="logo" />
+							<GnosisSafeIcon v-if="connector.name === 'safe'" class="logo" />
 
-						<div v-if="connector.name === 'metaMask'">MetaMask</div>
-						<div v-if="connector.name === 'walletConnect'">WalletConnect</div>
-						<div v-if="connector.name === 'coinbaseWallet'">Coinbase Wallet</div>
-						<div v-if="connector.name === 'safe'">Gnosis Safe</div>
+							<div v-if="connector.name === 'metaMask'">MetaMask</div>
+							<div v-if="connector.name === 'walletConnect'">WalletConnect</div>
+							<div v-if="connector.name === 'coinbaseWallet'">Coinbase Wallet</div>
+							<div v-if="connector.name === 'safe'">Gnosis Safe</div>
+						</div>
 					</div>
+					<div v-if="i !== connectors.length - 1" :class="dark ? 'line--dark' : 'line'"></div>
 				</div>
-				<div v-if="i !== connectors.length - 1" :class="dark ? 'line--dark' : 'line'"></div>
-			</div>
-		</div>
-	</Modal>
-
-	<slot name="connecting">
-		<Modal :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
-			<div class="loading-modal" v-if="status === 'connecting'">
-				<p>Connecting...</p>
-				<p class="mt-4">Approve or reject request using your wallet</p>
 			</div>
 		</Modal>
-	</slot>
 
-	<!-- <slot name="loading">
-		<Modal :modalOpen="status === 'loading' && !isAutoConnecting" :dark="dark"></Modal>
-	</slot> -->
+		<slot name="connecting">
+			<Modal :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
+				<div class="loading-modal" v-if="status === 'connecting'">
+					<p>Connecting...</p>
+					<p class="mt-4">Approve or reject request using your wallet</p>
+				</div>
+			</Modal>
+		</slot>
+	</div>
 </template>
 
 <style scoped>
