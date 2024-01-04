@@ -19,12 +19,10 @@
 
 Notice that Vue Dapp v1 is working in progress. I expect to release a stable version by June 30, 2024.
 
-I recommend keeping an eye on [vue3-dapp-starter](https://github.com/vu3th/vue3-dapp-starter) and [nuxt-dapp](https://github.com/vu3th/nuxt-dapp), as it strives to maintain a development-friendly version whenever possible.
+I recommend keeping an eye on [vue-dapp-starter](https://github.com/vu3th/vue-dapp-starter) and [nuxt-dapp](https://github.com/vu3th/nuxt-dapp), as it strives to maintain a development-friendly version whenever possible.
 
  
 ## Monorepo Architecture
-
-library
 
 
 | Name                    | Description                                       | Version                                                                                                                                        | Size                                                                                                                                                             |
@@ -34,33 +32,85 @@ library
 | @vue-dapp/walletconnect | WalletConnect integration                         | <a href="https://www.npmjs.com/package/@vue-dapp/walletconnect"><img src="https://badgen.net/npm/v/@vue-dapp/walletconnect" alt="Version"></a> | <a href="https://bundlephobia.com/package/@vue-dapp/walletconnect"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/walletconnect" alt="Size"></a> |
 
 
-
-app
-
-| Name           | Description        |
-| -------------- | ------------------ |
-| @vue-dapp/app  | Nuxt 3 demo for v1 |
-| @vue-dapp/docs | documentation      |
-
-legacy
-
-| Name             | Description                   |
-| ---------------- | ----------------------------- |
-| @vue-dapp/legacy | vue-dapp version below v1     |
-| @vue-dapp/demo   | Vue demo for @vue-dapp/legacy |
-
-
 ## Installation
 
 ```bash
-yarn add @vue-dapp/core @vue-dapp/vd-board
+yarn add @vue-dapp/core @vue-dapp/walletconnect
 ```
 
-If you want to support more wallet providers not only MetaMask, you should install respective packages.
+## Example
 
-### WalletConnect
-```bash
-yarn add @vue-dapp/walletconnect
+```vue
+<script lang="ts" setup>
+import { type WalletContext, MetaMaskConnector, useVueDapp, VueDappProvider } from '@vue-dapp/core'
+import { WalletConnectConnector } from '@vue-dapp/walletconnect'
+
+// In Nuxt 3, this is essential.
+const pinia = useNuxtApp().$pinia
+
+const connectors = [
+	new MetaMaskConnector(),
+	new WalletConnectConnector({
+		projectId: '3f3c98042b194264687bf59e104c534a',
+		chains: [1],
+		showQrModal: true,
+		qrModalOptions: {
+			themeMode: 'dark',
+			themeVariables: undefined,
+			desktopWallets: undefined,
+			walletImages: undefined,
+			mobileWallets: undefined,
+			enableExplorer: true,
+			privacyPolicyUrl: undefined,
+			termsOfServiceUrl: undefined,
+		},
+	}),
+]
+
+function handleConnect({ provider, address, chainId }: WalletContext) {
+	console.log('handleConnect')
+}
+
+function handleDisconnect() {
+	console.log('handleDisconnect')
+}
+
+const { status, isConnected, address, chainId, error, disconnect, connectWith } = useVueDapp(pinia)
+
+function onClickMetaMask() {
+	if (!isConnected.value) {
+		connectWith(connectors[0])
+	}
+}
+
+function onClickWalletConnect() {
+	if (!isConnected.value) {
+		connectWith(connectors[1])
+	}
+}
+</script>
+
+<template>
+	<div>
+		<VueDappProvider :pinia="pinia" @connect="handleConnect" @disconnect="handleDisconnect">
+			<div v-if="!isConnected">
+				<button :disabled="status !== 'idle'" @click="onClickMetaMask">Connect with MetaMask</button>
+				<button :disabled="status !== 'idle'" @click="onClickWalletConnect">Connect with WalletConnect</button>
+			</div>
+			<button v-else @click="disconnect">Disconnect</button>
+
+			<div>status: {{ status }}</div>
+			<div>isConnected: {{ isConnected }}</div>
+			<div>error: {{ error }}</div>
+
+			<div v-if="isConnected">
+				<div v-if="chainId !== -1">chainId: {{ chainId }}</div>
+				<div>address: {{ address }}</div>
+			</div>
+		</VueDappProvider>
+	</div>
+</template>
+
 ```
 
 ## Support 🙏
