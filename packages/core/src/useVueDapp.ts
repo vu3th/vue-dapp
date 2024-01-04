@@ -15,7 +15,7 @@ export type OnAccountOrChainIdChangedCB = (context: WalletContext) => void
 export type OnDisconnectedCB = () => void
 export type OnWalletUpdatedCB = (context: WalletContext) => void
 
-export function useVueDapp(pinia: any) {
+export function useVueDapp(pinia?: any) {
 	const walletStore = useWalletStore(pinia)
 	const {
 		isConnected: _isConnected,
