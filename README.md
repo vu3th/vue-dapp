@@ -42,11 +42,8 @@ yarn add @vue-dapp/core @vue-dapp/walletconnect
 
 ```vue
 <script lang="ts" setup>
-import { type WalletContext, MetaMaskConnector, useVueDapp, VueDappProvider } from '@vue-dapp/core'
+import { type WalletContext, MetaMaskConnector, VueDappProvider } from '@vue-dapp/core'
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
-
-// In Nuxt 3, this is essential.
-const pinia = useNuxtApp().$pinia
 
 const connectors = [
 	new MetaMaskConnector(),
@@ -75,7 +72,7 @@ function handleDisconnect() {
 	console.log('handleDisconnect')
 }
 
-const { status, isConnected, address, chainId, error, disconnect, connectWith } = useVueDapp(pinia)
+const { status, isConnected, address, chainId, error, disconnect, connectWith } = useVueDapp()
 
 function onClickMetaMask() {
 	if (!isConnected.value) {
@@ -92,7 +89,7 @@ function onClickWalletConnect() {
 
 <template>
 	<div>
-		<VueDappProvider :pinia="pinia" @connect="handleConnect" @disconnect="handleDisconnect">
+		<VueDappProvider @connect="handleConnect" @disconnect="handleDisconnect">
 			<div v-if="!isConnected">
 				<button :disabled="status !== 'idle'" @click="onClickMetaMask">Connect with MetaMask</button>
 				<button :disabled="status !== 'idle'" @click="onClickWalletConnect">Connect with WalletConnect</button>
