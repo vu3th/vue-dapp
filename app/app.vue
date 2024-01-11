@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { MetaMaskConnector, type WalletContext } from '@vue-dapp/core'
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
+import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
 import { ethers } from 'ethers'
 import { useDappStore } from '@/stores/useDappStore'
 import { DappProvider } from '@vue-dapp/vd-board'
 import '@vue-dapp/vd-board/dist/style.css'
+import { INFURA_ID } from './constants'
 
 const dappStore = useDappStore()
 
@@ -24,6 +26,10 @@ const connectors = [
 			privacyPolicyUrl: undefined,
 			termsOfServiceUrl: undefined,
 		},
+	}),
+	new CoinbaseWalletConnector({
+		appName: 'Vue Dapp',
+		jsonRpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
 	}),
 ]
 

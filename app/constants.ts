@@ -29,3 +29,5 @@ export const HARDHAT_PRIV_KEY = [
 	'',
 	'0xa267530f49f8280200edf313ee7af6b827f2a8bce2897751d06a843f644967b1',
 ]
+
+export const INFURA_ID = 'ff6a249a74e048f1b413cba715f98d07'

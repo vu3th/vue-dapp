@@ -34,5 +34,8 @@
 		"**/*.{js,ts,json,scss,css,vue}": [
 			"prettier --write"
 		]
+	},
+	"resolutions": {
+		"@noble/hashes": "1.3.3"
 	}
 }
