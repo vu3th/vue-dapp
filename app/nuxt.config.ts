@@ -8,6 +8,7 @@ export default defineNuxtConfig({
 		},
 	],
 	modules: [
+		'@vue-dapp/nuxt',
 		'@nuxtjs/tailwindcss',
 		[
 			'@pinia/nuxt',

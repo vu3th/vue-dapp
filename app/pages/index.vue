@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { useVueDapp } from '@vue-dapp/core'
-
-const { isConnected, address, chainId } = useVueDapp(usePinia())
+const { isConnected, address, chainId } = useVueDapp()
 
 watch(isConnected, () => {
 	console.log(isConnected.value)
