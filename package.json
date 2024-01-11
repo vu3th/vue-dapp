@@ -10,7 +10,7 @@
 	"author": "Johnson Chen <https://twitter.com/chnejohnson>",
 	"license": "MIT",
 	"scripts": {
-		"build": "pnpm -F core build && pnpm -F vd-board build && pnpm -F nuxt build && pnpm -F walletconnect build",
+		"build": "pnpm -F core build && pnpm -F vd-board build && pnpm -F nuxt build && pnpm -F walletconnect build && pnpm -F coinbase build",
 		"build:app": "pnpm -F app build",
 		"format": "prettier --write \"**/*.{vue,ts,js,json}\"",
 		"prepare": "husky install"
