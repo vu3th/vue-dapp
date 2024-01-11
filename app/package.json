@@ -11,7 +11,7 @@
 	"dependencies": {
 		"@pinia-plugin-persistedstate/nuxt": "^1.2.0",
 		"@pinia/nuxt": "^0.5.1",
-		"@vue-dapp/coinbase": "workspace:1.0.0-beta.0",
+		"@vue-dapp/coinbase": "workspace:^",
 		"@vue-dapp/core": "workspace:^",
 		"@vue-dapp/nuxt": "workspace:^",
 		"@vue-dapp/vd-board": "workspace:^",

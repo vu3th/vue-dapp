@@ -1,7 +1,7 @@
 {
 	"name": "@vue-dapp/vd-board",
 	"version": "1.0.0-beta.6",
-	"description": "Vue 3 library for building Dapps on Ethereum",
+	"description": "Vue library for building Dapps",
 	"repository": "https://github.com/vu3th/vue-dapp",
 	"bugs": {
 		"url": "https://github.com/vu3th/vue-dapp/issues"

@@ -1,6 +1,6 @@
 {
 	"name": "vue-dapp-monorepo",
-	"description": "Vue 3 library for building Dapps on Ethereum",
+	"description": "Vue library for building Dapps",
 	"repository": "https://github.com/vu3th/vue-dapp",
 	"bugs": {
 		"url": "https://github.com/vu3th/vue-dapp/issues"
