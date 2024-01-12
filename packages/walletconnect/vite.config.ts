@@ -22,5 +22,13 @@ export default defineConfig({
 			fileName: name,
 		},
 		outDir: 'dist',
+		rollupOptions: {
+			external: ['@walletconnect/ethereum-provider'],
+			output: {
+				globals: {
+					'@walletconnect/ethereum-provider': 'EthereumProvider',
+				},
+			},
+		},
 	},
 })

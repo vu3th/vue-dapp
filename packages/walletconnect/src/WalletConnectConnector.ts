@@ -2,17 +2,21 @@ import {
 	Connector,
 	toHex,
 	ProviderNotFoundError,
-	ProviderRpcError,
 	SwitchChainError,
 	SwitchChainNotSupportedError,
 	UserRejectedRequestError,
 } from '@vue-dapp/core'
-import { EthereumProviderOptions, EthereumProvider } from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
+import {
+	EthereumProviderOptions,
+	EthereumProvider as IEthereumProvider,
+} from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
+import { EthereumProvider } from '@walletconnect/ethereum-provider'
+import { ProviderRpcError, IProviderEvents } from '@walletconnect/ethereum-provider/dist/types/types'
 
-export class WalletConnectConnector extends Connector<EthereumProvider, EthereumProviderOptions> {
+export class WalletConnectConnector extends Connector<IEthereumProvider, EthereumProviderOptions> {
 	readonly name = 'walletConnect'
-	#provider?: any
-	#onDisconnectHandler?: (code: number, reason: string) => void
+	#provider?: IEthereumProvider
+	#onDisconnectHandler?: (args: ProviderRpcError) => void
 	#onAccountsChangedHandler?: (accounts: string[]) => void
 	#onChainChangedHandler?: (chainId: number) => void
 
@@ -37,8 +41,6 @@ export class WalletConnectConnector extends Connector<EthereumProvider, Ethereum
 	}
 
 	async getProvider() {
-		// @todo how about no dynamic import?
-		const { EthereumProvider } = await import('@walletconnect/ethereum-provider')
 		const provider = await EthereumProvider.init({
 			...this.options,
 		})
@@ -64,13 +66,13 @@ export class WalletConnectConnector extends Connector<EthereumProvider, Ethereum
 		this.#provider = undefined
 	}
 
-	onDisconnect(handler: (code: number, reason: string) => void) {
+	onDisconnect(handler: (args: ProviderRpcError) => void) {
 		if (!this.#provider) throw new ProviderNotFoundError()
 		if (this.#onDisconnectHandler) {
 			this.#removeListener('disconnect', this.#onDisconnectHandler)
 		}
 		this.#onDisconnectHandler = handler
-		this.#provider.on('disconnect', handler)
+		this.#provider.on('disconnect', this.#onDisconnectHandler)
 	}
 
 	onAccountsChanged(handler: (accounts: string[]) => void) {
@@ -102,10 +104,9 @@ export class WalletConnectConnector extends Connector<EthereumProvider, Ethereum
 		})
 	}
 
-	#removeListener(event: string, handler: (...args: any[]) => void) {
+	#removeListener(event: IProviderEvents.Event, handler: (...args: any[]) => void) {
 		if (!this.#provider) throw new ProviderNotFoundError()
 		this.#provider.removeListener(event, handler)
-		// console.log('remove listener', event, handler)
 	}
 
 	/**
