@@ -37,7 +37,7 @@ I recommend keeping an eye on [vue-dapp-starter](https://github.com/vu3th/vue-da
 ## Installation
 
 ```bash
-yarn add @vue-dapp/core
+yarn add pinia @vue-dapp/core
 ```
 
 ## Example
