@@ -96,9 +96,9 @@ importers:
       viem:
         specifier: ^2.0.6
         version: 2.0.6
-      vue3-select:
-        specifier: ^0.1.2
-        version: 0.1.2(vue@3.4.10)
+      vs-vue3-select:
+        specifier: ^1.3.5
+        version: 1.3.5(vue@3.4.10)
     devDependencies:
       '@nuxt/devtools':
         specifier: ^1.0.6
@@ -3534,7 +3534,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.4.10
       '@vue/shared': 3.4.10
-      vue: 3.4.10(typescript@5.3.3)
+      vue: 3.4.10(typescript@5.1.3)
 
   /@vue/shared@3.4.10:
     resolution: {integrity: sha512-C0mIVhwW1xQLMFyqMJxnhq6fWyE02lCgcE+TDdtGpg6B3H6kh/0YcqS54qYc76UJNlWegf3VgsLqgk6D9hBmzQ==}
@@ -6496,6 +6496,7 @@ packages:
   /iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dependencies:
       safer-buffer: 2.1.2
 
@@ -11391,6 +11392,14 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /vs-vue3-select@1.3.5(vue@3.4.10):
+    resolution: {integrity: sha512-XtYUs1H8tXXNe8ANtopKeuEaX+nfIyqarA37p1G2Jhpbz1Aaru29JpeRBpmfH9J4RF8tmuCxgoAn8U1z0aPBvA==}
+    peerDependencies:
+      vue: 3.x
+    dependencies:
+      vue: 3.4.10(typescript@5.1.3)
+    dev: false
+
   /vscode-css-languageservice@5.4.2:
     resolution: {integrity: sha512-DT7+7vfdT2HDNjDoXWtYJ0lVDdeDEdbMNdK4PKqUl2MS8g7PWt7J5G9B6k9lYox8nOfhCEjLnoNC3UKHHCR1lg==}
     dependencies:
@@ -11648,14 +11657,6 @@ packages:
       semver: 7.5.4
       typescript: 5.3.3
     dev: true
-
-  /vue3-select@0.1.2(vue@3.4.10):
-    resolution: {integrity: sha512-mEIpx9CWFzynpUwDpb5YL+CfRXagiMlLscwA8i/QbMfDAwSw3MfFFU1+fInW33KpVnS/QPpxWFh7AwutaUpapw==}
-    peerDependencies:
-      vue: 3.x
-    dependencies:
-      vue: 3.4.10(typescript@5.1.3)
-    dev: false
 
   /vue@3.4.10(typescript@5.1.3):
     resolution: {integrity: sha512-c+O8qGqdWPF9joTCzMGeDDedViooh6c8RY3+eW5+6GCAIY8YjChmU06LsUu0PnMZbIk1oKUoJTqKzmghYtFypw==}
