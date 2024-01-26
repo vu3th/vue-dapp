@@ -8,7 +8,46 @@ import { DappProvider } from '@vue-dapp/vd-board'
 import '@vue-dapp/vd-board/dist/style.css'
 import { INFURA_ID } from './constants'
 
+// why from /dist/types?
+import type { WalletProvider } from '@vue-dapp/core/dist/types'
+
 const dappStore = useDappStore()
+
+interface EIP6963ProviderInfo {
+	uuid: string
+	name: string
+	icon: string
+	rdns: string
+}
+
+interface EIP6963ProviderDetail {
+	info: EIP6963ProviderInfo
+	provider: WalletProvider
+}
+
+interface EIP6963AnnounceProviderEvent extends CustomEvent {
+	type: 'eip6963:announceProvider'
+	detail: EIP6963ProviderDetail
+}
+
+export interface EIP6963RequestProviderEvent extends Event {
+	type: 'eip6963:requestProvider'
+}
+
+declare global {
+	interface WindowEventMap {
+		'eip6963:announceProvider': EIP6963AnnounceProviderEvent
+		'eip6963:requestProvider': EIP6963RequestProviderEvent
+	}
+}
+
+if (process.client) {
+	window.addEventListener('eip6963:announceProvider', (event: EIP6963AnnounceProviderEvent) => {
+		console.log(event.detail.info.name)
+	})
+
+	window.dispatchEvent(new CustomEvent('eip6963:requestProvider'))
+}
 
 const connectors = [
 	new MetaMaskConnector(),
