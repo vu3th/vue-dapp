@@ -44,10 +44,10 @@ yarn add pinia @vue-dapp/core
 
 ```vue
 <script lang="ts" setup>
-import { type WalletContext, MetaMaskConnector, VueDappProvider } from '@vue-dapp/core'
+import { type WalletContext, BrowserWalletConnector, VueDappProvider } from '@vue-dapp/core'
 
 const connectors = [
-	new MetaMaskConnector()
+	new BrowserWalletConnector()
 ]
 
 function handleConnect({ provider, address, chainId }: WalletContext) {

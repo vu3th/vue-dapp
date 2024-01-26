@@ -1,10 +1,10 @@
-import { computed, markRaw, ref } from 'vue'
+import { computed, markRaw, reactive, ref, toRefs } from 'vue'
 import { defineStore } from 'pinia'
-import { Connector } from './types'
+import { ConnectOptions, Connector, ConnectorName, EIP6963ProviderDetail, EIP6963ProviderInfo } from './types'
 import { ConnectorNotFoundError, ConnectError, AutoConnectError } from './errors'
-import { WalletProvider } from './types'
+import { EIP1193Provider } from './types'
 import { normalizeChainId } from './utils'
-import { MetaMaskConnector } from './metamaskConnector'
+import { BrowserWalletConnector } from './browserWalletConnector'
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'connected'
 
@@ -19,51 +19,109 @@ export type OnChainChangedCallback = (chainId: number) => void
  *  - dealing with SSR https://pinia.vuejs.org/cookbook/composables.html#SSR
  */
 export const useWalletStore = defineStore('vd-wallet', () => {
-	const status = ref<ConnectionStatus>('idle')
-	const error = ref('')
+	// ============================= feat: connectors =============================
+
+	const _connectors: Connector[] = reactive([])
+
+	function hasConnector(connectorName: ConnectorName | string) {
+		return _connectors.some(conn => conn.name === connectorName)
+	}
+
+	function addConnector(connector: Connector) {
+		if (_connectors.find(conn => conn.name === connector.name)) {
+			throw new Error(`Connector ${connector.name} already added`)
+		}
+		_connectors.push(connector)
+	}
+
+	function addConnectors(connectors: Connector[]) {
+		connectors.forEach(conn => addConnector(conn))
+	}
+
+	// ============================= feat: EIP6963 =============================
+	const providerDetails = reactive<EIP6963ProviderDetail[]>([])
+
+	// ============================= dev: dumb =============================
 
 	const dumb = ref(true)
 	function setDumb(isDumb: boolean) {
 		dumb.value = isDumb
 	}
 
-	const connector = ref<Connector | null>(null)
-	const provider = ref<WalletProvider | null>(null)
-	const address = ref('')
-	const chainId = ref(-1)
+	// ============================= feat: wallet =============================
+
+	const walletState = reactive<{
+		status: ConnectionStatus
+		error: string | null
+
+		name: ConnectorName | null
+		provider: EIP1193Provider | null
+		providerInfo: EIP6963ProviderInfo | null
+		connector: Connector | null
+		address: string | null
+		chainId: number | null
+	}>({
+		status: 'idle',
+		error: null,
+
+		name: null,
+		provider: null,
+		providerInfo: null,
+		connector: null,
+		address: null,
+		chainId: null,
+	})
+
+	async function resetWallet() {
+		walletState.status = 'idle'
+		walletState.error = null
+		walletState.name = null
+		walletState.provider = null
+		walletState.providerInfo = null
+		walletState.connector = null
+		walletState.address = null
+		walletState.chainId = null
+	}
+
+	const isConnected = computed(() => walletState.status === 'connected')
 
 	// feat: callbacks
 	const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
 	const onAccountsChangedCallback = ref<OnAccountsChangedCallback | null>(null)
 	const onChainChangedCallback = ref<OnChainChangedCallback | null>(null)
 
-	const isConnected = computed(() => status.value === 'connected')
+	async function connectTo(connectorName: ConnectorName | string, options?: ConnectOptions) {
+		walletState.error = ''
+		walletState.status = 'connecting'
 
-	async function connectWith(_connector: Connector, timeout?: number) {
-		error.value = ''
-		status.value = 'connecting'
+		// find connector
+		const connector = _connectors.find(conn => conn.name === connectorName)
+		if (!connector) throw new ConnectorNotFoundError()
 
 		try {
-			if (!_connector) throw new ConnectorNotFoundError()
+			const { provider, account, chainId, info } = await connector.connect(options)
 
-			const { provider: _provider, account, chainId: _chainId } = await _connector.connect(timeout)
+			if (connector.name === 'BrowserWallet') {
+				walletState.providerInfo = info!
+			}
 
-			connector.value = markRaw(_connector)
-			provider.value = markRaw(_provider)
-			address.value = account
-			chainId.value = normalizeChainId(_chainId)
+			walletState.connector = markRaw(connector)
+			walletState.provider = markRaw(provider)
+			walletState.address = account
+			walletState.chainId = normalizeChainId(chainId)
 		} catch (err: any) {
-			await disconnect() // will also resetWallet()
-			error.value = err.message
+			await disconnect() // will resetWallet()
+			walletState.error = err.message
 			throw new ConnectError(err)
 		}
 
-		status.value = 'connected'
+		walletState.status = 'connected'
 		localStorage.removeItem('VUE_DAPP__hasDisconnected')
 
 		// feat: callbacks
-		connector.value.onDisconnect((...args: any[]) => {
+		walletState.connector.onDisconnect((...args: any[]) => {
 			onDisconnectCallback.value && onDisconnectCallback.value(...args)
+
 			/**
 			 * Exclude metamask to disconnect on this event
 			 * @note MetaMask disconnect event would be triggered when the specific chain changed (like L2 network),
@@ -71,27 +129,27 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 			 * because the wallet state was cleared.
 			 * @todo better solution
 			 */
-			if (connector.value?.name === 'metaMask') {
+			if (walletState.connector?.name === 'BrowserWallet') {
 				return
 			}
 			disconnect()
 		})
 
-		connector.value.onAccountsChanged(async (accounts: string[]) => {
+		walletState.connector.onAccountsChanged(async (accounts: string[]) => {
 			onAccountsChangedCallback.value && onAccountsChangedCallback.value(accounts)
-			address.value = accounts[0]
+			walletState.address = accounts[0]
 		})
 
-		connector.value.onChainChanged(async (_chainId: number) => {
-			onChainChangedCallback.value && onChainChangedCallback.value(normalizeChainId(_chainId))
-			chainId.value = normalizeChainId(_chainId)
+		walletState.connector.onChainChanged(async (chainId: number) => {
+			onChainChangedCallback.value && onChainChangedCallback.value(normalizeChainId(chainId))
+			walletState.chainId = normalizeChainId(chainId)
 		})
 	}
 
 	async function disconnect() {
-		if (connector.value) {
+		if (walletState.connector) {
 			try {
-				await connector.value.disconnect()
+				await walletState.connector.disconnect()
 			} catch (err: any) {
 				resetWallet()
 				throw new Error(err)
@@ -102,27 +160,19 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		localStorage.setItem('VUE_DAPP__hasDisconnected', 'true')
 	}
 
-	async function resetWallet() {
-		connector.value = null
-		provider.value = null
-		status.value = 'idle'
-		address.value = ''
-		chainId.value = -1
-	}
-
-	async function autoConnect(connectors: Connector[]) {
+	async function autoConnect() {
 		if (localStorage.getItem('VUE_DAPP__hasDisconnected')) {
 			!dumb.value && console.warn('No auto-connect: has disconnected') // eslint-disable-line
 			return
 		}
 
-		const metamask = connectors.find(conn => conn.name === 'metaMask') as MetaMaskConnector | undefined
+		const browserWalletConn = _connectors.find(conn => conn.name === 'BrowserWallet')
 
-		if (metamask) {
+		if (browserWalletConn) {
 			try {
-				const isConnected = await MetaMaskConnector.checkConnection()
+				const isConnected = await BrowserWalletConnector.checkConnection()
 				if (isConnected) {
-					await connectWith(metamask)
+					await connectTo(browserWalletConn.name)
 				} else if (!dumb.value) {
 					console.warn('No auto-connect to MetaMask: not connected')
 				}
@@ -135,18 +185,23 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 	}
 
 	return {
-		// state
-		isConnected,
-		error,
+		// feat: connectors
+		addConnector,
+		addConnectors,
+		hasConnector,
 
-		provider,
-		connector,
-		status,
-		address,
-		chainId,
+		// feat: EIP6963
+		providerDetails,
+
+		// state
+		walletState,
+		...toRefs(walletState),
+
+		// computed
+		isConnected,
 
 		// wallet functions
-		connectWith,
+		connectTo,
 		disconnect,
 		resetWallet,
 		autoConnect,

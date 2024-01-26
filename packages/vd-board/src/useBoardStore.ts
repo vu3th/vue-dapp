@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-type BoardStoreState = {
+export type BoardStoreState = {
 	boardOpen: boolean
 }
 

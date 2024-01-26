@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import Modal from './Modal.vue'
 import WalletConnectIcon from './logos/WalletConnect.vue'
-import MetaMaskIcon from './logos/MetaMask.vue'
 import CoinbaseWalletIcon from './logos/CoinbaseWallet.vue'
-import GnosisSafeIcon from './logos/GnosisSafe.vue'
-import { useWalletStore, type Connector } from '@vue-dapp/core'
-import { useBoardStore } from '../stores'
-import { storeToRefs } from 'pinia'
+// import GnosisSafeIcon from './logos/GnosisSafe.vue'
+import { useVueDapp, ConnectorName, RDNS } from '@vue-dapp/core'
+import { useBoardStore } from '../useBoardStore'
 
 const props = withDefaults(
 	defineProps<{
-		connectors: Connector[]
 		dark?: boolean
 		autoConnect?: boolean
 		connectTimeout?: number
@@ -29,24 +26,21 @@ const props = withDefaults(
 	},
 )
 
-const { close } = useBoardStore()
-const { boardOpen } = storeToRefs(useBoardStore())
-const { connectWith, autoConnect } = useWalletStore()
-const { status } = storeToRefs(useWalletStore())
-
-const walletItemClass = computed(() => (props.dark ? 'wallet-item--dark' : 'wallet-item'))
-
-const connectors = props.connectors as Connector[]
+const boardStore = useBoardStore()
 
 const isAutoConnecting = ref(false)
 const isAutoConnect = props.autoConnect
 const connectTimeout = props.connectTimeout
 
+// ==================== useVueDapp ====================
+
+const { connectTo, autoConnect, status, providerDetails, hasConnector } = useVueDapp()
+
 onMounted(async () => {
 	if (isAutoConnect) {
 		try {
 			isAutoConnecting.value = true
-			await autoConnect(connectors)
+			await autoConnect()
 		} catch (err: any) {
 			props.autoConnectErrorHandler && props.autoConnectErrorHandler(err)
 		} finally {
@@ -56,18 +50,18 @@ onMounted(async () => {
 })
 
 // feat: autoconnect metaMask if it's the only connector
-watch(boardOpen, async () => {
-	if (props.autoConnectMetamaskIfSolo && boardOpen.value) {
-		if (connectors.length === 1 && connectors[0].name === 'metaMask') {
-			await onClickWallet(connectors[0])
-		}
-	}
-})
+// watch(boardOpen, async () => {
+// 	if (props.autoConnectMetamaskIfSolo && boardOpen.value) {
+// 		if (connectors.length === 1 && connectors[0].name === 'metaMask') {
+// 			await onClickWallet(connectors[0])
+// 		}
+// 	}
+// })
 
-const onClickWallet = async (connector: Connector) => {
+const onClickWallet = async (connName: ConnectorName, rdns?: RDNS | string) => {
 	try {
-		close()
-		await connectWith(connector, connectTimeout)
+		boardStore.close()
+		await connectTo(connName, { rdns })
 	} catch (err: any) {
 		props.connectErrorHandler && props.connectErrorHandler(err)
 	}
@@ -98,24 +92,49 @@ const vClickOutside = {
 
 <template>
 	<div>
-		<Modal :modalOpen="boardOpen" @close="close" :dark="dark">
-			<div v-click-outside="close">
-				<div v-for="(connector, i) in connectors" :key="connector.name">
-					<div :class="walletItemClass" @click="onClickWallet(connector)">
+		<Modal :modalOpen="boardStore.boardOpen" @close="boardStore.close" :dark="dark">
+			<div v-click-outside="boardStore.close">
+				<div v-for="detail in providerDetails" :key="detail.info.uuid">
+					<div
+						@click="onClickWallet('BrowserWallet', detail.info.rdns)"
+						:class="dark ? 'wallet-item--dark' : 'wallet-item'"
+					>
 						<div class="item">
-							<!-- TODO: refactor these v-if -->
-							<MetaMaskIcon v-if="connector.name === 'metaMask'" class="logo" />
-							<WalletConnectIcon v-if="connector.name === 'walletConnect'" class="logo" />
-							<CoinbaseWalletIcon v-if="connector.name === 'coinbaseWallet'" class="logo" />
-							<GnosisSafeIcon v-if="connector.name === 'safe'" class="logo" />
+							<div class="logo">
+								<!-- why the following will cause the error? -->
+								<!-- <img
+									style="width: 30px; height: 30px"
+									:src="detail.info.icon"
+									:alt="detail.info.name"
+								/> -->
+							</div>
 
-							<div v-if="connector.name === 'metaMask'">MetaMask</div>
-							<div v-if="connector.name === 'walletConnect'">WalletConnect</div>
-							<div v-if="connector.name === 'coinbaseWallet'">Coinbase Wallet</div>
-							<div v-if="connector.name === 'safe'">Gnosis Safe</div>
+							<div>{{ detail.info.name }}</div>
+							<div :class="dark ? 'line--dark' : 'line'"></div>
 						</div>
 					</div>
-					<div v-if="i !== connectors.length - 1" :class="dark ? 'line--dark' : 'line'"></div>
+				</div>
+
+				<div
+					v-if="hasConnector('WalletConnect')"
+					@click="onClickWallet('WalletConnect')"
+					:class="dark ? 'wallet-item--dark' : 'wallet-item'"
+				>
+					<div class="item">
+						<WalletConnectIcon class="logo" />
+						<div>WalletConnect</div>
+					</div>
+				</div>
+
+				<div
+					v-if="hasConnector('CoinbaseWallet')"
+					@click="onClickWallet('CoinbaseWallet')"
+					:class="dark ? 'wallet-item--dark' : 'wallet-item'"
+				>
+					<div class="item">
+						<CoinbaseWalletIcon class="logo" />
+						<div>Coinbase Wallet</div>
+					</div>
 				</div>
 			</div>
 		</Modal>
@@ -171,7 +190,7 @@ const vClickOutside = {
 
 .item {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	font-size: 1.5rem;
@@ -198,6 +217,8 @@ const vClickOutside = {
 }
 
 .logo {
+	display: flex;
+	align-items: center;
 	width: 50px;
 	height: 50px;
 }

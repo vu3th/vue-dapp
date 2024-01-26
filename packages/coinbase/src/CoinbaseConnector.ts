@@ -22,7 +22,7 @@ export type CoinbaseWalletConnectorOptions = CoinbaseWalletSDKOptions & {
 }
 
 export class CoinbaseWalletConnector extends Connector<CoinbaseWalletProvider, CoinbaseWalletConnectorOptions> {
-	readonly name = 'coinbaseWallet'
+	readonly name = 'CoinbaseWallet'
 
 	#provider?: CoinbaseWalletProvider
 	#onDisconnectHandler?: () => void

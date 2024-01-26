@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { shortenAddress, useWalletStore } from '@vue-dapp/core'
+import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import copy from 'copy-to-clipboard'
 import { useDappStore } from '@/stores/useDappStore'
 import { useBoardStore } from '@vue-dapp/vd-board'
 
 const { open } = useBoardStore()
 
-const { disconnect } = useWalletStore()
-const { connector, status, address, isConnected, dumb } = storeToRefs(useWalletStore())
+const { disconnect } = useVueDapp()
+const { connector, status, address, isConnected } = useVueDapp()
 
 const dappStore = useDappStore()
 const { isNetworkUnmatched } = storeToRefs(dappStore)

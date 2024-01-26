@@ -1,11 +1,13 @@
-import { computed, watch, toRaw } from 'vue'
+import { computed, watch, toRaw, toRefs } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from './useWalletStore'
-import { WalletProvider } from './types'
+import { EIP1193Provider } from './types'
 import invariant from 'tiny-invariant'
+import { useEIP6963 } from './useEIP6963'
 
 export type WalletContext = {
-	provider: WalletProvider
+	// export walletState?
+	provider: EIP1193Provider
 	address: string
 	chainId: number
 }
@@ -17,16 +19,15 @@ export type OnWalletUpdatedCB = (context: WalletContext) => void
 
 export function useVueDapp(pinia?: any) {
 	const walletStore = useWalletStore(pinia)
+
 	const {
-		isConnected: _isConnected,
-		address: _address,
-		chainId: _chainId,
-		provider: _provider,
-		error,
-		status,
-	} = storeToRefs(walletStore)
-	const {
-		connectWith,
+		// feat: connectors
+		addConnector,
+		addConnectors,
+		hasConnector,
+
+		// feat: wallet
+		connectTo,
 		disconnect,
 		resetWallet,
 		autoConnect,
@@ -36,10 +37,11 @@ export function useVueDapp(pinia?: any) {
 		setDumb,
 	} = walletStore
 
-	const isConnected = computed(() => _isConnected.value)
-	const address = computed(() => _address.value)
-	const chainId = computed(() => _chainId.value)
-	const provider = computed(() => _provider.value)
+	const connector = computed(() => walletStore.walletState.connector)
+	const isConnected = computed(() => walletStore.isConnected)
+	const address = computed(() => walletStore.walletState.address)
+	const chainId = computed(() => walletStore.walletState.chainId)
+	const provider = computed(() => walletStore.walletState.provider)
 
 	function onConnected(callback: OnConnectedCB) {
 		watch(isConnected, (val, oldVal) => {
@@ -75,7 +77,7 @@ export function useVueDapp(pinia?: any) {
 		})
 
 		watch(chainId, (val, oldVal) => {
-			if (val !== -1 && val && oldVal > 0) {
+			if (val !== -1 && val && oldVal) {
 				invariant(provider.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchChainId-provider')
 				invariant(address.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchChainId-address')
 				invariant(chainId.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchChainId-chainId')
@@ -105,21 +107,28 @@ export function useVueDapp(pinia?: any) {
 		})
 	}
 
+	const { status, error } = storeToRefs(useWalletStore(pinia))
+
 	return {
+		connector,
 		isConnected,
 		address,
 		chainId,
 		provider,
 
-		error,
 		status,
+		error,
+
+		addConnector,
+		addConnectors,
+		hasConnector,
 
 		onConnected,
 		onAccountOrChainIdChanged,
 		onWalletUpdated,
 		onDisconnected,
 
-		connectWith,
+		connectTo,
 		disconnect,
 		resetWallet,
 		autoConnect,
@@ -127,5 +136,7 @@ export function useVueDapp(pinia?: any) {
 		onAccountsChangedCallback,
 		onChainChangedCallback,
 		setDumb,
+
+		...useEIP6963(),
 	}
 }

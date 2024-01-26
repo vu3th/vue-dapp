@@ -60,17 +60,17 @@ export class ProviderRpcError<T = undefined> extends RpcError<T> {
 
 export class ConnectorNotFoundError extends Error {
 	name = 'ConnectorNotFoundError'
-	message = 'Connector not found'
+	message = 'VueDappError: Connector not found'
 }
 
 export class ProviderNotFoundError extends Error {
 	name = 'ProviderNotFoundError'
-	message = 'Provider not found'
+	message = 'VueDappError: Provider not found'
 }
 
 export class AddChainError extends Error {
 	name = 'AddChainError'
-	message = 'Error adding chain'
+	message = 'VueDappError: Error adding chain'
 }
 
 export class SwitchChainError extends ProviderRpcError {
@@ -83,7 +83,7 @@ export class SwitchChainError extends ProviderRpcError {
 
 export class SwitchChainNotSupportedError extends Error {
 	name = 'SwitchChainNotSupportedError'
-	message = 'Switch chain not supported by connector'
+	message = 'VueDappError: Switch chain not supported by connector'
 }
 
 export class UserRejectedRequestError extends ProviderRpcError {
@@ -96,7 +96,7 @@ export class UserRejectedRequestError extends ProviderRpcError {
 
 export class ActivateEthersError extends Error {
 	name = 'ActivateEthersError'
-	message = 'Failed to load wallet data'
+	message = 'VueDappError: Failed to load wallet data'
 	constructor(msg: string) {
 		super()
 		if (msg) {

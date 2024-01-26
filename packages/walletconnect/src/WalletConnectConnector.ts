@@ -14,7 +14,7 @@ import { EthereumProvider } from '@walletconnect/ethereum-provider'
 import { ProviderRpcError, IProviderEvents } from '@walletconnect/ethereum-provider/dist/types/types'
 
 export class WalletConnectConnector extends Connector<IEthereumProvider, EthereumProviderOptions> {
-	readonly name = 'walletConnect'
+	readonly name = 'WalletConnect'
 	#provider?: IEthereumProvider
 	#onDisconnectHandler?: (args: ProviderRpcError) => void
 	#onAccountsChangedHandler?: (accounts: string[]) => void
