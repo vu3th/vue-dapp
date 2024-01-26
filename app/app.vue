@@ -52,6 +52,14 @@ function handleDisconnect() {
 	console.log('handleDisconnect')
 	dappStore.resetUser()
 }
+
+function handleConnectError(err: any) {
+	console.error('AppError:', err)
+}
+
+function handleAutoConnectError(err: any) {
+	console.error('AppError:', err)
+}
 </script>
 
 <template>
@@ -61,7 +69,15 @@ function handleDisconnect() {
 		<VueDappProvider @connect="handleConnect" @disconnect="handleDisconnect">
 			<NuxtPage />
 
-			<Board dark autoConnect />
+			<ClientOnly>
+				<Board
+					v-model="dappStore.connectModalOpen"
+					dark
+					autoConnect
+					:connectErrorHandler="handleConnectError"
+					:autoConnectErrorHandler="handleAutoConnectError"
+				/>
+			</ClientOnly>
 		</VueDappProvider>
 	</NuxtLayout>
 </template>

@@ -15,7 +15,7 @@ watch(isConnected, () => {
 		</div>
 
 		<div class="mt-10 flex flex-col items-center justify-center">
-			<p v-if="chainId !== -1" class="text-gray-600 text-sm">Chain ID: {{ chainId }}</p>
+			<p v-if="chainId" class="text-gray-600 text-sm">Chain ID: {{ chainId }}</p>
 			<p class="text-gray-600 text-xs">{{ address }}</p>
 		</div>
 	</div>

@@ -19,12 +19,11 @@ export default defineConfig({
 		},
 		outDir: 'dist',
 		rollupOptions: {
-			external: ['vue', 'pinia', '@vue-dapp/core'],
+			external: ['vue', '@vue-dapp/core'],
 			output: {
 				dir: 'dist',
 				globals: {
 					vue: 'vue',
-					pinia: 'pinia',
 					'@vue-dapp/core': 'core',
 				},
 			},

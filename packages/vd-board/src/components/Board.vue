@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import Modal from './Modal.vue'
-import WalletConnectIcon from './logos/WalletConnect.vue'
-import CoinbaseWalletIcon from './logos/CoinbaseWallet.vue'
-// import GnosisSafeIcon from './logos/GnosisSafe.vue'
+import WalletConnectIcon from './logos/WalletConnectIcon.vue'
+import CoinbaseWalletIcon from './logos/CoinbaseWalletIcon.vue'
+// import GnosisSafeIcon from './logos/GnosisSafeIcon.vue'
 import { useVueDapp, ConnectorName, RDNS } from '@vue-dapp/core'
-import { useBoardStore } from '../useBoardStore'
+
+// const coinbaseWalletIconSrc =
+// 	'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTI4IDU2YzE1LjQ2NCAwIDI4LTEyLjUzNiAyOC0yOFM0My40NjQgMCAyOCAwIDAgMTIuNTM2IDAgMjhzMTIuNTM2IDI4IDI4IDI4WiIgZmlsbD0iIzFCNTNFNCIvPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNyAyOGMwIDExLjU5OCA5LjQwMiAyMSAyMSAyMXMyMS05LjQwMiAyMS0yMVMzOS41OTggNyAyOCA3IDcgMTYuNDAyIDcgMjhabTE3LjIzNC02Ljc2NmEzIDMgMCAwIDAtMyAzdjcuNTMzYTMgMyAwIDAgMCAzIDNoNy41MzNhMyAzIDAgMCAwIDMtM3YtNy41MzNhMyAzIDAgMCAwLTMtM2gtNy41MzNaIiBmaWxsPSIjZmZmIi8+PC9zdmc+'
 
 const props = withDefaults(
 	defineProps<{
+		modelValue: boolean
 		dark?: boolean
 		autoConnect?: boolean
 		connectTimeout?: number
@@ -21,12 +24,16 @@ const props = withDefaults(
 		autoConnect: false,
 		connectTimeout: 0,
 		autoConnectMetamaskIfSolo: false,
-		connectErrorHandler: () => {},
-		autoConnectErrorHandler: () => {},
+		connectErrorHandler: undefined,
+		autoConnectErrorHandler: undefined,
 	},
 )
 
-const boardStore = useBoardStore()
+const emit = defineEmits(['update:modelValue'])
+
+function closeModal() {
+	emit('update:modelValue', false)
+}
 
 const isAutoConnecting = ref(false)
 const isAutoConnect = props.autoConnect
@@ -36,13 +43,21 @@ const connectTimeout = props.connectTimeout
 
 const { connectTo, autoConnect, status, providerDetails, hasConnector } = useVueDapp()
 
+watch(status, () => {
+	console.log('Board.status', status.value)
+})
+
 onMounted(async () => {
 	if (isAutoConnect) {
 		try {
 			isAutoConnecting.value = true
 			await autoConnect()
 		} catch (err: any) {
-			props.autoConnectErrorHandler && props.autoConnectErrorHandler(err)
+			if (props.autoConnectErrorHandler) {
+				props.autoConnectErrorHandler(err)
+			} else {
+				console.error('VueDappError:', err)
+			}
 		} finally {
 			isAutoConnecting.value = false
 		}
@@ -60,10 +75,14 @@ onMounted(async () => {
 
 const onClickWallet = async (connName: ConnectorName, rdns?: RDNS | string) => {
 	try {
-		boardStore.close()
+		closeModal()
 		await connectTo(connName, { rdns })
 	} catch (err: any) {
-		props.connectErrorHandler && props.connectErrorHandler(err)
+		if (props.connectErrorHandler) {
+			props.connectErrorHandler(err)
+		} else {
+			console.error('VueDappError:', err)
+		}
 	}
 }
 
@@ -92,58 +111,68 @@ const vClickOutside = {
 
 <template>
 	<div>
-		<Modal :modalOpen="boardStore.boardOpen" @close="boardStore.close" :dark="dark">
-			<div v-click-outside="boardStore.close">
-				<div v-for="detail in providerDetails" :key="detail.info.uuid">
-					<div
-						@click="onClickWallet('BrowserWallet', detail.info.rdns)"
-						:class="dark ? 'wallet-item--dark' : 'wallet-item'"
-					>
-						<div class="item">
-							<div class="logo">
-								<!-- why the following will cause the error? -->
-								<!-- <img
-									style="width: 30px; height: 30px"
-									:src="detail.info.icon"
-									:alt="detail.info.name"
-								/> -->
-							</div>
-
-							<div>{{ detail.info.name }}</div>
-							<div :class="dark ? 'line--dark' : 'line'"></div>
-						</div>
+		<Modal :modalOpen="modelValue" @close="closeModal" :dark="dark">
+			<div id="the-board" v-click-outside="closeModal">
+				<div
+					v-for="detail in providerDetails"
+					:key="detail.info.uuid"
+					@click="onClickWallet('BrowserWallet', detail.info.rdns)"
+					class="wallet-block"
+					:class="{
+						'wallet-block--dark': dark,
+					}"
+				>
+					<div class="logo">
+						<img :src="detail.info.icon" :alt="detail.info.name" />
 					</div>
+
+					<div>{{ detail.info.name }}</div>
+					<!-- <div :class="dark ? 'line--dark' : 'line'"></div> -->
 				</div>
 
 				<div
 					v-if="hasConnector('WalletConnect')"
 					@click="onClickWallet('WalletConnect')"
-					:class="dark ? 'wallet-item--dark' : 'wallet-item'"
+					class="wallet-block"
+					:class="{
+						'wallet-block--dark': dark,
+					}"
 				>
-					<div class="item">
-						<WalletConnectIcon class="logo" />
-						<div>WalletConnect</div>
-					</div>
+					<WalletConnectIcon class="logo" />
+					<div>WalletConnect</div>
 				</div>
 
 				<div
 					v-if="hasConnector('CoinbaseWallet')"
 					@click="onClickWallet('CoinbaseWallet')"
-					:class="dark ? 'wallet-item--dark' : 'wallet-item'"
+					class="wallet-block"
+					:class="{
+						'wallet-block--dark': dark,
+					}"
 				>
-					<div class="item">
-						<CoinbaseWalletIcon class="logo" />
-						<div>Coinbase Wallet</div>
-					</div>
+					<CoinbaseWalletIcon class="logo" />
+					<!-- <img class="logo" :src="coinbaseWalletIconSrc" alt="Coinbase Wallet" /> -->
+					<div>Coinbase Wallet</div>
 				</div>
 			</div>
 		</Modal>
 
 		<slot name="connecting">
-			<Modal :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
+			<Modal :modalOpen="status === 'connecting' && !isAutoConnecting" dark>
 				<div class="loading-modal" v-if="status === 'connecting'">
 					<p>Connecting...</p>
 					<p class="mt-4">Approve or reject request using your wallet</p>
+
+					<!-- fucking problem when using the following code -->
+					<!-- <button
+						class="cancel-btn"
+						:class="{
+							'cancel-btn--dark': dark,
+						}"
+						@click="closeModal"
+					>
+						Cancel
+					</button> -->
 				</div>
 			</Modal>
 		</slot>
@@ -151,55 +180,92 @@ const vClickOutside = {
 </template>
 
 <style scoped>
-.wallet-item {
+#the-board {
+	width: 450px;
+	height: auto;
+
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 5px;
+	padding: 15px 15px;
+}
+
+.wallet-block {
+	padding: 10px 20px;
+
 	display: flex;
-	justify-content: center;
-	padding: 1rem 1rem 0.6rem;
-	margin: 0.5rem;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+
 	border-radius: 0.75rem;
 	cursor: pointer;
 }
 
-.wallet-item:hover {
-	background-color: rgba(236, 237, 239, 0.737);
-}
-
-/* dark mode */
-.wallet-item--dark {
-	display: flex;
-	justify-content: center;
-	padding: 1rem 1rem 0.6rem;
-	margin: 0.5rem;
-	border-radius: 0.75rem;
-	cursor: pointer;
-	color: rgb(199, 199, 199);
-}
-
-.wallet-item--dark:hover {
+.wallet-block.wallet-block--dark:hover {
 	background-color: #101a20;
 }
 
-@media (min-width: 640px) {
+.wallet-block:not(.wallet-block--dark):hover {
+	background-color: rgba(236, 237, 239, 0.737);
+}
+
+.logo {
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.loading-modal {
+	width: 20rem;
+	padding: 2.5rem;
+	text-align: center;
+}
+
+/* title: connecting... */
+.loading-modal > p:first-child {
+	font-size: 1.25rem;
+}
+
+.cancel-btn {
+	margin-top: 15px;
+
+	width: auto;
+	padding: 5px 15px;
+	border: gray 1px solid;
+	border-radius: 0.75rem;
+}
+
+.cancel-btn:not(.cancel-btn--dark):hover {
+	background-color: #e5e7eb;
+}
+
+.cancel-btn.cancel-btn--dark:hover {
+	border: #e5e7eb 1px solid;
+	background: #101a20;
+}
+
+@media (max-width: 460px) {
+	#the-board {
+		width: 95vw;
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
 	.wallet-item {
 		width: 24rem;
 	}
 	.wallet-item--dark {
 		width: 24rem;
 	}
-}
 
-.item {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	font-size: 1.5rem;
-	line-height: 2rem;
-}
+	.loading-modal {
+		width: 95vw;
+		padding: 1.5rem 5px;
+	}
 
-.item > :not([hidden]) ~ :not([hidden]) {
-	margin-top: 1rem;
-	margin-bottom: 1rem;
+	.loading-modal > p:first-child {
+		font-size: 1rem;
+	}
 }
 
 .line {
@@ -216,13 +282,6 @@ const vClickOutside = {
 	border-style: solid;
 }
 
-.logo {
-	display: flex;
-	align-items: center;
-	width: 50px;
-	height: 50px;
-}
-
 .wallet-disabled {
 	opacity: 0.5;
 }
@@ -230,22 +289,5 @@ const vClickOutside = {
 .wallet-disabled:hover {
 	background-color: rgba(255, 255, 255, 0);
 	cursor: default;
-}
-
-.loading-modal {
-	width: 20rem;
-	padding: 2.5rem;
-	text-align: center;
-}
-
-.loading-modal > p:first-child {
-	font-size: 1.25rem;
-	line-height: 1.75rem;
-}
-
-@media (min-width: 640px) {
-	.loading-modal {
-		width: auto;
-	}
 }
 </style>

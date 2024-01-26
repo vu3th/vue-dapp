@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Board from './components/Board.vue'
-import { useBoardStore } from './useBoardStore'
 import { BrowserWalletConnector, useVueDapp } from '@vue-dapp/core'
+import { ref } from 'vue'
 
-const boardStore = useBoardStore()
+const isModalOpen = ref(true)
 
 const { isConnected, address, chainId, disconnect, addConnector } = useVueDapp()
 
@@ -11,7 +11,7 @@ addConnector(new BrowserWalletConnector())
 
 function onClickConnectButton() {
 	if (!isConnected.value) {
-		boardStore.open()
+		isModalOpen.value = false
 	} else {
 		disconnect()
 	}
@@ -28,9 +28,15 @@ function autoConnectErrorHandler(err: any) {
 <template>
 	<div>
 		<button @click="onClickConnectButton">{{ isConnected ? 'Disconnect' : 'Connect Wallet' }}</button>
-		<p v-if="chainId !== -1">Chain ID: {{ chainId }}</p>
+		<p v-if="chainId">Chain ID: {{ chainId }}</p>
 		<p>{{ address }}</p>
 
-		<Board dark :autoConnectErrorHandler="autoConnectErrorHandler" :connectErrorHandler="connectErrorHandler" />
+		<Board
+			v-model="isModalOpen"
+			dark
+			autoConnect
+			:connectErrorHandler="connectErrorHandler"
+			:autoConnectErrorHandler="autoConnectErrorHandler"
+		/>
 	</div>
 </template>

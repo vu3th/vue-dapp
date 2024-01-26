@@ -1,4 +1,4 @@
-import { computed, markRaw, reactive, ref, toRefs } from 'vue'
+import { computed, isProxy, markRaw, reactive, ref, toRaw, toRefs, toValue } from 'vue'
 import { defineStore } from 'pinia'
 import { ConnectOptions, Connector, ConnectorName, EIP6963ProviderDetail, EIP6963ProviderInfo } from './types'
 import { ConnectorNotFoundError, ConnectError, AutoConnectError } from './errors'
@@ -101,12 +101,15 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		try {
 			const { provider, account, chainId, info } = await connector.connect(options)
 
+			// console.log('useWalletStore.connectTo -> account', account)
+
 			if (connector.name === 'BrowserWallet') {
 				walletState.providerInfo = info!
 			}
 
-			walletState.connector = markRaw(connector)
-			walletState.provider = markRaw(provider)
+			walletState.connector = connector
+			walletState.name = connector.name as ConnectorName
+			walletState.provider = provider
 			walletState.address = account
 			walletState.chainId = normalizeChainId(chainId)
 		} catch (err: any) {
@@ -129,7 +132,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 			 * because the wallet state was cleared.
 			 * @todo better solution
 			 */
-			if (walletState.connector?.name === 'BrowserWallet') {
+			if (walletState.name === 'BrowserWallet') {
 				return
 			}
 			disconnect()
@@ -147,6 +150,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 	}
 
 	async function disconnect() {
+		// console.log('useWalletStore.disconnect')
 		if (walletState.connector) {
 			try {
 				await walletState.connector.disconnect()

@@ -3,15 +3,16 @@ import { storeToRefs } from 'pinia'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import copy from 'copy-to-clipboard'
 import { useDappStore } from '@/stores/useDappStore'
-import { useBoardStore } from '@vue-dapp/vd-board'
-
-const { open } = useBoardStore()
 
 const { disconnect } = useVueDapp()
 const { connector, status, address, isConnected } = useVueDapp()
 
 const dappStore = useDappStore()
 const { isNetworkUnmatched } = storeToRefs(dappStore)
+
+function onClickConnectButton() {
+	dappStore.connectModalOpen = !dappStore.connectModalOpen
+}
 
 async function onSwitchChain() {
 	try {
@@ -39,20 +40,20 @@ async function onSwitchChain() {
 					@click="onSwitchChain"
 				/>
 
-				<p v-else>{{ shortenAddress(address) }}</p>
+				<p v-else>{{ shortenAddress(address!) }}</p>
 
 				<Icon
 					name="i-ic-baseline-content-copy"
 					v-if="!isNetworkUnmatched"
 					class="clickable"
-					@click="copy(address)"
+					@click="copy(address!)"
 				/>
 
 				<Icon name="i-ic:baseline-logout" class="clickable" @click="disconnect" />
 			</div>
 		</div>
 
-		<BaseButton class="rounded-3xl w-auto" v-else @click="open()" :disabled="status === 'connecting'">
+		<BaseButton class="rounded-3xl w-auto" v-else @click="onClickConnectButton" :disabled="status === 'connecting'">
 			{{ status === 'connecting' ? 'Connecting...' : '' }}
 			<Icon name="i-octicon-plug-24" v-if="status !== 'connecting'" />
 		</BaseButton>

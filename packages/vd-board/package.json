@@ -20,17 +20,16 @@
 		"wallet",
 		"component"
 	],
-	"type": "module",
 	"files": [
 		"dist"
 	],
-	"main": "./dist/vd-board.umd.cjs",
-	"module": "./dist/vd-board.js",
+	"main": "./dist/vd-board.mjs",
+	"module": "./dist/vd-board.mjs",
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./dist/vd-board.js",
-			"require": "./dist/vd-board.umd.cjs"
+			"import": "./dist/vd-board.mjs",
+			"require": "./dist/vd-board.umd.js"
 		},
 		"./dist/style.css": "./dist/style.css"
 	},
@@ -44,18 +43,16 @@
 		"preview": "vite preview"
 	},
 	"devDependencies": {
-		"@vitejs/plugin-vue": "^4.4.0",
+		"@vitejs/plugin-vue": "^5.0.3",
 		"@vue-dapp/core": "workspace:^",
-		"pinia": "^2.1.7",
 		"typescript": "^5.1.3",
-		"vite": "^4.5.0",
-		"vite-plugin-dts": "^3.6.2",
+		"vite": "^5.0.12",
+		"vite-plugin-dts": "^3.7.2",
 		"vue": "^3.3.6",
 		"vue-tsc": "^0.29.8"
 	},
 	"peerDependencies": {
 		"@vue-dapp/core": "workspace:^",
-		"pinia": "^2.1.7",
 		"vue": "^3.3.6"
 	}
 }
