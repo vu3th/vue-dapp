@@ -1,22 +1,9 @@
-import { computed, watch, toRaw } from 'vue'
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStore } from './store'
-import { EIP1193Provider } from './types'
-import invariant from 'tiny-invariant'
 import { useEIP6963 } from './services/eip6963'
 import { useConnectors } from './services/connectors'
-
-export type WalletContext = {
-	// export walletState?
-	provider: EIP1193Provider
-	address: string
-	chainId: number
-}
-
-export type OnConnectedCB = (context: WalletContext) => void
-export type OnAccountOrChainIdChangedCB = (context: WalletContext) => void
-export type OnDisconnectedCB = () => void
-export type OnWalletUpdatedCB = (context: WalletContext) => void
+import { useWatch } from './services/watch'
 
 export function useVueDapp(pinia?: any) {
 	const walletStore = useStore(pinia)
@@ -38,75 +25,12 @@ export function useVueDapp(pinia?: any) {
 	const chainId = computed(() => walletStore.walletState.chainId)
 	const provider = computed(() => walletStore.walletState.provider)
 
-	function onConnected(callback: OnConnectedCB) {
-		watch(isConnected, (val, oldVal) => {
-			if (val && !oldVal) {
-				invariant(provider.value, 'VueDappError: useVueDapp-onConnected-provider')
-				invariant(address.value, 'VueDappError: useVueDapp-onConnected-address')
-				invariant(chainId.value, 'VueDappError: useVueDapp-onConnected-chainId')
-
-				callback &&
-					callback({
-						provider: toRaw(provider.value),
-						address: toRaw(address.value),
-						chainId: toRaw(chainId.value),
-					})
-			}
-		})
-	}
-
-	function onAccountOrChainIdChanged(callback: OnAccountOrChainIdChangedCB) {
-		watch(address, (val, oldVal) => {
-			if (oldVal && val) {
-				invariant(provider.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchAddress-provider')
-				invariant(address.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchAddress-address')
-				invariant(chainId.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchAddress-chainId')
-
-				callback &&
-					callback({
-						provider: toRaw(provider.value),
-						address: toRaw(address.value),
-						chainId: toRaw(chainId.value),
-					})
-			}
-		})
-
-		watch(chainId, (val, oldVal) => {
-			if (val !== -1 && val && oldVal) {
-				invariant(provider.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchChainId-provider')
-				invariant(address.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchChainId-address')
-				invariant(chainId.value, 'VueDappError: useVueDapp-onAccountOrChainIdChanged-watchChainId-chainId')
-
-				callback &&
-					callback({
-						provider: toRaw(provider.value),
-						address: toRaw(address.value),
-						chainId: toRaw(chainId.value),
-					})
-			}
-		})
-	}
-
-	function onWalletUpdated(callback: OnWalletUpdatedCB) {
-		onConnected(callback)
-		onAccountOrChainIdChanged(callback)
-	}
-
-	function onDisconnected(callback: OnDisconnectedCB) {
-		const { isConnected } = storeToRefs(useStore(pinia))
-
-		watch(isConnected, (val, oldVal) => {
-			if (!val && oldVal) {
-				callback && callback()
-			}
-		})
-	}
-
 	const { status, error } = storeToRefs(useStore(pinia))
 
 	return {
 		...useConnectors(pinia),
 		...useEIP6963(pinia),
+		...useWatch(pinia),
 
 		walletState: computed(() => walletStore.walletState),
 		connector,
@@ -117,11 +41,6 @@ export function useVueDapp(pinia?: any) {
 
 		status,
 		error,
-
-		onConnected,
-		onAccountOrChainIdChanged,
-		onWalletUpdated,
-		onDisconnected,
 
 		connectTo,
 		disconnect,
