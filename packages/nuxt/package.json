@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/nuxt",
-	"version": "1.0.0-beta.6",
+	"version": "1.0.0-beta.11",
 	"description": "Vue Dapp Nuxt module",
 	"repository": "your-org/@vue-dapp/nuxt",
 	"license": "MIT",
