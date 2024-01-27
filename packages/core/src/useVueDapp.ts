@@ -1,9 +1,10 @@
-import { computed, watch, toRaw, toRefs } from 'vue'
+import { computed, watch, toRaw } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from './useWalletStore'
 import { EIP1193Provider } from './types'
 import invariant from 'tiny-invariant'
-import { useEIP6963 } from './useEIP6963'
+import { useEIP6963 } from './composables/eip6963'
+import { useConnectors } from './composables/connectors'
 
 export type WalletContext = {
 	// export walletState?
@@ -21,12 +22,6 @@ export function useVueDapp(pinia?: any) {
 	const walletStore = useWalletStore(pinia)
 
 	const {
-		// feat: connectors
-		addConnector,
-		addConnectors,
-		hasConnector,
-
-		// feat: wallet
 		connectTo,
 		disconnect,
 		resetWallet,
@@ -110,6 +105,10 @@ export function useVueDapp(pinia?: any) {
 	const { status, error } = storeToRefs(useWalletStore(pinia))
 
 	return {
+		...useConnectors(pinia),
+		...useEIP6963(pinia),
+
+		walletState: computed(() => walletStore.walletState),
 		connector,
 		isConnected,
 		address,
@@ -118,10 +117,6 @@ export function useVueDapp(pinia?: any) {
 
 		status,
 		error,
-
-		addConnector,
-		addConnectors,
-		hasConnector,
 
 		onConnected,
 		onAccountOrChainIdChanged,
@@ -136,7 +131,5 @@ export function useVueDapp(pinia?: any) {
 		onAccountsChangedCallback,
 		onChainChangedCallback,
 		setDumb,
-
-		...useEIP6963(),
 	}
 }

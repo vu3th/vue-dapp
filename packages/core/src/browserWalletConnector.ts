@@ -15,7 +15,7 @@ import {
 	SwitchChainError,
 } from './errors'
 import { normalizeChainId, toHex } from './utils'
-import { useEIP6963 } from './useEIP6963'
+import { useEIP6963 } from './composables/eip6963'
 
 export type BrowserWalletConnectorOptions = {
 	appUrl?: string
@@ -24,10 +24,10 @@ export type BrowserWalletConnectorOptions = {
 export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWalletConnectorOptions> {
 	readonly name = 'BrowserWallet'
 
-	provider?: EIP1193Provider
-	onDisconnectHandler?: (error: ProviderRpcError) => void
-	onAccountsChangedHandler?: (accounts: string[]) => void
-	onChainChangedHandler?: (chainId: number) => void
+	#provider?: EIP1193Provider
+	#onDisconnectHandler?: (error: ProviderRpcError) => void
+	#onAccountsChangedHandler?: (accounts: string[]) => void
+	#onChainChangedHandler?: (chainId: number) => void
 
 	constructor(options: BrowserWalletConnectorOptions = {}) {
 		super(options)
@@ -84,10 +84,10 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 			throw new Error(`Failed to request MetaMask${error.message ? ': ' + error.message : ''}`)
 		}
 
-		this.provider = provider
+		this.#provider = provider
 
 		return {
-			provider: this.provider,
+			provider: this.#provider,
 			account: accounts[0],
 			chainId,
 			info,
@@ -118,16 +118,16 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 	 * @see https://github.com/MetaMask/metamask-extension/issues/10353
 	 */
 	async disconnect() {
-		if (!this.provider) throw new ProviderNotFoundError()
+		if (!this.#provider) throw new ProviderNotFoundError()
 
-		this.onDisconnectHandler && this.#removeListener('disconnect', this.onDisconnectHandler)
-		this.onAccountsChangedHandler && this.#removeListener('accountsChanged', this.onAccountsChangedHandler)
-		this.onChainChangedHandler && this.#removeListener('chainChanged', this.onChainChangedHandler)
+		this.#onDisconnectHandler && this.#removeListener('disconnect', this.#onDisconnectHandler)
+		this.#onAccountsChangedHandler && this.#removeListener('accountsChanged', this.#onAccountsChangedHandler)
+		this.#onChainChangedHandler && this.#removeListener('chainChanged', this.#onChainChangedHandler)
 
-		this.provider = undefined
-		this.onDisconnectHandler = undefined
-		this.onAccountsChangedHandler = undefined
-		this.onChainChangedHandler = undefined
+		this.#provider = undefined
+		this.#onDisconnectHandler = undefined
+		this.#onAccountsChangedHandler = undefined
+		this.#onChainChangedHandler = undefined
 	}
 
 	/**
@@ -135,47 +135,48 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 	 * and will not be triggered when a user clicked disconnect in wallet...
 	 */
 	onDisconnect(handler: (error: ProviderRpcError) => void) {
-		if (!this.provider) throw new ProviderNotFoundError()
-		if (this.onDisconnectHandler) {
-			this.#removeListener('disconnect', this.onDisconnectHandler)
+		if (!this.#provider) throw new ProviderNotFoundError()
+		if (this.#onDisconnectHandler) {
+			this.#removeListener('disconnect', this.#onDisconnectHandler)
 		}
-		this.onDisconnectHandler = handler
-		this.provider.on('disconnect', handler)
+		this.#onDisconnectHandler = handler
+		this.#provider.on('disconnect', handler)
 	}
 
 	onAccountsChanged(handler: (accounts: string[]) => void) {
-		if (!this.provider) throw new ProviderNotFoundError()
-		if (this.onAccountsChangedHandler) {
-			this.#removeListener('accountsChanged', this.onAccountsChangedHandler)
+		if (!this.#provider) throw new ProviderNotFoundError()
+		if (this.#onAccountsChangedHandler) {
+			this.#removeListener('accountsChanged', this.#onAccountsChangedHandler)
 		}
-		this.onAccountsChangedHandler = handler
-		this.provider.on('accountsChanged', handler)
+		this.#onAccountsChangedHandler = handler
+		this.#provider.on('accountsChanged', handler)
 	}
 
 	onChainChanged(handler: (chainId: number) => void) {
-		if (!this.provider) throw new ProviderNotFoundError()
-		if (this.onChainChangedHandler) {
-			this.#removeListener('chainChanged', this.onChainChangedHandler)
+		if (!this.#provider) throw new ProviderNotFoundError()
+		if (this.#onChainChangedHandler) {
+			this.#removeListener('chainChanged', this.#onChainChangedHandler)
 		}
-		this.onChainChangedHandler = handler
-		this.provider.on('chainChanged', (chainId: string) => {
+		this.#onChainChangedHandler = handler
+		this.#provider.on('chainChanged', (chainId: string) => {
 			const _chainId = normalizeChainId(chainId)
 			handler(_chainId)
 		})
 	}
 
 	#removeListener(event: string, handler: (...args: any[]) => void) {
-		if (!this.provider) throw new ProviderNotFoundError()
-		this.provider.removeListener(event, handler)
+		if (!this.#provider) throw new ProviderNotFoundError()
+		console.log('BrowserWalletConnector.#removeListener called')
+		// this.provider.removeListener(event, handler)
 	}
 
 	/**
 	 * docs: https://docs.metamask.io/wallet/reference/wallet_watchasset/
 	 */
 	async addERC20Token(options: AddERC20TokenOptions) {
-		if (!this.provider) throw new ProviderNotFoundError()
+		if (!this.#provider) throw new ProviderNotFoundError()
 		try {
-			await this.provider.request({
+			await this.#provider.request({
 				method: 'wallet_watchAsset',
 				params: {
 					// @ts-ignore
@@ -197,11 +198,11 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 	 * docs: https://docs.metamask.io/wallet/reference/wallet_switchethereumchain/
 	 */
 	async switchChain(chainId: number, networkDetails: NetworkDetails) {
-		if (!this.provider) throw new ProviderNotFoundError()
+		if (!this.#provider) throw new ProviderNotFoundError()
 		const id = toHex(chainId)
 
 		try {
-			await this.provider.request({
+			await this.#provider.request({
 				method: 'wallet_switchEthereumChain',
 				params: [{ chainId: id }],
 			})
@@ -224,9 +225,9 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 	}
 
 	async addChain(networkDetails: NetworkDetails) {
-		if (!this.provider) throw new ProviderNotFoundError()
+		if (!this.#provider) throw new ProviderNotFoundError()
 		try {
-			this.provider.request({
+			this.#provider.request({
 				method: 'wallet_addEthereumChain',
 				params: [networkDetails], // notice that chainId must be in hexadecimal numbers
 			})

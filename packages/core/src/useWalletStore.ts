@@ -1,4 +1,4 @@
-import { computed, isProxy, markRaw, reactive, ref, toRaw, toRefs, toValue } from 'vue'
+import { computed, reactive, ref, toRefs } from 'vue'
 import { defineStore } from 'pinia'
 import { ConnectOptions, Connector, ConnectorName, EIP6963ProviderDetail, EIP6963ProviderInfo } from './types'
 import { ConnectorNotFoundError, ConnectError, AutoConnectError } from './errors'
@@ -21,22 +21,7 @@ export type OnChainChangedCallback = (chainId: number) => void
 export const useWalletStore = defineStore('vd-wallet', () => {
 	// ============================= feat: connectors =============================
 
-	const _connectors: Connector[] = reactive([])
-
-	function hasConnector(connectorName: ConnectorName | string) {
-		return _connectors.some(conn => conn.name === connectorName)
-	}
-
-	function addConnector(connector: Connector) {
-		if (_connectors.find(conn => conn.name === connector.name)) {
-			throw new Error(`Connector ${connector.name} already added`)
-		}
-		_connectors.push(connector)
-	}
-
-	function addConnectors(connectors: Connector[]) {
-		connectors.forEach(conn => addConnector(conn))
-	}
+	const connectors: Connector[] = reactive([])
 
 	// ============================= feat: EIP6963 =============================
 	const providerDetails = reactive<EIP6963ProviderDetail[]>([])
@@ -95,7 +80,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		walletState.status = 'connecting'
 
 		// find connector
-		const connector = _connectors.find(conn => conn.name === connectorName)
+		const connector = connectors.find(conn => conn.name === connectorName)
 		if (!connector) throw new ConnectorNotFoundError()
 
 		try {
@@ -150,6 +135,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 	}
 
 	async function disconnect() {
+		// console.log('isProxy', isProxy(walletState.connector))
 		// console.log('useWalletStore.disconnect')
 		if (walletState.connector) {
 			try {
@@ -170,7 +156,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 			return
 		}
 
-		const browserWalletConn = _connectors.find(conn => conn.name === 'BrowserWallet')
+		const browserWalletConn = connectors.find(conn => conn.name === 'BrowserWallet')
 
 		if (browserWalletConn) {
 			try {
@@ -189,12 +175,10 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 	}
 
 	return {
-		// feat: connectors
-		addConnector,
-		addConnectors,
-		hasConnector,
+		// composables: connectors
+		connectors: connectors,
 
-		// feat: EIP6963
+		// composables: eip6963
 		providerDetails,
 
 		// state
