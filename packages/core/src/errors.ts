@@ -66,6 +66,13 @@ export class ConnectorNotFoundError extends Error {
 export class ProviderNotFoundError extends Error {
 	name = 'ProviderNotFoundError'
 	message = 'VueDappError: Provider not found'
+
+	constructor(msg?: string) {
+		super()
+		if (msg) {
+			this.message = this.message + ': ' + msg
+		}
+	}
 }
 
 export class AddChainError extends Error {

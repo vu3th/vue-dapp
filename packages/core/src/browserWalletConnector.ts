@@ -96,29 +96,21 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 
 	getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
 		const { providerDetails } = useEIP6963()
-		if (providerDetails.value.length < 1) throw new ProviderNotFoundError()
+		if (providerDetails.value.length < 1) throw new ProviderNotFoundError('providerDetails.length < 1')
 
 		// without rdns, return the first provider
 		if (!rdns) {
-			if (providerDetails.value.length === 1) {
+			if (providerDetails.value.length >= 1) {
 				return providerDetails.value[0]
 			}
-
-			if (providerDetails.value.length > 1) {
-				const metamaskProviderDetail = providerDetails.value.find(({ info }) => info.rdns === RDNS.metamask)
-				if (metamaskProviderDetail) return metamaskProviderDetail
-				return providerDetails.value[0]
-			}
-		}
-
-		// with rdns, return the provider with the same rdns
-		if (providerDetails.value.length > 1) {
+		} else {
+			// with rdns, return the provider with the same rdns
 			const detail = providerDetails.value.find(({ info }) => info.rdns === rdns)
-			if (!detail) throw new ProviderNotFoundError()
+			if (!detail) throw new ProviderNotFoundError('rdns not found')
 			return detail
 		}
 
-		throw new ProviderNotFoundError()
+		throw new ProviderNotFoundError('getProvider failed')
 	}
 
 	/**
