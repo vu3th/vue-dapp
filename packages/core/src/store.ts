@@ -18,12 +18,12 @@ export type OnChainChangedCallback = (chainId: number) => void
  *  - Setup Stores https://pinia.vuejs.org/core-concepts/#Setup-Stores
  *  - dealing with SSR https://pinia.vuejs.org/cookbook/composables.html#SSR
  */
-export const useWalletStore = defineStore('vd-wallet', () => {
-	// ============================= feat: connectors =============================
+export const useStore = defineStore('vd-store', () => {
+	// ============================= service: connectors =============================
 
 	const connectors: Connector[] = reactive([])
 
-	// ============================= feat: EIP6963 =============================
+	// ============================= service: EIP6963 =============================
 	const providerDetails = reactive<EIP6963ProviderDetail[]>([])
 
 	// ============================= dev: dumb =============================
@@ -86,7 +86,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 		try {
 			const { provider, account, chainId, info } = await connector.connect(options)
 
-			// console.log('useWalletStore.connectTo -> account', account)
+			// console.log('useStore.connectTo -> account', account)
 
 			if (connector.name === 'BrowserWallet') {
 				walletState.providerInfo = info!
@@ -136,7 +136,7 @@ export const useWalletStore = defineStore('vd-wallet', () => {
 
 	async function disconnect() {
 		// console.log('isProxy', isProxy(walletState.connector))
-		// console.log('useWalletStore.disconnect')
+		// console.log('useStore.disconnect')
 		if (walletState.connector) {
 			try {
 				await walletState.connector.disconnect()

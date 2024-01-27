@@ -1,9 +1,9 @@
-import { useWalletStore } from '../useWalletStore'
+import { useStore } from '../store'
 import { Connector, ConnectorName } from '../types'
 import { computed, markRaw } from 'vue'
 
 export function useConnectors(pinia: any) {
-	const walletStore = useWalletStore(pinia)
+	const walletStore = useStore(pinia)
 
 	function hasConnector(connectorName: ConnectorName | string) {
 		return walletStore.connectors.some((conn: Connector) => conn.name === connectorName)

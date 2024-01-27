@@ -9,11 +9,11 @@ I recommend keeping an eye on [vue3-dapp-starter](https://github.com/vu3th/vue3-
 
 library
 
-| Name                    | Description                                       |
-| ----------------------- | ------------------------------------------------- |
-| @vue-dapp/core          | useWalletStore, connector, utils, and metamask... |
-| @vue-dapp/vd-board      | Vue components for connecting wallet              |
-| @vue-dapp/walletconnect | WalletConnect integration                         |
+| Name                    | Description                  |
+| ----------------------- | ---------------------------- |
+| @vue-dapp/core          | useVueDapp & VueDappProvider |
+| @vue-dapp/vd-board      | VueDappModal                 |
+| @vue-dapp/walletconnect | WalletConnect integration    |
 
 app
 

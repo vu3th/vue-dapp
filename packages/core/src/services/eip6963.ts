@@ -1,9 +1,9 @@
 import { computed } from 'vue'
 import { EIP6963AnnounceProviderEvent, EIP6963ProviderDetail, RDNS } from '../types'
-import { useWalletStore } from '../useWalletStore'
+import { useStore } from '../store'
 
 export function useEIP6963(pinia?: any) {
-	const walletStore = useWalletStore(pinia)
+	const walletStore = useStore(pinia)
 
 	function subscribe() {
 		window.addEventListener('eip6963:announceProvider', (event: EIP6963AnnounceProviderEvent) => {

@@ -1,1 +1,1 @@
-export * from './WalletConnectConnector'
+export * from './walletConnectConnector'

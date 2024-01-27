@@ -15,7 +15,7 @@ import {
 	SwitchChainError,
 } from './errors'
 import { normalizeChainId, toHex } from './utils'
-import { useEIP6963 } from './composables/eip6963'
+import { useEIP6963 } from './services/eip6963'
 
 export type BrowserWalletConnectorOptions = {
 	appUrl?: string

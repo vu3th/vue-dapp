@@ -1,10 +1,10 @@
 import { computed, watch, toRaw } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWalletStore } from './useWalletStore'
+import { useStore } from './store'
 import { EIP1193Provider } from './types'
 import invariant from 'tiny-invariant'
-import { useEIP6963 } from './composables/eip6963'
-import { useConnectors } from './composables/connectors'
+import { useEIP6963 } from './services/eip6963'
+import { useConnectors } from './services/connectors'
 
 export type WalletContext = {
 	// export walletState?
@@ -19,7 +19,7 @@ export type OnDisconnectedCB = () => void
 export type OnWalletUpdatedCB = (context: WalletContext) => void
 
 export function useVueDapp(pinia?: any) {
-	const walletStore = useWalletStore(pinia)
+	const walletStore = useStore(pinia)
 
 	const {
 		connectTo,
@@ -93,7 +93,7 @@ export function useVueDapp(pinia?: any) {
 	}
 
 	function onDisconnected(callback: OnDisconnectedCB) {
-		const { isConnected } = storeToRefs(useWalletStore(pinia))
+		const { isConnected } = storeToRefs(useStore(pinia))
 
 		watch(isConnected, (val, oldVal) => {
 			if (!val && oldVal) {
@@ -102,7 +102,7 @@ export function useVueDapp(pinia?: any) {
 		})
 	}
 
-	const { status, error } = storeToRefs(useWalletStore(pinia))
+	const { status, error } = storeToRefs(useStore(pinia))
 
 	return {
 		...useConnectors(pinia),
