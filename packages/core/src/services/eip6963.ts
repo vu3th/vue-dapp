@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, markRaw } from 'vue'
 import { EIP6963AnnounceProviderEvent, EIP6963ProviderDetail, RDNS } from '../types'
 import { useStore } from '../store'
 
@@ -8,13 +8,15 @@ export function useEIP6963(pinia?: any) {
 	function subscribe() {
 		window.addEventListener('eip6963:announceProvider', (event: EIP6963AnnounceProviderEvent) => {
 			// console.log('eip6963:announceProvider -> detail', event.detail)
-			const detail = event.detail
-			if (walletStore.providerDetails.some(({ info }) => info.uuid === detail.info.uuid)) return
-
-			walletStore.providerDetails.push(detail)
+			_addProviderDetail(event.detail)
 		})
 
 		window.dispatchEvent(new CustomEvent('eip6963:requestProvider'))
+	}
+
+	function _addProviderDetail(detail: EIP6963ProviderDetail) {
+		if (walletStore.providerDetails.some(({ info }) => info.uuid === detail.info.uuid)) return
+		walletStore.providerDetails.push(markRaw(detail)) // note: providerDetail don't need to be reactive
 	}
 
 	function getProviderDetail(rdns: string | RDNS): EIP6963ProviderDetail | undefined {
