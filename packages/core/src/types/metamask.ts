@@ -1,3 +1,5 @@
+// TODO: deprecated
+
 /**
  * MetaMask
  * Docs: https://docs.metamask.io/guide/ethereum-provider.html

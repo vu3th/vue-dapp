@@ -1,10 +1,11 @@
 <script setup lang="ts">
-const { isConnected, address, chainId, walletState } = useVueDapp()
+const { address, chainId, wallet } = useVueDapp()
 
+// TODO: when connected, get the wallet twice
 watch(
-	walletState,
+	wallet,
 	() => {
-		console.log('app -> index.vue -> walletState', walletState.value)
+		console.log('app -> index.vue -> wallet', wallet.value)
 	},
 	{
 		immediate: true,

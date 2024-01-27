@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BrowserWalletConnector, useVueDapp, type WalletContext, VueDappProvider } from '@vue-dapp/core'
+import { BrowserWalletConnector, useVueDapp, type WalletConnected, VueDappProvider } from '@vue-dapp/core'
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
 import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
 import { ethers } from 'ethers'
@@ -36,7 +36,7 @@ if (process.client) {
 	])
 }
 
-async function handleConnect({ provider, address, chainId }: WalletContext) {
+async function handleConnect({ provider, address, chainId }: WalletConnected) {
 	console.log('handleConnect')
 	const ethersProvider = new ethers.BrowserProvider(provider)
 	const signer = await ethersProvider.getSigner()

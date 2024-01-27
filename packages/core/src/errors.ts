@@ -61,6 +61,15 @@ export class ProviderRpcError<T = undefined> extends RpcError<T> {
 export class ConnectorNotFoundError extends Error {
 	name = 'ConnectorNotFoundError'
 	message = 'VueDappError: Connector not found'
+
+	// TODO: use the following pattern to design all errors
+
+	constructor(msg?: string) {
+		super()
+		if (msg) {
+			this.message = this.message + ': ' + msg
+		}
+	}
 }
 
 export class ProviderNotFoundError extends Error {
