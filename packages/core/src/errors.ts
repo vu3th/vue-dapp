@@ -134,3 +134,13 @@ export class AutoConnectError extends Error {
 		super(msg)
 	}
 }
+
+export class AssertConnectedError extends Error {
+	name = 'AssertConnectedError'
+	constructor(msg?: string) {
+		super()
+		if (msg) {
+			this.message = this.message + ': ' + msg
+		}
+	}
+}

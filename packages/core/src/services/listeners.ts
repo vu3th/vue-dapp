@@ -1,37 +1,18 @@
 import { watch, toRaw } from 'vue'
 import { OnConnectedCB, OnAccountOrChainIdChangedCB, OnWalletUpdatedCB, OnDisconnectedCB } from '../types'
 import { useWallet } from './wallet'
-import invariant from 'tiny-invariant'
+import { assertConnected } from '../utils/assert'
 
 // TODO: should return unwatch handler
 
 export function useListeners(pinia?: any) {
-	const { isConnected, status, connectorName, provider, providerInfo, connector, address, chainId } = useWallet(pinia)
+	const { isConnected, address, chainId, wallet } = useWallet(pinia)
 
 	function onConnected(callback: OnConnectedCB) {
 		watch(isConnected, (val, oldVal) => {
 			if (val && !oldVal) {
-				invariant(status.value === 'connected', 'useListeners - onConnected - status')
-				invariant(connectorName.value, 'useListeners - onConnected - connectorName')
-				invariant(provider.value, 'useListeners - onConnected - provider')
-				if (connectorName.value === 'BrowserWallet') {
-					invariant(providerInfo.value, 'useListeners - onConnected - providerInfo')
-				}
-				invariant(connector.value, 'useListeners - onConnected - connector')
-				invariant(address.value, 'useListeners - onConnected - address')
-				invariant(chainId.value, 'useListeners - onConnected - chainId')
-
-				callback &&
-					callback({
-						status: status.value,
-						error: null,
-						connectorName: connectorName.value,
-						provider: toRaw(provider.value),
-						providerInfo: toRaw(providerInfo.value),
-						connector: toRaw(connector.value),
-						address: address.value,
-						chainId: chainId.value,
-					})
+				assertConnected(wallet.value, 'useListeners - onConnected')
+				callback && callback(toRaw(wallet.value))
 			}
 		})
 	}
@@ -40,53 +21,15 @@ export function useListeners(pinia?: any) {
 		// TODO: make sure this works
 		watch(address, (val, oldVal) => {
 			if (oldVal && val) {
-				invariant(status.value === 'connected', 'useListeners - onAccountOrChainIdChanged - status')
-				invariant(connectorName.value, 'useListeners - onAccountOrChainIdChanged - connectorName')
-				invariant(provider.value, 'useListeners - onAccountOrChainIdChanged - provider')
-				if (connectorName.value === 'BrowserWallet') {
-					invariant(providerInfo.value, 'useListeners - onAccountOrChainIdChanged - providerInfo')
-				}
-				invariant(connector.value, 'useListeners - onAccountOrChainIdChanged - connector')
-				invariant(address.value, 'useListeners - onAccountOrChainIdChanged - address')
-				invariant(chainId.value, 'useListeners - onAccountOrChainIdChanged - chainId')
-
-				callback &&
-					callback({
-						status: status.value,
-						error: null,
-						connectorName: connectorName.value,
-						provider: toRaw(provider.value),
-						providerInfo: toRaw(providerInfo.value),
-						connector: toRaw(connector.value),
-						address: address.value,
-						chainId: chainId.value,
-					})
+				assertConnected(wallet.value, 'useListeners - onAccountOrChainIdChanged - address')
+				callback && callback(toRaw(wallet.value))
 			}
 		})
 
 		watch(chainId, (val, oldVal) => {
 			if (val && oldVal) {
-				invariant(status.value === 'connected', 'useListeners - onAccountOrChainIdChanged - status')
-				invariant(connectorName.value, 'useListeners - onAccountOrChainIdChanged - connectorName')
-				invariant(provider.value, 'useListeners - onAccountOrChainIdChanged - provider')
-				if (connectorName.value === 'BrowserWallet') {
-					invariant(providerInfo.value, 'useListeners - onAccountOrChainIdChanged - providerInfo')
-				}
-				invariant(connector.value, 'useListeners - onAccountOrChainIdChanged - connector')
-				invariant(address.value, 'useListeners - onAccountOrChainIdChanged - address')
-				invariant(chainId.value, 'useListeners - onAccountOrChainIdChanged - chainId')
-
-				callback &&
-					callback({
-						status: status.value,
-						error: null,
-						connectorName: connectorName.value,
-						provider: toRaw(provider.value),
-						providerInfo: toRaw(providerInfo.value),
-						connector: toRaw(connector.value),
-						address: address.value,
-						chainId: chainId.value,
-					})
+				assertConnected(wallet.value, 'useListeners - onAccountOrChainIdChanged - chainId')
+				callback && callback(toRaw(wallet.value))
 			}
 		})
 	}
