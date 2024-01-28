@@ -2,7 +2,7 @@ import { Connector, ConnectorName } from './connector'
 import { EIP1193Provider } from './eip1193'
 import { EIP6963ProviderInfo } from './eip6963'
 
-export type WalletConnected = {
+export type ConnWallet = {
 	status: 'connected'
 	error: null
 	connectorName: ConnectorName
@@ -13,8 +13,8 @@ export type WalletConnected = {
 	chainId: number
 }
 
-export type OnConnectedCB = (wallet: WalletConnected) => void
-export type OnAccountOrChainIdChangedCB = (wallet: WalletConnected) => void
+export type OnConnectedCB = (wallet: ConnWallet) => void
+export type OnAccountOrChainIdChangedCB = (wallet: ConnWallet) => void
 export type OnDisconnectedCB = () => void
 
-export type OnWalletUpdatedCB = (wallet: WalletConnected) => void
+export type OnWalletUpdatedCB = (wallet: ConnWallet) => void

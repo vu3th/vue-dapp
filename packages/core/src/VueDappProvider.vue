@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WalletConnected } from './types'
+import { ConnWallet } from './types'
 import { useVueDapp } from './useVueDapp'
 
 const props = withDefaults(
@@ -10,13 +10,13 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-	(e: 'connect', wallet: WalletConnected): void
+	(e: 'connect', wallet: ConnWallet): void
 	(e: 'disconnect'): void
 }>()
 
 const { onWalletUpdated, onDisconnected } = useVueDapp(props.pinia)
 
-onWalletUpdated((wallet: WalletConnected) => {
+onWalletUpdated((wallet: ConnWallet) => {
 	emit('connect', wallet)
 })
 
