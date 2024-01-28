@@ -25,19 +25,30 @@ I recommend keeping an eye on [vue-dapp-starter](https://github.com/vu3th/vue-da
 ## Monorepo Architecture
 
 
-| Name                    | Description                        | Version                                                                                                                                        | Size                                                                                                                                                             |
-| ----------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| @vue-dapp/core          | useVueDapp & VueDappProvider       | <a href="https://www.npmjs.com/package/@vue-dapp/core"><img src="https://badgen.net/npm/v/@vue-dapp/core" alt="Version"></a>                   | <a href="https://bundlephobia.com/package/@vue-dapp/core"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/core" alt="Size"></a>                   |
-| @vue-dapp/nuxt          | Vue Dapp Nuxt module               | <a href="https://www.npmjs.com/package/@vue-dapp/nuxt"><img src="https://badgen.net/npm/v/@vue-dapp/nuxt" alt="Version"></a>                   | <a href="https://bundlephobia.com/package/@vue-dapp/nuxt"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/nuxt" alt="Size"></a>                   |
-| @vue-dapp/modal         | Vue Component for the wallet modal | <a href="https://www.npmjs.com/package/@vue-dapp/modal"><img src="https://badgen.net/npm/v/@vue-dapp/modal" alt="Version"></a>                 | <a href="https://bundlephobia.com/package/@vue-dapp/modal"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/modal" alt="Size"></a>                 |
-| @vue-dapp/walletconnect | WalletConnect integration          | <a href="https://www.npmjs.com/package/@vue-dapp/walletconnect"><img src="https://badgen.net/npm/v/@vue-dapp/walletconnect" alt="Version"></a> | <a href="https://bundlephobia.com/package/@vue-dapp/walletconnect"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/walletconnect" alt="Size"></a> |
-| @vue-dapp/coinbase      | Coinbase Wallet integration        | <a href="https://www.npmjs.com/package/@vue-dapp/coinbase"><img src="https://badgen.net/npm/v/@vue-dapp/coinbase" alt="Version"></a>           | <a href="https://bundlephobia.com/package/@vue-dapp/coinbase"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/coinbase" alt="Size"></a>           |
+| Name                    | Description                     | Version                                                                                                                                        | Size                                                                                                                                                             |
+| ----------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| @vue-dapp/core          | useVueDapp & VueDappProvider    | <a href="https://www.npmjs.com/package/@vue-dapp/core"><img src="https://badgen.net/npm/v/@vue-dapp/core" alt="Version"></a>                   | <a href="https://bundlephobia.com/package/@vue-dapp/core"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/core" alt="Size"></a>                   |
+| @vue-dapp/nuxt          | Vue Dapp Nuxt module            | <a href="https://www.npmjs.com/package/@vue-dapp/nuxt"><img src="https://badgen.net/npm/v/@vue-dapp/nuxt" alt="Version"></a>                   | <a href="https://bundlephobia.com/package/@vue-dapp/nuxt"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/nuxt" alt="Size"></a>                   |
+| @vue-dapp/modal         | VueDappModal for a wallet modal | <a href="https://www.npmjs.com/package/@vue-dapp/modal"><img src="https://badgen.net/npm/v/@vue-dapp/modal" alt="Version"></a>                 | <a href="https://bundlephobia.com/package/@vue-dapp/modal"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/modal" alt="Size"></a>                 |
+| @vue-dapp/walletconnect | WalletConnect integration       | <a href="https://www.npmjs.com/package/@vue-dapp/walletconnect"><img src="https://badgen.net/npm/v/@vue-dapp/walletconnect" alt="Version"></a> | <a href="https://bundlephobia.com/package/@vue-dapp/walletconnect"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/walletconnect" alt="Size"></a> |
+| @vue-dapp/coinbase      | Coinbase Wallet integration     | <a href="https://www.npmjs.com/package/@vue-dapp/coinbase"><img src="https://badgen.net/npm/v/@vue-dapp/coinbase" alt="Version"></a>           | <a href="https://bundlephobia.com/package/@vue-dapp/coinbase"><img src="https://img.shields.io/bundlephobia/minzip/@vue-dapp/coinbase" alt="Size"></a>           |
 
 
 ## Installation
 
+Minimum
 ```bash
-yarn add pinia @vue-dapp/core
+npm install pinia @vue-dapp/core
+```
+
+With a wallet modal
+```bash
+npm install pinia @vue-dapp/core @vue-dapp/modal
+```
+
+Maximum
+```bash
+npm install pinia @vue-dapp/core @vue-dapp/modal @vue-dapp/walletconnect @vue-dapp/coinbase
 ```
 
 ## Example
