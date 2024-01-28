@@ -52,8 +52,8 @@ module.exports = {
 				text: 'API',
 				items: [
 					{
-						text: '@vue-dapp/vd-board',
-						link: '/api/vd-board.md',
+						text: '@vue-dapp/modal',
+						link: '/api/modal.md',
 					},
 				],
 			},

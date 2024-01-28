@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/nuxt",
-	"version": "1.0.0-beta.6",
+	"version": "1.0.0-beta.12",
 	"description": "Vue Dapp Nuxt module",
 	"repository": "your-org/@vue-dapp/nuxt",
 	"license": "MIT",
@@ -42,9 +42,9 @@
 		"@types/node": "^20.10.6",
 		"changelogen": "^0.5.5",
 		"eslint": "^8.56.0",
-		"vitest": "^1.0.0"
+		"vitest": "^1.2.2"
 	},
 	"peerDependencies": {
-		"@vue-dapp/core": "workspace:^"
+		"@vue-dapp/core": "*"
 	}
 }

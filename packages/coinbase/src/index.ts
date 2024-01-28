@@ -1,1 +1,1 @@
-export * from './CoinbaseConnector'
+export * from './coinbaseConnector'

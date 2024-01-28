@@ -60,17 +60,33 @@ export class ProviderRpcError<T = undefined> extends RpcError<T> {
 
 export class ConnectorNotFoundError extends Error {
 	name = 'ConnectorNotFoundError'
-	message = 'Connector not found'
+	message = 'VueDappError: Connector not found'
+
+	// TODO: use the following pattern to design all errors
+
+	constructor(msg?: string) {
+		super()
+		if (msg) {
+			this.message = this.message + ': ' + msg
+		}
+	}
 }
 
 export class ProviderNotFoundError extends Error {
 	name = 'ProviderNotFoundError'
-	message = 'Provider not found'
+	message = 'VueDappError: Provider not found'
+
+	constructor(msg?: string) {
+		super()
+		if (msg) {
+			this.message = this.message + ': ' + msg
+		}
+	}
 }
 
 export class AddChainError extends Error {
 	name = 'AddChainError'
-	message = 'Error adding chain'
+	message = 'VueDappError: Error adding chain'
 }
 
 export class SwitchChainError extends ProviderRpcError {
@@ -83,7 +99,7 @@ export class SwitchChainError extends ProviderRpcError {
 
 export class SwitchChainNotSupportedError extends Error {
 	name = 'SwitchChainNotSupportedError'
-	message = 'Switch chain not supported by connector'
+	message = 'VueDappError: Switch chain not supported by connector'
 }
 
 export class UserRejectedRequestError extends ProviderRpcError {
@@ -96,7 +112,7 @@ export class UserRejectedRequestError extends ProviderRpcError {
 
 export class ActivateEthersError extends Error {
 	name = 'ActivateEthersError'
-	message = 'Failed to load wallet data'
+	message = 'VueDappError: Failed to load wallet data'
 	constructor(msg: string) {
 		super()
 		if (msg) {
@@ -116,5 +132,15 @@ export class AutoConnectError extends Error {
 	name = 'AutoConnectError'
 	constructor(msg: string) {
 		super(msg)
+	}
+}
+
+export class AssertConnectedError extends Error {
+	name = 'AssertConnectedError'
+	constructor(msg?: string) {
+		super()
+		if (msg) {
+			this.message = this.message + ': ' + msg
+		}
 	}
 }

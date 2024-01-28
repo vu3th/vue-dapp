@@ -1,4 +1,12 @@
-import { Connector, WalletProvider } from './types'
+import {
+	Connector,
+	NetworkDetails,
+	AddERC20TokenOptions,
+	EIP1193Provider,
+	ConnectOptions,
+	RDNS,
+	EIP6963ProviderDetail,
+} from './types'
 import {
 	AddChainError,
 	ProviderRpcError,
@@ -7,63 +15,29 @@ import {
 	SwitchChainError,
 } from './errors'
 import { normalizeChainId, toHex } from './utils'
+import { useEIP6963 } from './services/eip6963'
 
-declare global {
-	interface Window {
-		ethereum?: WalletProvider
-	}
-}
-
-/**
- * MetaMask
- * Docs: https://docs.metamask.io/guide/ethereum-provider.html
- * JSON RPC API: https://metamask.github.io/api-playground/api-documentation
- */
-export interface MetaMaskProvider extends MetaMaskEthereumProvider {
-	isMetaMask: boolean
-	providers?: MetaMaskProvider[]
-	isConnected: () => boolean
-	request: (request: { method: string; params?: any[] | undefined }) => Promise<any>
-	selectedAddress: string
-}
-
-/**
- * source: @metamask/detect-provider
- * https://github.com/MetaMask/detect-provider/blob/main/src/index.ts
- */
-export interface MetaMaskEthereumProvider {
-	isMetaMask?: boolean
-	once(eventName: string | symbol, listener: (...args: any[]) => void): this
-	on(eventName: string | symbol, listener: (...args: any[]) => void): this
-	off(eventName: string | symbol, listener: (...args: any[]) => void): this
-	addListener(eventName: string | symbol, listener: (...args: any[]) => void): this
-	removeListener(eventName: string | symbol, listener: (...args: any[]) => void): this
-	removeAllListeners(event?: string | symbol): this
-}
-
-export interface Window {
-	ethereum?: MetaMaskProvider
-}
-
-export type MetaMaskConnectorOptions = {
+export type BrowserWalletConnectorOptions = {
 	appUrl?: string
 }
 
-export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConnectorOptions> {
-	readonly name = 'metaMask'
+export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWalletConnectorOptions> {
+	readonly name = 'BrowserWallet'
 
-	#provider?: MetaMaskProvider
+	#provider?: EIP1193Provider
 	#onDisconnectHandler?: (error: ProviderRpcError) => void
 	#onAccountsChangedHandler?: (accounts: string[]) => void
 	#onChainChangedHandler?: (chainId: number) => void
 
-	constructor(options: MetaMaskConnectorOptions = {}) {
+	constructor(options: BrowserWalletConnectorOptions = {}) {
 		super(options)
+
+		useEIP6963().subscribe()
 	}
 
-	static async checkConnection() {
+	static async checkConnection(RDNS: string | RDNS) {
 		if (typeof window !== 'undefined' && !!window.ethereum) {
-			const provider = window.ethereum as MetaMaskProvider
+			const { provider } = this.getProvider(RDNS)
 			if ((await provider.request({ method: 'eth_accounts' })).length !== 0) {
 				return true
 			}
@@ -71,25 +45,17 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 		return false
 	}
 
-	async connect(timeout?: number) {
-		let provider = await this.getProvider()
+	async connect(options?: ConnectOptions) {
+		const { timeout, rdns } = options ?? { timeout: undefined, rdns: undefined }
 
-		/**
-		 * See PR #36 - find the single metamask provider when coinbaseWallet & metaMask are both installed
-		 * @link https://github.com/vu3th/vue-dapp/pull/36
-		 */
-		const isMulti = (provider?.providers?.length || 0) > 1
-		isMulti && (provider = provider?.providers?.find((e: MetaMaskProvider) => e.isMetaMask) || provider)
+		const { info, provider } = this.getProvider(rdns)
 
-		this.#provider = provider
-
-		let accounts
-		let chainId: number
+		let accounts, chainId
 
 		try {
 			if (timeout) {
 				accounts = await Promise.race([
-					this.#provider.request({
+					provider.request({
 						method: 'eth_requestAccounts',
 						params: [{ eth_accounts: {} }],
 					}),
@@ -100,40 +66,50 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 					),
 				])
 			} else {
-				accounts = await this.#provider.request({
+				accounts = await provider.request({
 					method: 'eth_requestAccounts',
 					params: [{ eth_accounts: {} }],
 				})
 			}
 
-			chainId = (await this.#provider.request({
+			chainId = (await provider.request({
 				method: 'eth_chainId',
 			})) as number
 		} catch (error: any) {
 			throw new Error(`Failed to request MetaMask${error.message ? ': ' + error.message : ''}`)
 		}
 
-		const account = accounts[0]
+		this.#provider = provider
 
 		return {
-			provider,
-			account,
+			provider: this.#provider,
+			account: accounts[0],
 			chainId,
+			info,
 		}
 	}
 
-	async getProvider() {
-		if (typeof window !== 'undefined' && !!window.ethereum) {
-			return window.ethereum as MetaMaskProvider
+	getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
+		return BrowserWalletConnector.getProvider(rdns)
+	}
+
+	static getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
+		const { providerDetails } = useEIP6963()
+		if (providerDetails.value.length < 1) throw new ProviderNotFoundError('providerDetails.length < 1')
+
+		// without rdns, return the first provider
+		if (!rdns) {
+			if (providerDetails.value.length >= 1) {
+				return providerDetails.value[0]
+			}
+		} else {
+			// with rdns, return the provider with the same rdns
+			const detail = providerDetails.value.find(({ info }) => info.rdns === rdns)
+			if (!detail) throw new ProviderNotFoundError('rdns not found')
+			return detail
 		}
-		/**
-		 * @see PR#29 - add deep link to MetaMask wallet on mobile device
-		 * @link https://github.com/vu3th/vue-dapp/pull/29
-		 */
-		if (this.options.appUrl) {
-			window.open(`https://metamask.app.link/dapp/${this.options.appUrl}`, '_blank')
-		}
-		throw new ProviderNotFoundError()
+
+		throw new ProviderNotFoundError('getProvider failed')
 	}
 
 	/**
@@ -261,27 +237,4 @@ export class MetaMaskConnector extends Connector<MetaMaskProvider, MetaMaskConne
 	#isUserRejectedRequestError(error: unknown) {
 		return /(user rejected)/i.test((<Error>error).message)
 	}
-}
-
-// Refer to https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
-export interface NetworkDetails {
-	chainId: string // A 0x-prefixed hexadecimal string
-	chainName: string
-	nativeCurrency: {
-		name?: string
-		symbol: string // 2-6 characters long
-		decimals: number
-	}
-	rpcUrls: string[]
-	blockExplorerUrls?: string[]
-	iconUrls?: string[] // Currently ignored.
-}
-
-export { Connector } from './types'
-
-export type AddERC20TokenOptions = {
-	address: string
-	symbol: string
-	decimals?: number
-	image?: string
 }

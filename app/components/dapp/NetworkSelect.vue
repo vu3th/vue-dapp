@@ -6,13 +6,15 @@ const dappStore = useDappStore()
 
 <template>
 	<div class="w-[160px]">
-		<VueSelect
-			:preservable="false"
-			:clearable="false"
-			:searchable="false"
-			v-model="dappStore.network"
-			:options="networkOptions"
-		/>
+		<ClientOnly>
+			<VSelect
+				:preservable="false"
+				:clearable="false"
+				:searchable="false"
+				v-model="dappStore.network"
+				:options="networkOptions"
+			/>
+		</ClientOnly>
 	</div>
 </template>
 

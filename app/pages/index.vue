@@ -1,9 +1,19 @@
 <script setup lang="ts">
-const { isConnected, address, chainId } = useVueDapp()
+const { address, chainId, wallet } = useVueDapp()
 
-watch(isConnected, () => {
-	console.log(isConnected.value)
-})
+// TODO: when connected, get the wallet twice
+if (process.client) {
+	watch(
+		wallet,
+		() => {
+			console.log('app -> index.vue -> wallet', wallet.value)
+		},
+		{
+			immediate: true,
+			deep: true,
+		},
+	)
+}
 </script>
 
 <template>
@@ -14,8 +24,8 @@ watch(isConnected, () => {
 			<p class="bold text-md px-4 sm:text-xl text-gray-600">Vue library for building DApps</p>
 		</div>
 
-		<div class="mt-10 flex flex-col items-center justify-center">
-			<p v-if="chainId !== -1" class="text-gray-600 text-sm">Chain ID: {{ chainId }}</p>
+		<div class="mt-10 px-10 flex flex-col items-center justify-center">
+			<p v-if="chainId" class="text-gray-600 text-sm">Chain ID: {{ chainId }}</p>
 			<p class="text-gray-600 text-xs">{{ address }}</p>
 		</div>
 	</div>

@@ -14,17 +14,16 @@ export default defineConfig({
 		assetsDir: 'assets',
 		lib: {
 			entry: path.resolve(__dirname, 'src/index.ts'),
-			name: '@vue-dapp/vd-board',
-			fileName: 'vd-board',
+			name: '@vue-dapp/modal',
+			fileName: 'modal',
 		},
 		outDir: 'dist',
 		rollupOptions: {
-			external: ['vue', 'pinia', '@vue-dapp/core'],
+			external: ['vue', '@vue-dapp/core'],
 			output: {
 				dir: 'dist',
 				globals: {
 					vue: 'vue',
-					pinia: 'pinia',
 					'@vue-dapp/core': 'core',
 				},
 			},

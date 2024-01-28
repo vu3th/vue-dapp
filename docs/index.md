@@ -9,11 +9,11 @@ I recommend keeping an eye on [vue3-dapp-starter](https://github.com/vu3th/vue3-
 
 library
 
-| Name                    | Description                                       |
-| ----------------------- | ------------------------------------------------- |
-| @vue-dapp/core          | useWalletStore, connector, utils, and metamask... |
-| @vue-dapp/vd-board      | Vue components for connecting wallet              |
-| @vue-dapp/walletconnect | WalletConnect integration                         |
+| Name                    | Description                  |
+| ----------------------- | ---------------------------- |
+| @vue-dapp/core          | useVueDapp & VueDappProvider |
+| @vue-dapp/modal         | VueDappModal                 |
+| @vue-dapp/walletconnect | WalletConnect integration    |
 
 app
 
@@ -33,7 +33,7 @@ legacy
 ## Installation
 
 ```bash
-yarn add @vue-dapp/core @vue-dapp/vd-board
+yarn add @vue-dapp/core @vue-dapp/modal
 ```
 
 If you want to support more wallet providers not only MetaMask, you should install respective packages.
