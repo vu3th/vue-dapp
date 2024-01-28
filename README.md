@@ -55,45 +55,47 @@ npm install pinia @vue-dapp/core @vue-dapp/modal @vue-dapp/walletconnect @vue-da
 
 ```vue
 <script lang="ts" setup>
-import { type WalletContext, BrowserWalletConnector, VueDappProvider } from '@vue-dapp/core'
+import { BrowserWalletConnector, VueDappProvider, type ConnWallet } from '@vue-dapp/core'
+import { VueDappModal } from '@vue-dapp/modal'
+import '@vue-dapp/modal/dist/style.css'
 
-const connectors = [
-	new BrowserWalletConnector()
-]
+const { status, isConnected, address, chainId, error, disconnect, addConnector } = useVueDapp()
 
-function handleConnect({ provider, address, chainId }: WalletContext) {
-	console.log('handleConnect')
+const isModalOpen = ref(false)
+
+function onClickConnectBtn() {
+	if (isConnected.value) disconnect()
+	else isModalOpen.value = true
+}
+
+if (process.client) { // only when using Nuxt 3
+	addConnector(new BrowserWalletConnector())
+}
+
+function handleConnect(wallet: ConnWallet) {
+	console.log('handleConnect', wallet)
 }
 
 function handleDisconnect() {
 	console.log('handleDisconnect')
-}
-
-const { status, isConnected, address, chainId, error, disconnect, connectWith } = useVueDapp()
-
-function onClickMetaMask() {
-	if (!isConnected.value) {
-		connectWith(connectors[0])
-	}
 }
 </script>
 
 <template>
 	<div>
 		<VueDappProvider @connect="handleConnect" @disconnect="handleDisconnect">
-			<div v-if="!isConnected">
-				<button :disabled="status !== 'idle'" @click="onClickMetaMask">Connect with MetaMask</button>
-			</div>
-			<button v-else @click="disconnect">Disconnect</button>
+			<button @click="onClickConnectBtn">{{ isConnected ? 'Disconnect' : 'Connect' }}</button>
 
 			<div>status: {{ status }}</div>
 			<div>isConnected: {{ isConnected }}</div>
 			<div>error: {{ error }}</div>
 
 			<div v-if="isConnected">
-				<div v-if="chainId !== -1">chainId: {{ chainId }}</div>
+				<div>chainId: {{ chainId }}</div>
 				<div>address: {{ address }}</div>
 			</div>
+
+			<VueDappModal v-model="isModalOpen" dark auto-connect />
 		</VueDappProvider>
 	</div>
 </template>
