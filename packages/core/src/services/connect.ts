@@ -5,7 +5,7 @@ import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../error
 import { normalizeChainId } from '../utils'
 import { BrowserWalletConnector } from '../browserWalletConnector'
 
-export function useWallet(pinia?: any) {
+export function useConnect(pinia?: any) {
 	const walletStore = useStore(pinia)
 
 	async function resetWallet() {
@@ -30,7 +30,7 @@ export function useWallet(pinia?: any) {
 		try {
 			const { provider, account, chainId, info } = await connector.connect(options)
 
-			// console.log('useWallet.connectTo -> account', account)
+			// console.log('useConnect.connectTo -> account', account)
 
 			if (connector.name === 'BrowserWallet') {
 				walletStore.wallet.providerInfo = info!
@@ -48,7 +48,7 @@ export function useWallet(pinia?: any) {
 		}
 
 		walletStore.wallet.status = 'connected'
-		localStorage.removeItem('VUE_DAPP__hasDisconnected')
+		localStorage.removeItem('VUE_DAPP__disconnected')
 
 		// ============================= listen EIP-1193 events =============================
 		// Events: disconnect, chainChanged, and accountsChanged
@@ -82,7 +82,7 @@ export function useWallet(pinia?: any) {
 	}
 
 	async function disconnect() {
-		// console.log('useWallet.disconnect')
+		// console.log('useConnect.disconnect')
 		if (walletStore.wallet.connector) {
 			try {
 				await walletStore.wallet.connector.disconnect()
@@ -93,11 +93,11 @@ export function useWallet(pinia?: any) {
 		}
 		resetWallet()
 
-		localStorage.setItem('VUE_DAPP__hasDisconnected', 'true')
+		localStorage.setItem('VUE_DAPP__disconnected', 'true')
 	}
 
 	async function autoConnect() {
-		if (localStorage.getItem('VUE_DAPP__hasDisconnected')) {
+		if (localStorage.getItem('VUE_DAPP__disconnected')) {
 			// console.warn('No auto-connect: has disconnected')
 			return
 		}
@@ -113,7 +113,8 @@ export function useWallet(pinia?: any) {
 					// console.warn('No auto-connect to MetaMask: not connected')
 				}
 			} catch (err: any) {
-				throw new AutoConnectError(err)
+				console.error(err)
+				// throw new AutoConnectError(err)
 			}
 		} else {
 			// console.warn('No auto-connect to MetaMask: connector not found')

@@ -45,15 +45,10 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 		return false
 	}
 
-	async connect(options: ConnectOptions) {
-		// console.log('connect', options)
-
-		const { timeout, rdns } = options
+	async connect(options?: ConnectOptions) {
+		const { timeout, rdns } = options ?? { timeout: undefined, rdns: undefined }
 
 		const { info, provider } = this.getProvider(rdns)
-
-		console.log('BrowserWalletConnector.connect -> provider', provider)
-		// console.log('BrowserWalletConnector.connect -> info', info)
 
 		let accounts, chainId
 
@@ -166,8 +161,7 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 
 	#removeListener(event: string, handler: (...args: any[]) => void) {
 		if (!this.#provider) throw new ProviderNotFoundError()
-		console.log('BrowserWalletConnector.#removeListener called')
-		// this.provider.removeListener(event, handler)
+		this.#provider.removeListener(event, handler)
 	}
 
 	/**

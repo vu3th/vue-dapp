@@ -25,7 +25,7 @@ export abstract class Connector<Provider = EIP1193Provider, Options = any> {
 		this.options = options
 	}
 
-	abstract connect(optionsOrTimeout: ConnectOptions | number | undefined): Promise<ConnectorData>
+	abstract connect(optionsOrTimeout?: ConnectOptions | number): Promise<ConnectorData>
 
 	abstract getProvider(): Promise<Provider> | EIP6963ProviderDetail // EIP6963ProviderDetail is returned by BrowserWalletConnector
 	abstract disconnect(): Promise<void>

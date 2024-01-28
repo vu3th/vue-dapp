@@ -1,12 +1,12 @@
 import { watch, toRaw } from 'vue'
 import { OnConnectedCB, OnAccountOrChainIdChangedCB, OnWalletUpdatedCB, OnDisconnectedCB } from '../types'
-import { useWallet } from './wallet'
+import { useConnect } from './connect'
 import { assertConnected } from '../utils/assert'
 
 // TODO: should return unwatch handler
 
 export function useListeners(pinia?: any) {
-	const { isConnected, address, chainId, wallet } = useWallet(pinia)
+	const { isConnected, address, chainId, wallet } = useConnect(pinia)
 
 	function onConnected(callback: OnConnectedCB) {
 		watch(isConnected, (val, oldVal) => {

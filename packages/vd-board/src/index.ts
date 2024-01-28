@@ -1,2 +1,2 @@
-import Board from './components/Board.vue'
-export { Board }
+import VueDappModal from './VueDappModal.vue'
+export { VueDappModal }

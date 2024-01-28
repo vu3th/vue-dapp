@@ -1,4 +1,4 @@
-import { computed, markRaw } from 'vue'
+import { computed } from 'vue'
 import { EIP6963AnnounceProviderEvent, EIP6963ProviderDetail, RDNS } from '../types'
 import { useStore } from '../store'
 
@@ -16,7 +16,7 @@ export function useEIP6963(pinia?: any) {
 
 	function _addProviderDetail(detail: EIP6963ProviderDetail) {
 		if (walletStore.providerDetails.some(({ info }) => info.uuid === detail.info.uuid)) return
-		walletStore.providerDetails.push(markRaw(detail)) // note: providerDetail don't need to be reactive
+		walletStore.providerDetails.push(detail) // why detail cannot be markRaw()? it will lead to "TypeError: Cannot define property __v_skip, object is not extensible"
 	}
 
 	function getProviderDetail(rdns: string | RDNS): EIP6963ProviderDetail | undefined {
