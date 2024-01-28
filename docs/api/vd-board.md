@@ -1,11 +1,11 @@
-# @vue-dapp/vd-board
+# @vue-dapp/modal
 
 ### Usage
 
 script
 ```ts
-import { Board } from '@vue-dapp/vd-board'
-import '@vue-dapp/vd-board/dist/style.css'
+import { VueDappModal } from '@vue-dapp/modal'
+import '@vue-dapp/modal/dist/style.css'
 
 const connectors = [
   new MetaMaskConnector()
@@ -21,7 +21,7 @@ function autoConnectErrorHandler(err: any) {
 
 template
 ```vue
-<Board
+<VueDappModal
 	:connectors="connectors"
 	dark
 	autoConnect

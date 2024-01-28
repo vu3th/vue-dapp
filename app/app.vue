@@ -4,8 +4,8 @@ import { WalletConnectConnector } from '@vue-dapp/walletconnect'
 import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
 import { ethers } from 'ethers'
 import { useDappStore } from '@/stores/useDappStore'
-import { Board } from '@vue-dapp/vd-board'
-import '@vue-dapp/vd-board/dist/style.css'
+import { VueDappModal } from '@vue-dapp/modal'
+import '@vue-dapp/modal/dist/style.css'
 import { INFURA_ID } from './constants'
 
 const dappStore = useDappStore()
@@ -70,7 +70,7 @@ function handleAutoConnectError(err: any) {
 			<NuxtPage />
 
 			<ClientOnly>
-				<Board
+				<VueDappModal
 					v-model="dappStore.connectModalOpen"
 					dark
 					autoConnect

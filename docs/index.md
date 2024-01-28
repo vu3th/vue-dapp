@@ -12,7 +12,7 @@ library
 | Name                    | Description                  |
 | ----------------------- | ---------------------------- |
 | @vue-dapp/core          | useVueDapp & VueDappProvider |
-| @vue-dapp/vd-board      | VueDappModal                 |
+| @vue-dapp/modal         | VueDappModal                 |
 | @vue-dapp/walletconnect | WalletConnect integration    |
 
 app
@@ -33,7 +33,7 @@ legacy
 ## Installation
 
 ```bash
-yarn add @vue-dapp/core @vue-dapp/vd-board
+yarn add @vue-dapp/core @vue-dapp/modal
 ```
 
 If you want to support more wallet providers not only MetaMask, you should install respective packages.

@@ -1,5 +1,5 @@
 {
-	"name": "@vue-dapp/vd-board",
+	"name": "@vue-dapp/modal",
 	"version": "1.0.0-beta.11",
 	"description": "Vue library for building Dapps",
 	"repository": "https://github.com/vu3th/vue-dapp",
@@ -23,13 +23,13 @@
 	"files": [
 		"dist"
 	],
-	"main": "./dist/vd-board.mjs",
-	"module": "./dist/vd-board.mjs",
+	"main": "./dist/modal.mjs",
+	"module": "./dist/modal.mjs",
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./dist/vd-board.mjs",
-			"require": "./dist/vd-board.umd.js"
+			"import": "./dist/modal.mjs",
+			"require": "./dist/modal.umd.js"
 		},
 		"./dist/style.css": "./dist/style.css"
 	},
