@@ -2,16 +2,18 @@
 const { address, chainId, wallet } = useVueDapp()
 
 // TODO: when connected, get the wallet twice
-watch(
-	wallet,
-	() => {
-		console.log('app -> index.vue -> wallet', wallet.value)
-	},
-	{
-		immediate: true,
-		deep: true,
-	},
-)
+if (process.client) {
+	watch(
+		wallet,
+		() => {
+			console.log('app -> index.vue -> wallet', wallet.value)
+		},
+		{
+			immediate: true,
+			deep: true,
+		},
+	)
+}
 </script>
 
 <template>
