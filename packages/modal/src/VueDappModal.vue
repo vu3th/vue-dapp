@@ -252,7 +252,7 @@ const vClickOutside = {
 /* cancel-btn light */
 .vd-cancel-btn:not(.vd-cancel-btn--dark) {
 	border: gray 1px solid;
-	background-color: var(rgba(236, 237, 239, 0.737));
+	background-color: rgba(236, 237, 239, 0.737);
 	color: #1a1a1a;
 }
 
@@ -265,7 +265,7 @@ const vClickOutside = {
 .vd-cancel-btn.vd-cancel-btn--dark {
 	border: inherit 1px solid;
 	background-color: #101a20;
-	color: var(rgba(236, 237, 239, 0.737));
+	color: rgba(236, 237, 239, 0.737);
 }
 
 /* cancel-btn dark hover */
@@ -293,7 +293,7 @@ const vClickOutside = {
 }
 
 .vd-line {
-	border-color: var(rgba(236, 237, 239, 0.737));
+	border-color: rgba(236, 237, 239, 0.737);
 	border-width: 0px;
 	border-bottom-width: 1px;
 	border-style: solid;

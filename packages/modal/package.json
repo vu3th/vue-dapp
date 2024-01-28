@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/modal",
-	"version": "1.0.0-beta.12",
+	"version": "1.0.0-beta.13",
 	"description": "Vue library for building Dapps",
 	"repository": "https://github.com/vu3th/vue-dapp",
 	"bugs": {
