@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { useStore } from '../store'
-import { ConnectOptions, ConnectorName } from '../types'
+import { ConnectOptions, ConnectorName, RDNS } from '../types'
 import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
 import { normalizeChainId } from '../utils'
 import { BrowserWalletConnector } from '../browserWalletConnector'
@@ -96,7 +96,7 @@ export function useConnect(pinia?: any) {
 		localStorage.setItem('VUE_DAPP__disconnected', 'true')
 	}
 
-	async function autoConnect() {
+	async function autoConnect(rdns: RDNS | string) {
 		if (localStorage.getItem('VUE_DAPP__disconnected')) {
 			// console.warn('No auto-connect: has disconnected')
 			return
@@ -106,15 +106,16 @@ export function useConnect(pinia?: any) {
 
 		if (browserWalletConn) {
 			try {
-				const isConnected = await BrowserWalletConnector.checkConnection()
+				const isConnected = await BrowserWalletConnector.checkConnection(rdns)
 				if (isConnected) {
-					await connectTo(browserWalletConn.name)
+					await connectTo(browserWalletConn.name, {
+						rdns,
+					})
 				} else {
 					// console.warn('No auto-connect to MetaMask: not connected')
 				}
 			} catch (err: any) {
-				console.error(err)
-				// throw new AutoConnectError(err)
+				throw new AutoConnectError(err)
 			}
 		} else {
 			// console.warn('No auto-connect to MetaMask: connector not found')

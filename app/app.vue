@@ -72,7 +72,6 @@ function handleAutoConnectError(err: any) {
 			<ClientOnly>
 				<VueDappModal
 					v-model="dappStore.connectModalOpen"
-					dark
 					autoConnect
 					:connectErrorHandler="handleConnectError"
 					:autoConnectErrorHandler="handleAutoConnectError"

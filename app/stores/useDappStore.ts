@@ -23,7 +23,7 @@ export const networkOptions = [...networkMap.keys()]
 
 export const useDappStore = defineStore('dapp', {
 	state: (): DappState => ({
-		connectModalOpen: true,
+		connectModalOpen: false,
 		user: {
 			address: '',
 			signer: null,

@@ -35,9 +35,9 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 		useEIP6963().subscribe()
 	}
 
-	static async checkConnection() {
+	static async checkConnection(RDNS: string | RDNS) {
 		if (typeof window !== 'undefined' && !!window.ethereum) {
-			const provider = window.ethereum as EIP1193Provider
+			const { provider } = this.getProvider(RDNS)
 			if ((await provider.request({ method: 'eth_accounts' })).length !== 0) {
 				return true
 			}
@@ -90,6 +90,10 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 	}
 
 	getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
+		return BrowserWalletConnector.getProvider(rdns)
+	}
+
+	static getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
 		const { providerDetails } = useEIP6963()
 		if (providerDetails.value.length < 1) throw new ProviderNotFoundError('providerDetails.length < 1')
 

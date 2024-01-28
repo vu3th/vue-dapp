@@ -31,18 +31,16 @@ function closeModal() {
 }
 
 const isAutoConnecting = ref(false)
-const isAutoConnect = props.autoConnect
-const connectTimeout = props.connectTimeout
-
-// ==================== useVueDapp ====================
 
 const { connectors, connectTo, autoConnect, status, providerDetails, hasConnector, disconnect } = useVueDapp()
 
-onMounted(async () => {
-	if (isAutoConnect) {
+// ============================ feat: autoConnect ============================
+
+async function handleAutoConnect() {
+	if (props.autoConnect) {
 		try {
 			isAutoConnecting.value = true
-			await autoConnect()
+			await autoConnect(RDNS.metamask)
 		} catch (err: any) {
 			if (props.autoConnectErrorHandler) {
 				props.autoConnectErrorHandler(err)
@@ -53,9 +51,11 @@ onMounted(async () => {
 			isAutoConnecting.value = false
 		}
 	}
-})
+}
 
-// feat: auto click BrowserWallet if it's the only connector
+onMounted(async () => handleAutoConnect())
+
+// ============================ feat: auto click BrowserWallet if it's the only connector ============================
 watch(
 	() => props.modelValue,
 	async () => {
