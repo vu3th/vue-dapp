@@ -3,11 +3,29 @@
 	"version": "1.0.0-beta.15",
 	"description": "Vue Dapp Nuxt module",
 	"repository": "your-org/@vue-dapp/nuxt",
-	"license": "MIT",
-	"type": "module",
-	"publishConfig": {
-		"access": "public"
+	"bugs": {
+		"url": "https://github.com/vu3th/vue-dapp/issues"
 	},
+	"packageManager": "^pnpm@8.6.9",
+	"homepage": "https://github.com/vu3th/vue-dapp",
+	"author": "Johnson Chen <https://twitter.com/chnejohnson>",
+	"license": "MIT",
+	"keywords": [
+		"vue",
+		"nuxt",
+		"dapp",
+		"web3",
+		"ethereum",
+		"crypto",
+		"wallet",
+		"module"
+	],
+	"files": [
+		"dist"
+	],
+	"main": "./dist/module.cjs",
+	"module": "./dist/module.mjs",
+	"types": "./dist/types.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/types.d.ts",
@@ -15,11 +33,9 @@
 			"require": "./dist/module.cjs"
 		}
 	},
-	"main": "./dist/module.cjs",
-	"types": "./dist/types.d.ts",
-	"files": [
-		"dist"
-	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"build": "nuxt prepare && nuxt-module-build build",
 		"dev": "nuxi dev playground",
