@@ -39,7 +39,7 @@ Minimum
 npm install pinia @vue-dapp/core
 ```
 
-With a wallet modal
+With the wallet modal
 ```bash
 npm install pinia @vue-dapp/core @vue-dapp/modal
 ```
