@@ -17,9 +17,7 @@
   </a>
 </p>
 
-Notice that Vue Dapp v1 is working in progress. I expect to release a stable version by Jan. 31, 2024.
 
-I recommend keeping an eye on [vue-dapp-starter](https://github.com/vu3th/vue-dapp-starter) and [nuxt-dapp](https://github.com/vu3th/nuxt-dapp), as it strives to maintain a development-friendly version whenever possible.
 
  
 ## Monorepo Architecture
@@ -101,6 +99,12 @@ function handleDisconnect() {
 </template>
 
 ```
+
+## Examples
+
+- [vue-dapp-starter](https://github.com/vu3th/vue-dapp-starter) 
+- [nuxt-dapp](https://github.com/vu3th/nuxt-dapp), as it strives to maintain a development-friendly version whenever possible.
+
 
 ## Support 🙏
 

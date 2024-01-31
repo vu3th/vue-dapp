@@ -14,6 +14,7 @@
 		"build": "pnpm -F core build && pnpm -F modal build && pnpm -F nuxt build && pnpm -F walletconnect build && pnpm -F coinbase build",
 		"build:app": "pnpm -F app build",
 		"format": "prettier --write \"**/*.{vue,ts,js,json}\"",
+		"publish": "pnpm lerna publish --no-private",
 		"prepare": "husky install"
 	},
 	"devDependencies": {
