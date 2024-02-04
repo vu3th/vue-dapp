@@ -1,26 +1,36 @@
 <p align="center">
-   <a href="https://vue-dapp.vercel.app/">
-    <img src="https://github.com/vu3th/vue-dapp/blob/main/app/assets/logo.png" alt="VueDapp Logo" style="max-width:100%;" width="400">
-  </a>
+	<a href="https://vue-dapp.vercel.app/">
+		<img src="https://github.com/vu3th/vue-dapp/blob/main/app/assets/logo.png" alt="Vue Dapp Logo" style="max-width:100%;" width="400">
+	</a>
 </p>
+
 <h2 align="center">
-  Vue Dapp
+	Vue Dapp
 </h2>
+
 <p align="center">
-  Vue library for building Dapps
+	Vue library for building Dapps
 </p>
 
 <p align="center">
-  <!-- license -->
-  <a href="https://github.com/vu3th/vue-dapp">
-    <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License"/>
-  </a>
+	<!-- license -->
+	<a href="https://github.com/vu3th/vue-dapp/blob/main/LICENSE">
+		<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"/>
+	</a>
+	<!-- telegram -->
+	<a href="https://t.me/+pLwZxOdgdBg3ZTRl">
+		<img src="https://img.shields.io/badge/vue--dapp-blue?style=flat&logo=telegram&label=Telegram" alt="Telegram" />
+	</a>
+	<!-- website -->
+	<a href="https://vue-dapp.vercel.app/">
+		<img src="https://img.shields.io/website?up_color=blue&up_message=vue-dapp&url=https://vue-dapp.vercel.app/" alt="Website" />
+	</a>
 </p>
 
 
 
  
-## Monorepo Architecture
+## Packages 📦
 
 
 | Name                    | Description                     | Version                                                                                                                                        | Size                                                                                                                                                             |
@@ -103,12 +113,12 @@ function handleDisconnect() {
 ## Examples
 
 - [vue-dapp-starter](https://github.com/vu3th/vue-dapp-starter) 
-- [nuxt-dapp](https://github.com/vu3th/nuxt-dapp), as it strives to maintain a development-friendly version whenever possible.
+- [nuxt-dapp](https://github.com/vu3th/nuxt-dapp)
 
 
 ## Support 🙏
 
-Gitcoin Grants 20 coming soon~
+0x9D75F4EbcB8e7669E59dcc27CBadC698E0F77187
 
 ## MIT license
 
