@@ -15,11 +15,11 @@ if (process.client) {
 	addConnectors([
 		new BrowserWalletConnector(),
 		new WalletConnectConnector({
-			projectId: '3f3c98042b194264687bf59e104c534a',
+			projectId: 'd1e65611568666138126d315c0bafd7d',
 			chains: [1],
 			showQrModal: true,
 			qrModalOptions: {
-				themeMode: 'dark',
+				themeMode: 'light',
 				themeVariables: undefined,
 				desktopWallets: undefined,
 				walletImages: undefined,
