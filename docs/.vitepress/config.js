@@ -15,7 +15,7 @@ module.exports = {
 	],
 
 	themeConfig: {
-		repo: 'chnejohnson/vue-dapp',
+		repo: 'johnson86tw/vue-dapp',
 		nav: [
 			{
 				text: 'v1.0.0-alpha',

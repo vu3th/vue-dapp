@@ -122,4 +122,4 @@ function handleDisconnect() {
 
 ## MIT license
 
-Copyright (c) 2021-present, Johnson Chen ([@chnejohnson](https://twitter.com/chnejohnson))
+Copyright (c) 2021-present, Johnson Chen ([@johnson86tw](https://twitter.com/johnson86tw))
