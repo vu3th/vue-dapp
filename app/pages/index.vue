@@ -1,8 +1,22 @@
 <script setup lang="ts">
 import pkg from '~/package.json'
+import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 
-const { address, chainId, wallet, status, error, disconnect } = useVueDapp()
+const { address, chainId, wallet, status, error, disconnect, onConnected, onDisconnected } = useVueDapp()
 const dappStore = useDappStore()
+
+const ensName = ref('')
+
+onConnected(async ({ address }) => {
+	console.log('onConnected')
+	const ens = await dappStore.provider.lookupAddress(address)
+	if (ens) {
+		ensName.value = ens
+	}
+})
+onDisconnected(() => {
+	ensName.value = ''
+})
 
 function onClickConnectButton() {
 	if (status.value === 'connected') {
@@ -51,8 +65,18 @@ if (process.client) {
 
 			<p v-if="error">{{ error }}</p>
 
-			<p v-if="chainId" class="text-gray-600 text-sm">Chain ID: {{ chainId }}</p>
-			<p class="text-gray-600 text-xs">{{ address }}</p>
+			<div class="text-gray-600 text-sm mt-5">
+				<p v-if="chainId" class="">Chain ID: {{ chainId }}</p>
+				<p class="">{{ address && shortenAddress(address) }}</p>
+				<p>{{ ensName }}</p>
+			</div>
+		</div>
+
+		<!-- todo: Contract call/send -->
+		<div class="mt-10 px-10 flex">
+			<div></div>
+
+			<div></div>
 		</div>
 	</div>
 </template>

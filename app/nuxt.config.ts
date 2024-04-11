@@ -50,7 +50,6 @@ export default defineNuxtConfig({
 	tailwindcss: {
 		cssPath: '~/styles/tailwind.css',
 		configPath: 'tailwind.config',
-		injectPosition: 'last', // https://tailwindcss.nuxtjs.org/getting-started/options#injectposition
 	},
 	css: ['~/styles/main.scss'],
 	runtimeConfig: {
