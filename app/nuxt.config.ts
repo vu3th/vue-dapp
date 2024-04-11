@@ -104,11 +104,11 @@ export default defineNuxtConfig({
 				},
 				{
 					property: 'og:image:width',
-					content: '512',
+					content: '600',
 				},
 				{
 					property: 'og:image:height',
-					content: '512',
+					content: '200',
 				},
 				{
 					property: 'twitter:site',
