@@ -9,7 +9,7 @@
 </h2>
 
 <p align="center">
-	Vue library for building dApps
+	Empower dapp developers with Vue integration for crypto wallets
 </p>
 
 <p align="center">

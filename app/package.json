@@ -2,7 +2,7 @@
 	"name": "@vue-dapp/app",
 	"private": true,
 	"type": "module",
-	"description": "Vue library for building dApps",
+	"description": "Empower dapp developers with Vue integration for crypto wallets",
 	"author": "Johnson Chen <https://twitter.com/johnson86tw>",
 	"repository": "https://github.com/vu3th/vue-dapp",
 	"scripts": {
