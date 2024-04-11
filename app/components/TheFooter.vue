@@ -26,21 +26,18 @@ const interval = setInterval(async () => {
 </script>
 
 <template>
-	<footer
-		class="px-2 h-[20px] text-xs text-gray-800 bg-gray-200 fixed bottom-0 flex justify-between items-center w-full"
-	>
-		<Transition name="fade" mode="out-in">
-			<!-- Note: must add key to enable transition animation -->
-			<div :key="dappStore.blockNumber">
+	<footer class="px-2 h-[20px] text-xs text-gray-800 fixed bottom-0 flex justify-between items-center w-full">
+		<!-- <Transition name="fade" mode="out-in"> -->
+		<!-- Note: must add key to enable transition animation -->
+		<!-- <div :key="dappStore.blockNumber">
 				{{ dappStore.blockNumber ? dappStore.blockNumber : '' }}
 			</div>
-		</Transition>
+		</Transition> -->
+
+		<div></div>
 
 		<div class="flex items-center gap-x-2">
-			<a class="text-black" href="https://github.com/vu3th/vue-dapp" target="_blank">
-				<Icon name="i-mdi-github" />
-			</a>
-			<p>vue-dapp/core v{{ pkg.version }}</p>
+			<p>v{{ pkg.version }}</p>
 		</div>
 	</footer>
 </template>

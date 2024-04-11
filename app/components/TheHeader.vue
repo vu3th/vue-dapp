@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
-import { APP_NAME } from '@/constants'
 
 const route = useRoute()
 const router = useRouter()
@@ -34,9 +33,7 @@ function menuActiveClass(path: string) {
 		<header class="header frosted-glass-effect">
 			<div class="flex items-center gap-x-3">
 				<NuxtLink to="/">
-					<div class="flex items-center text-primary-dark hover:text-secondary">
-						{{ APP_NAME }}
-					</div>
+					<div class="flex items-center text-primary-dark hover:text-secondary">Vue Dapp</div>
 				</NuxtLink>
 				<!-- <Icon
 					name="svg-spinners:ring-resize"
@@ -45,21 +42,23 @@ function menuActiveClass(path: string) {
 			</div>
 
 			<div class="flex items-center gap-x-5">
-				<NetworkSelect />
-				<ConnectButton />
+				<a class="text-gray-600 text-2xl" href="https://github.com/vu3th/vue-dapp" target="_blank">
+					<Icon name="i-mdi-github" />
+				</a>
 			</div>
 		</header>
 
-		<!-- mobile header -->
+		<!-- mobile -->
 		<header class="header-mobile frosted-glass-effect">
 			<div class="flex">
 				<div class="flex gap-x-4 items-center">
-					<div class="" @click="() => (isDrawerOpen = true)">
+					<!-- drawer -->
+					<!-- <div class="" @click="() => (isDrawerOpen = true)">
 						<Icon name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
-					</div>
+					</div> -->
 
-					<div class="hidden sm:block">
-						<NuxtLink class="" to="/"> {{ APP_NAME }} </NuxtLink>
+					<div class="">
+						<NuxtLink class="" to="/"> Vue Dapp </NuxtLink>
 					</div>
 				</div>
 
@@ -89,8 +88,9 @@ function menuActiveClass(path: string) {
 			</div>
 
 			<div class="flex gap-x-2">
-				<NetworkSelect />
-				<ConnectButton />
+				<a class="text-gray-600 text-2xl" href="https://github.com/vu3th/vue-dapp" target="_blank">
+					<Icon name="i-mdi-github" />
+				</a>
 			</div>
 		</header>
 	</div>

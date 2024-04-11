@@ -7,6 +7,7 @@ import { useDappStore } from '@/stores/useDappStore'
 import { VueDappModal } from '@vue-dapp/modal'
 import '@vue-dapp/modal/dist/style.css'
 import { INFURA_ID } from './constants'
+import { lightTheme } from 'naive-ui'
 
 const dappStore = useDappStore()
 
@@ -63,20 +64,22 @@ function handleAutoConnectError(err: any) {
 </script>
 
 <template>
-	<NuxtLayout>
-		<NuxtLoadingIndicator />
+	<n-config-provider :theme="lightTheme">
+		<NuxtLayout>
+			<NuxtLoadingIndicator />
 
-		<VueDappProvider @connect="handleConnect" @disconnect="handleDisconnect">
-			<NuxtPage />
+			<VueDappProvider @connect="handleConnect" @disconnect="handleDisconnect">
+				<NuxtPage />
 
-			<ClientOnly>
-				<VueDappModal
-					v-model="dappStore.connectModalOpen"
-					autoConnect
-					:connectErrorHandler="handleConnectError"
-					:autoConnectErrorHandler="handleAutoConnectError"
-				/>
-			</ClientOnly>
-		</VueDappProvider>
-	</NuxtLayout>
+				<ClientOnly>
+					<VueDappModal
+						v-model="dappStore.connectModalOpen"
+						autoConnect
+						:connectErrorHandler="handleConnectError"
+						:autoConnectErrorHandler="handleAutoConnectError"
+					/>
+				</ClientOnly>
+			</VueDappProvider>
+		</NuxtLayout>
+	</n-config-provider>
 </template>

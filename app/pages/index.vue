@@ -1,7 +1,18 @@
 <script setup lang="ts">
-const { address, chainId, wallet } = useVueDapp()
+import pkg from '~/package.json'
 
-// TODO: when connected, get the wallet twice
+const { address, chainId, wallet, status, error, disconnect } = useVueDapp()
+const dappStore = useDappStore()
+
+function onClickConnectButton() {
+	if (status.value === 'connected') {
+		disconnect()
+		return
+	}
+	dappStore.connectModalOpen = !dappStore.connectModalOpen
+}
+
+// bug: when connected, get the wallet twice
 if (process.client) {
 	watch(
 		wallet,
@@ -21,12 +32,25 @@ if (process.client) {
 		<!-- banner -->
 		<div class="mt-40 flex flex-col items-center justify-center">
 			<img class="w-90" src="/logo.png" alt="logo" />
-			<p class="bold text-md px-4 sm:text-xl text-gray-600">
-				Empower dapp developers with Vue integration for crypto wallets
+			<p class="bold text-md md:text-xl px-4 text-gray-500 text-center">
+				{{ pkg.description }}
 			</p>
 		</div>
 
-		<div class="mt-10 px-10 flex flex-col items-center justify-center">
+		<div class="mt-10 px-10 flex flex-col items-center justify-center gap-3">
+			<n-button
+				size="medium"
+				:loading="status === 'connecting'"
+				:disabled="status === 'connecting'"
+				@click="onClickConnectButton"
+			>
+				<p v-if="status === 'idle'">Connect Wallet</p>
+				<p v-else-if="status === 'connecting'">Connecting...</p>
+				<p v-if="status === 'connected'">Disconnect</p>
+			</n-button>
+
+			<p v-if="error">{{ error }}</p>
+
 			<p v-if="chainId" class="text-gray-600 text-sm">Chain ID: {{ chainId }}</p>
 			<p class="text-gray-600 text-xs">{{ address }}</p>
 		</div>
