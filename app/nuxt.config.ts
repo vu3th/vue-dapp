@@ -1,4 +1,5 @@
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import packageJSON from './package.json'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -41,7 +42,7 @@ export default defineNuxtConfig({
 	},
 	app: {
 		head: {
-			title: '',
+			title: 'Vue Dapp',
 			meta: [
 				{
 					charset: 'utf-8',
@@ -54,13 +55,14 @@ export default defineNuxtConfig({
 				},
 				{
 					name: 'description',
-					content: '',
+					content: packageJSON.description,
 				},
 				{
 					name: 'author',
-					content: '',
+					content: packageJSON.author,
 				},
 			],
+			link: [{ rel: 'icon', href: '/favicon.ico' }],
 		},
 	},
 })

@@ -1,6 +1,6 @@
 module.exports = {
 	title: 'Vue Dapp',
-	description: 'Vue library for building Dapps',
+	description: 'Vue library for building dApps',
 	head: [
 		['link', { rel: 'icon', href: '/favicon.ico', type: 'image/png' }],
 		['meta', { name: 'author', content: 'Johnson Chen' }],
@@ -9,7 +9,7 @@ module.exports = {
 			'meta',
 			{
 				property: 'og:description',
-				content: 'Vue library for building Dapps',
+				content: 'Vue library for building dApps',
 			},
 		],
 	],

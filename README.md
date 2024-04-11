@@ -9,7 +9,7 @@
 </h2>
 
 <p align="center">
-	Vue library for building Dapps
+	Vue library for building dApps
 </p>
 
 <p align="center">

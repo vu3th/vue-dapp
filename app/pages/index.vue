@@ -21,7 +21,7 @@ if (process.client) {
 		<!-- banner -->
 		<div class="mt-40 flex flex-col items-center justify-center">
 			<img class="w-90" src="@/assets/logo.png" alt="logo" />
-			<p class="bold text-md px-4 sm:text-xl text-gray-600">Vue library for building DApps</p>
+			<p class="bold text-md px-4 sm:text-xl text-gray-600">Vue library for building dApps</p>
 		</div>
 
 		<div class="mt-10 px-10 flex flex-col items-center justify-center">
