@@ -1,6 +1,6 @@
 {
 	"name": "vue-dapp-monorepo",
-	"description": "Vue library for building Dapps",
+	"description": "Vue library for building dApps",
 	"repository": "https://github.com/vu3th/vue-dapp",
 	"bugs": {
 		"url": "https://github.com/vu3th/vue-dapp/issues"
