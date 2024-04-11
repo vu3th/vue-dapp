@@ -61,14 +61,10 @@ export default defineNuxtConfig({
 					name: 'author',
 					content: packageJSON.author,
 				},
-				// open graph
+				// Facebook Meta Tags
 				{
 					property: 'og:type',
 					content: 'website',
-				},
-				{
-					property: 'og:site:name',
-					content: 'Vue Dapp',
 				},
 				{
 					property: 'og:title',
@@ -84,51 +80,33 @@ export default defineNuxtConfig({
 				},
 				{
 					property: 'og:image',
-					content: 'https://vue-dapp.vercel.app/logo.png',
+					content: 'https://vue-dapp.vercel.app/banner16x9.png',
 				},
+
+				// Twitter Meta Tags
 				{
-					property: 'og:image:url',
-					content: 'https://vue-dapp.vercel.app/logo.png',
-				},
-				{
-					property: 'og:image:secure_url',
-					content: 'https://vue-dapp.vercel.app/logo.png',
-				},
-				{
-					property: 'og:image:alt',
-					content: 'Vue Dapp',
-				},
-				{
-					property: 'og:image:type',
-					content: 'image/png',
-				},
-				{
-					property: 'og:image:width',
-					content: '600',
-				},
-				{
-					property: 'og:image:height',
-					content: '200',
-				},
-				{
-					property: 'twitter:site',
-					content: '@johnson86tw',
-				},
-				{
-					property: 'twitter:card',
+					name: 'twitter:card',
 					content: 'summary_large_image',
 				},
 				{
-					property: 'twitter:title',
+					property: 'twitter:domain',
+					content: 'vue-dapp.vercel.app',
+				},
+				{
+					property: 'twitter:url',
+					content: 'https://vue-dapp.vercel.app/',
+				},
+				{
+					name: 'twitter:title',
 					content: 'Vue Dapp',
 				},
 				{
-					property: 'twitter:description',
+					name: 'twitter:description',
 					content: packageJSON.description,
 				},
 				{
-					property: 'twitter:image',
-					content: 'https://vue-dapp.vercel.app/logo.png',
+					name: 'twitter:image',
+					content: 'https://vue-dapp.vercel.app/banner16x9.png',
 				},
 			],
 			link: [{ rel: 'icon', href: '/favicon.ico' }],
