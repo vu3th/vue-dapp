@@ -1,5 +1,5 @@
 module.exports = {
-	title: 'Vue Dapp',
+	title: 'Vue Dapp - Essential Web3 Tools for Vue Developers',
 	description: 'Empower dapp developers with Vue integration for crypto wallets',
 	head: [
 		['link', { rel: 'icon', href: '/favicon.ico', type: 'image/png' }],

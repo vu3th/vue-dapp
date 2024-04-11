@@ -41,8 +41,9 @@ export default defineNuxtConfig({
 		},
 	},
 	app: {
+		// opengraph https://www.opengraph.xyz/url/https%3A%2F%2Fvue-dapp.vercel.app%2F
 		head: {
-			title: 'Vue Dapp',
+			title: 'Vue Dapp - Essential Web3 Tools for Vue Developers',
 			meta: [
 				{
 					charset: 'utf-8',
@@ -68,7 +69,7 @@ export default defineNuxtConfig({
 				},
 				{
 					property: 'og:title',
-					content: 'Vue Dapp',
+					content: 'Vue Dapp - Essential Web3 Tools for Vue Developers',
 				},
 				{
 					property: 'og:description',
@@ -98,7 +99,7 @@ export default defineNuxtConfig({
 				},
 				{
 					name: 'twitter:title',
-					content: 'Vue Dapp',
+					content: 'Vue Dapp - Essential Web3 Tools for Vue Developers',
 				},
 				{
 					name: 'twitter:description',
