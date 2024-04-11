@@ -61,6 +61,75 @@ export default defineNuxtConfig({
 					name: 'author',
 					content: packageJSON.author,
 				},
+				// open graph
+				{
+					property: 'og:type',
+					content: 'website',
+				},
+				{
+					property: 'og:site:name',
+					content: 'Vue Dapp',
+				},
+				{
+					property: 'og:title',
+					content: 'Vue Dapp',
+				},
+				{
+					property: 'og:description',
+					content: packageJSON.description,
+				},
+				{
+					property: 'og:url',
+					content: 'https://vue-dapp.vercel.app/',
+				},
+				{
+					property: 'og:image',
+					content: 'https://vue-dapp.vercel.app/logo.png',
+				},
+				{
+					property: 'og:image:url',
+					content: 'https://vue-dapp.vercel.app/logo.png',
+				},
+				{
+					property: 'og:image:secure_url',
+					content: 'https://vue-dapp.vercel.app/logo.png',
+				},
+				{
+					property: 'og:image:alt',
+					content: 'Vue Dapp',
+				},
+				{
+					property: 'og:image:type',
+					content: 'image/png',
+				},
+				{
+					property: 'og:image:width',
+					content: '512',
+				},
+				{
+					property: 'og:image:height',
+					content: '512',
+				},
+				{
+					property: 'twitter:site',
+					content: '@johnson86tw',
+				},
+				{
+					property: 'twitter:card',
+					content: 'summary_large_image',
+				},
+				{
+					property: 'twitter:title',
+					content: 'Vue Dapp',
+				},
+				{
+					property: 'twitter:description',
+					content: packageJSON.description,
+				},
+				{
+					property: 'twitter:image',
+					content: 'https://vue-dapp.vercel.app/logo.png',
+				},
 			],
 			link: [{ rel: 'icon', href: '/favicon.ico' }],
 		},

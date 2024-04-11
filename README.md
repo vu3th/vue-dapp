@@ -1,6 +1,6 @@
 <p align="center">
 	<a href="https://vue-dapp.vercel.app/">
-		<img src="https://github.com/vu3th/vue-dapp/blob/main/app/assets/logo.png" alt="Vue Dapp Logo" style="max-width:100%;" width="400">
+		<img src="https://github.com/vu3th/vue-dapp/blob/main/app/public/logo.png" alt="Vue Dapp Logo" style="max-width:100%;" width="400">
 	</a>
 </p>
 
