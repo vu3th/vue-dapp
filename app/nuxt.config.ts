@@ -80,6 +80,11 @@ export default defineNuxtConfig({
 					name: 'author',
 					content: packageJSON.author,
 				},
+				{
+					name: 'keywords',
+					content:
+						'web3,dapp,development,developer,library,blockchain,vue,vuejs,vue3,nuxt,nuxt3,wallet,crypto,typescript,javascript,ethereum,account,network,eip-6963',
+				},
 				// Facebook Meta Tags
 				{
 					property: 'og:type',
