@@ -41,7 +41,7 @@
 		"sass": "^1.70.0",
 		"unplugin-vue-components": "^0.26.0",
 		"vite-plugin-node-polyfills": "^0.19.0",
-		"vue": "^3.4.15",
+		"vue": "^3.4.21",
 		"vue-router": "^4.2.5"
 	}
 }
