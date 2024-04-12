@@ -1,6 +1,5 @@
 import { defineNuxtModule, addImports, createResolver } from '@nuxt/kit'
 
-// Module options TypeScript interface definition
 export interface ModuleOptions {}
 
 export default defineNuxtModule<ModuleOptions>({
@@ -8,7 +7,7 @@ export default defineNuxtModule<ModuleOptions>({
 		name: '@vue-dapp/nuxt',
 		configKey: 'vue-dapp',
 	},
-	// Default configuration options of the Nuxt module
+
 	defaults: {},
 	setup(options, nuxt) {
 		const resolver = createResolver(import.meta.url)
