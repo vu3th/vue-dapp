@@ -57,7 +57,6 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 				accounts = await Promise.race([
 					provider.request({
 						method: 'eth_requestAccounts',
-						params: [{ eth_accounts: {} }],
 					}),
 					new Promise<void>((_, reject) =>
 						setTimeout(() => {
@@ -68,7 +67,6 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 			} else {
 				accounts = await provider.request({
 					method: 'eth_requestAccounts',
-					params: [{ eth_accounts: {} }],
 				})
 			}
 
@@ -76,7 +74,7 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 				method: 'eth_chainId',
 			})) as number
 		} catch (error: any) {
-			throw new Error(`Failed to request MetaMask${error.message ? ': ' + error.message : ''}`)
+			throw new Error(`Failed to request accounts${error.message ? ': ' + error.code + ' ' + error.message : ''}`)
 		}
 
 		this.#provider = provider

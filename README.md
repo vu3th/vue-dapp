@@ -119,6 +119,13 @@ function handleDisconnect() {
 - [vue-dapp-starter](https://github.com/vu3th/vue-dapp-starter) 
 - [nuxt-dapp](https://github.com/vu3th/nuxt-dapp)
 
+## Development
+
+```
+pnpm dev
+pnpm -F core watch
+```
+
 
 ## Support 🙏
 
