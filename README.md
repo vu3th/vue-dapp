@@ -67,9 +67,14 @@ npm install pinia @vue-dapp/core @vue-dapp/modal @vue-dapp/walletconnect @vue-da
 
 ```vue
 <script lang="ts" setup>
-import { BrowserWalletConnector, VueDappProvider, type ConnWallet } from '@vue-dapp/core'
+import {
+	useVueDapp,
+	BrowserWalletConnector,
+	VueDappProvider,
+	type ConnWallet,
+} from '@vue-dapp/core'
 import { VueDappModal } from '@vue-dapp/modal'
-import '@vue-dapp/modal/dist/style.css'
+import '@vue-dapp/modal/dist/style.css' // make sure to add css for the modal
 
 const { status, isConnected, address, chainId, error, disconnect, addConnector } = useVueDapp()
 
@@ -86,10 +91,23 @@ if (process.client) { // only when using Nuxt 3
 
 function handleConnect(wallet: ConnWallet) {
 	console.log('handleConnect', wallet)
+	
+	// example with ethers v6
+	const ethersProvider = new ethers.providers.Web3Provider(provider)
+	const signer = await ethersProvider.getSigner()
+
+	dappStore.setUser({
+		address,
+		signer: markRaw(signer),
+		chainId,
+	})
 }
 
 function handleDisconnect() {
 	console.log('handleDisconnect')
+
+	// example
+	dappStore.resetUser()
 }
 </script>
 
