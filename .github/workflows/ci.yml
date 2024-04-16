@@ -21,5 +21,5 @@ jobs:
                   key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
                   restore-keys: ${{ runner.os }}-node-
             - run: npm install -g pnpm
-            - run: pnpm i
+            - run: pnpm i --no-frozen-lockfile
             - run: pnpm build
