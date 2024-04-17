@@ -15,6 +15,7 @@ export default defineNuxtConfig({
 	},
 	vite: {
 		plugins: [
+			// @ts-ignore
 			nodePolyfills(), // only for @vue-dapp/coinbase
 			Components({
 				dts: true,
@@ -34,7 +35,6 @@ export default defineNuxtConfig({
 	],
 	modules: [
 		'@vue-dapp/nuxt',
-		'@nuxtjs/tailwindcss',
 		[
 			'@pinia/nuxt',
 			{
@@ -44,13 +44,13 @@ export default defineNuxtConfig({
 		'@pinia-plugin-persistedstate/nuxt',
 		'@vueuse/nuxt',
 		'nuxt-icon',
+		'@nuxt/content',
 	],
-	imports: {
-		dirs: ['store'],
-	},
-	tailwindcss: {
-		cssPath: '~/styles/tailwind.css',
-		configPath: 'tailwind.config',
+	postcss: {
+		plugins: {
+			tailwindcss: {},
+			autoprefixer: {},
+		},
 	},
 	css: ['~/styles/main.scss'],
 	runtimeConfig: {

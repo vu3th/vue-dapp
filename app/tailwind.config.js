@@ -2,13 +2,14 @@
 const breakpoints = require('./styles/breakpoints.json')
 
 module.exports = {
+	plugins: [require('@tailwindcss/typography')],
 	content: [
-		'./components/**/*.{vue,js,ts}',
+		'./components/**/*.{js,vue,ts}',
 		'./layouts/**/*.vue',
 		'./pages/**/*.vue',
-		'./composables/**/*.{js,ts}',
 		'./plugins/**/*.{js,ts}',
-		'./app.{js,ts,vue}',
+		'./app.vue',
+		'./error.vue',
 	],
 	theme: {
 		screens: breakpoints,
@@ -34,5 +35,4 @@ module.exports = {
 		// 	16: '4rem',
 		// },
 	},
-	plugins: [],
 }

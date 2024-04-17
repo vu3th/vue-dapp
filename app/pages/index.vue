@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import pkg from '~/package.json'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
+import type { ConnWallet } from '../../packages/core/dist'
 
-const { address, chainId, wallet, status, error, disconnect, onConnected, onDisconnected } = useVueDapp()
+const { address, chainId, status, error, disconnect, onConnected, onDisconnected } = useVueDapp()
 const dappStore = useDappStore()
 
 const ensName = ref('')
 
-onConnected(async ({ address }) => {
-	console.log('onConnected')
-	const ens = await dappStore.provider.lookupAddress(address)
+onConnected(async (wallet: ConnWallet) => {
+	const ens = await dappStore.provider.lookupAddress(wallet.address)
 	if (ens) {
 		ensName.value = ens
 	}
@@ -24,20 +24,6 @@ function onClickConnectButton() {
 		return
 	}
 	dappStore.connectModalOpen = !dappStore.connectModalOpen
-}
-
-// bug: when connected, get the wallet twice
-if (process.client) {
-	watch(
-		wallet,
-		() => {
-			console.log('app -> index.vue -> wallet', wallet.value)
-		},
-		{
-			immediate: true,
-			deep: true,
-		},
-	)
 }
 </script>
 

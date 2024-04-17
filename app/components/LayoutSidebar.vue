@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NIcon } from 'naive-ui'
 import { BookOutline as BookIcon, PersonOutline as PersonIcon, WineOutline as WineIcon } from '@vicons/ionicons5'
+import { NuxtLink } from '#components'
 
 function renderIcon(icon: Component) {
 	return () => h(NIcon, null, { default: () => h(icon) })
@@ -8,74 +9,53 @@ function renderIcon(icon: Component) {
 
 const menuOptions = [
 	{
-		label: 'Hear the Wind Sing',
-		key: 'hear-the-wind-sing',
-		icon: renderIcon(BookIcon),
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/overview',
+				},
+				{ default: () => 'Overview' },
+			),
+		key: 'Overview',
 	},
 	{
-		label: 'Pinball 1973',
-		key: 'pinball-1973',
-		icon: renderIcon(BookIcon),
-		disabled: true,
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/wallet',
+				},
+				{ default: () => 'Wallet' },
+			),
+		key: 'Wallet',
+	},
+	{
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/vue-dapp-provider',
+				},
+				{ default: () => 'VueDappProvider' },
+			),
+		key: 'VueDappProvider',
+	},
+	{
+		label: 'Examples',
+		key: 'Examples',
 		children: [
 			{
-				label: 'Rat',
-				key: 'rat',
-			},
-		],
-	},
-	{
-		label: 'A Wild Sheep Chase',
-		key: 'a-wild-sheep-chase',
-		disabled: true,
-		icon: renderIcon(BookIcon),
-	},
-	{
-		label: 'Dance Dance Dance',
-		key: 'Dance Dance Dance',
-		icon: renderIcon(BookIcon),
-		children: [
-			{
-				type: 'group',
-				label: 'People',
-				key: 'people',
-				children: [
-					{
-						label: 'Narrator',
-						key: 'narrator',
-						icon: renderIcon(PersonIcon),
-					},
-					{
-						label: 'Sheep Man',
-						key: 'sheep-man',
-						icon: renderIcon(PersonIcon),
-					},
-				],
+				label: 'Contract',
+				key: 'Contract',
 			},
 			{
-				label: 'Beverage',
-				key: 'beverage',
-				icon: renderIcon(WineIcon),
-				children: [
-					{
-						label: 'Whisky',
-						key: 'whisky',
-					},
-				],
+				label: 'Multicall',
+				key: 'Multicall',
 			},
 			{
-				label: 'Food',
-				key: 'food',
-				children: [
-					{
-						label: 'Sandwich',
-						key: 'sandwich',
-					},
-				],
-			},
-			{
-				label: 'The past increases. The future recedes.',
-				key: 'the-past-increases-the-future-recedes',
+				label: 'Switch chain',
+				key: 'Switch chain',
 			},
 		],
 	},
@@ -91,7 +71,7 @@ const menuOptions = [
 		:width="240"
 		:native-scrollbar="false"
 	>
-		<n-menu :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions" />
+		<n-menu :collapsed-width="64" :collapsed-icon-size="20" :options="menuOptions" />
 	</n-layout-sider>
 </template>
 
