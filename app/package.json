@@ -34,7 +34,7 @@
 	},
 	"devDependencies": {
 		"@css-render/vue3-ssr": "^0.15.12",
-		"@nuxt/devtools": "^1.0.8",
+		"@nuxt/devtools": "^1.1.5",
 		"@nuxtjs/tailwindcss": "^6.11.1",
 		"autoprefixer": "^10.4.17",
 		"nuxt": "^3.10.3",
