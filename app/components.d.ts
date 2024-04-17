@@ -9,6 +9,12 @@ declare module 'vue' {
 	export interface GlobalComponents {
 		NButton: (typeof import('naive-ui'))['NButton']
 		NConfigProvider: (typeof import('naive-ui'))['NConfigProvider']
+		NLayout: (typeof import('naive-ui'))['NLayout']
+		NLayoutFooter: (typeof import('naive-ui'))['NLayoutFooter']
+		NLayoutHeader: (typeof import('naive-ui'))['NLayoutHeader']
+		NLayoutSider: (typeof import('naive-ui'))['NLayoutSider']
+		NMenu: (typeof import('naive-ui'))['NMenu']
+		NSpace: (typeof import('naive-ui'))['NSpace']
 		RouterLink: (typeof import('vue-router'))['RouterLink']
 		RouterView: (typeof import('vue-router'))['RouterView']
 	}
