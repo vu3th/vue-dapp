@@ -100,7 +100,6 @@ const sidebarMenu = [
 	},
 ]
 
-const { isSmallerThanMd } = useRWD()
 const showDrawer = ref(false)
 </script>
 
@@ -108,19 +107,23 @@ const showDrawer = ref(false)
 	<n-layout content-class="flex flex-col" position="absolute">
 		<n-layout-header bordered class="grid grid-cols-2">
 			<div class="flex items-center">
+				<!-- drawer button -->
 				<div class="pl-5 md:hidden flex justify-center items-center" @click="() => (showDrawer = true)">
 					<Icon size="20" name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
 				</div>
+				<!-- logo -->
 				<n-menu mode="horizontal" :options="headerLeftMenu" />
 			</div>
+			<!-- right side menu -->
 			<div class="place-self-end">
 				<n-menu mode="horizontal" :options="headerRightMenu" />
 			</div>
 		</n-layout-header>
 
 		<n-layout has-sider class="flex-1">
+			<!-- sidebar -->
 			<n-layout-sider
-				:collapsed="isSmallerThanMd"
+				class="hidden md:block"
 				bordered
 				collapse-mode="width"
 				:collapsed-width="0"
@@ -130,18 +133,19 @@ const showDrawer = ref(false)
 				<n-menu :collapsed-width="64" :collapsed-icon-size="20" :options="sidebarMenu" default-expand-all />
 			</n-layout-sider>
 
+			<!-- pages -->
 			<n-layout>
 				<slot />
 			</n-layout>
 
 			<!-- top-down drawer -->
-			<n-drawer v-model:show="showDrawer" height="100vh" placement="top">
+			<n-drawer v-model:show="showDrawer" height="100vh" placement="top" :trap-focus="false">
 				<n-drawer-content closable>
 					<template #header>
-						<div class="h-5 flex justify-center items-center gap-1" @click="showDrawer = false">
-							<img class="w-6" src="/sheaf-of-rice/favicon-32x32.png" alt="" />
-							<p class="text-gray-500">Vue Dapp</p>
-						</div>
+						<NuxtLink to="/" class="h-5 flex justify-center items-center gap-1" @click="showDrawer = false">
+							<img class="w-5" src="/sheaf-of-rice/favicon-32x32.png" alt="" />
+							<p class="text-gray-500 text-sm">Vue Dapp</p>
+						</NuxtLink>
 					</template>
 					<n-menu :options="sidebarMenu" default-expand-all />
 				</n-drawer-content>
