@@ -37,7 +37,7 @@
 		"@nuxt/devtools": "^1.0.8",
 		"@nuxtjs/tailwindcss": "^6.11.1",
 		"autoprefixer": "^10.4.17",
-		"nuxt": "^3.9.3",
+		"nuxt": "^3.10.3",
 		"postcss": "^8.4.33",
 		"postcss-custom-properties": "^13.3.4",
 		"sass": "^1.70.0",
