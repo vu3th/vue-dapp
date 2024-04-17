@@ -149,6 +149,7 @@ pnpm -F core watch
 
 0x9D75F4EbcB8e7669E59dcc27CBadC698E0F77187
 
-## MIT license
+## Credits
 
-Copyright (c) 2021-present, Johnson Chen ([@johnson86tw](https://twitter.com/johnson86tw))
+- Vue Dapp Logo by @ramuta https://github.com/vu3th/vue-dapp/issues/24
+- Favicon.io - Emoji Favicons > Sheaf Of Rice https://favicon.io/emoji-favicons/sheaf-of-rice

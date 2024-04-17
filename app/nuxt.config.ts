@@ -10,11 +10,12 @@ export default defineNuxtConfig({
 	build: {
 		transpile:
 			process.env.NODE_ENV === 'production'
-				? ['naive-ui', '@css-render/vue3-ssr', '@juggle/resize-observer']
+				? ['naive-ui', 'vueuc', '@css-render/vue3-ssr', '@juggle/resize-observer']
 				: ['@juggle/resize-observer'],
 	},
 	vite: {
 		plugins: [
+			// @ts-ignore
 			nodePolyfills(), // only for @vue-dapp/coinbase
 			Components({
 				dts: true,
@@ -22,7 +23,8 @@ export default defineNuxtConfig({
 			}),
 		],
 		optimizeDeps: {
-			include: process.env.NODE_ENV === 'development' ? ['naive-ui'] : [],
+			include:
+				process.env.NODE_ENV === 'development' ? ['naive-ui', 'vueuc', 'date-fns-tz/formatInTimeZone'] : [],
 		},
 	},
 	components: [
@@ -33,7 +35,6 @@ export default defineNuxtConfig({
 	],
 	modules: [
 		'@vue-dapp/nuxt',
-		'@nuxtjs/tailwindcss',
 		[
 			'@pinia/nuxt',
 			{
@@ -43,13 +44,13 @@ export default defineNuxtConfig({
 		'@pinia-plugin-persistedstate/nuxt',
 		'@vueuse/nuxt',
 		'nuxt-icon',
+		'@nuxt/content',
 	],
-	imports: {
-		dirs: ['store'],
-	},
-	tailwindcss: {
-		cssPath: '~/styles/tailwind.css',
-		configPath: 'tailwind.config',
+	postcss: {
+		plugins: {
+			tailwindcss: {},
+			autoprefixer: {},
+		},
 	},
 	css: ['~/styles/main.scss'],
 	runtimeConfig: {
