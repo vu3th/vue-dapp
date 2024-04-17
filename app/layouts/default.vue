@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import LayoutSider from '~/components/LayoutSider.vue'
 import { NuxtLink } from '#components'
 import packageJsonCore from '../../packages/core/package.json'
 
@@ -58,7 +57,7 @@ const headerRightMenu = [
 		</n-layout-header>
 
 		<n-layout has-sider class="flex-1">
-			<LayoutSider />
+			<LayoutSidebar />
 			<n-layout>
 				<slot />
 			</n-layout>
