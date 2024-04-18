@@ -11,8 +11,8 @@ export function useListeners(pinia?: any) {
 	function onConnected(callback: OnConnectedCB) {
 		watch(isConnected, (val, oldVal) => {
 			if (val && !oldVal) {
-				assertConnected(wallet.value, 'useListeners - onConnected')
-				callback && callback(toRaw(wallet.value))
+				assertConnected(wallet, 'useListeners - onConnected')
+				callback && callback(toRaw(wallet))
 			}
 		})
 	}
@@ -21,15 +21,15 @@ export function useListeners(pinia?: any) {
 		// TODO: make sure this works
 		watch(address, (val, oldVal) => {
 			if (oldVal && val) {
-				assertConnected(wallet.value, 'useListeners - onAccountOrChainIdChanged - address')
-				callback && callback(toRaw(wallet.value))
+				assertConnected(wallet, 'useListeners - onAccountOrChainIdChanged - address')
+				callback && callback(toRaw(wallet))
 			}
 		})
 
 		watch(chainId, (val, oldVal) => {
 			if (val && oldVal) {
-				assertConnected(wallet.value, 'useListeners - onAccountOrChainIdChanged - chainId')
-				callback && callback(toRaw(wallet.value))
+				assertConnected(wallet, 'useListeners - onAccountOrChainIdChanged - chainId')
+				callback && callback(toRaw(wallet))
 			}
 		})
 	}
