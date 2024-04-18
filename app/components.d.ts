@@ -11,6 +11,7 @@ declare module 'vue' {
 		NConfigProvider: (typeof import('naive-ui'))['NConfigProvider']
 		NDrawer: (typeof import('naive-ui'))['NDrawer']
 		NDrawerContent: (typeof import('naive-ui'))['NDrawerContent']
+		NInputNumber: (typeof import('naive-ui'))['NInputNumber']
 		NLayout: (typeof import('naive-ui'))['NLayout']
 		NLayoutFooter: (typeof import('naive-ui'))['NLayoutFooter']
 		NLayoutHeader: (typeof import('naive-ui'))['NLayoutHeader']

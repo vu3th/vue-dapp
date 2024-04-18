@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { NuxtLink } from '#components'
 import packageJsonCore from '../../packages/core/package.json'
+import { sidebarMenu } from '~/core/sidebar'
 
 const headerLeftMenu = [
 	{
@@ -43,60 +44,6 @@ const headerRightMenu = [
 				{ default: () => 'v' + packageJsonCore.version },
 			),
 		key: 'version',
-	},
-]
-
-const sidebarMenu = [
-	{
-		label: () =>
-			h(
-				NuxtLink,
-				{
-					to: '/overview',
-				},
-				{ default: () => 'Overview' },
-			),
-		key: 'Overview',
-	},
-	{
-		label: () =>
-			h(
-				NuxtLink,
-				{
-					to: '/wallet',
-				},
-				{ default: () => 'Wallet' },
-			),
-		key: 'Wallet',
-	},
-	{
-		label: () =>
-			h(
-				NuxtLink,
-				{
-					to: '/vue-dapp-provider',
-				},
-				{ default: () => 'VueDappProvider' },
-			),
-		key: 'VueDappProvider',
-	},
-	{
-		label: 'Examples',
-		key: 'Examples',
-		children: [
-			{
-				label: 'Contract',
-				key: 'Contract',
-			},
-			{
-				label: 'Multicall',
-				key: 'Multicall',
-			},
-			{
-				label: 'Switch chain',
-				key: 'Switch chain',
-			},
-		],
 	},
 ]
 

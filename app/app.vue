@@ -3,7 +3,7 @@ import { BrowserWalletConnector, useVueDapp, type ConnWallet, VueDappProvider } 
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
 import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
 import { ethers } from 'ethers'
-import { useDappStore } from '@/stores/useDappStore'
+import { useDappStore } from '~/stores/dappStore'
 import { VueDappModal } from '@vue-dapp/modal'
 import '@vue-dapp/modal/dist/style.css'
 import { INFURA_ID } from './constants'
@@ -37,6 +37,8 @@ if (process.client) {
 	])
 }
 
+const ethersStore = useEthersStore()
+
 async function handleConnect({ provider, address, chainId }: ConnWallet) {
 	const ethersProvider = new ethers.BrowserProvider(provider)
 	const signer = await ethersProvider.getSigner()
@@ -46,18 +48,13 @@ async function handleConnect({ provider, address, chainId }: ConnWallet) {
 		signer: markRaw(signer),
 		chainId,
 	})
+
+	ethersStore.setWallet(provider)
 }
 
 function handleDisconnect() {
 	dappStore.resetUser()
-}
-
-function handleConnectError(err: any) {
-	console.error('AppError:', err)
-}
-
-function handleAutoConnectError(err: any) {
-	console.error('AppError:', err)
+	ethersStore.resetWallet()
 }
 </script>
 
@@ -70,12 +67,7 @@ function handleAutoConnectError(err: any) {
 				<NuxtPage />
 
 				<ClientOnly>
-					<VueDappModal
-						v-model="dappStore.connectModalOpen"
-						autoConnect
-						:connectErrorHandler="handleConnectError"
-						:autoConnectErrorHandler="handleAutoConnectError"
-					/>
+					<VueDappModal v-model="dappStore.connectModalOpen" autoConnect />
 				</ClientOnly>
 			</VueDappProvider>
 		</NuxtLayout>

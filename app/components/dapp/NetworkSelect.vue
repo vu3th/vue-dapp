@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { networkOptions, useDappStore } from '@/stores/useDappStore'
+import { networkOptions, useDappStore } from '~/stores/dappStore'
 
 const dappStore = useDappStore()
 </script>
