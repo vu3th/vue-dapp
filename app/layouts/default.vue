@@ -123,7 +123,7 @@ const showDrawer = ref(false)
 		<n-layout has-sider class="flex-1">
 			<!-- sidebar -->
 			<n-layout-sider
-				class="hidden md:block"
+				class="hidden lg:block"
 				bordered
 				collapse-mode="width"
 				:collapsed-width="0"
