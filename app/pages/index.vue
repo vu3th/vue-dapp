@@ -24,6 +24,7 @@ onConnected((wallet: ConnWallet) => {
 
 onDisconnected(() => {
 	ensName.value = ''
+	balance.value = 0n
 })
 
 function onClickConnectButton() {
@@ -61,17 +62,10 @@ function onClickConnectButton() {
 
 			<div class="text-gray-600 text-sm mt-5">
 				<p v-if="chainId" class="">Chain ID: {{ chainId }}</p>
-				<p class="">{{ address && shortenAddress(address) }}</p>
-				<p v-if="balance">{{ formatEther(balance) }}</p>
-				<p>{{ ensName }}</p>
+				<p v-if="address">{{ 'Address: ' + shortenAddress(address) }}</p>
+				<p v-if="balance">{{ 'Balance: ' + formatEther(balance) }}</p>
+				<p v-if="ensName">{{ 'ENS: ' + ensName }}</p>
 			</div>
-		</div>
-
-		<!-- todo: Contract call/send -->
-		<div class="mt-10 px-10 flex">
-			<div></div>
-
-			<div></div>
 		</div>
 	</div>
 </template>
