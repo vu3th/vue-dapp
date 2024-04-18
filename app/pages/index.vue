@@ -2,29 +2,32 @@
 import pkg from '~/package.json'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import type { ConnWallet } from '@vue-dapp/core'
-import { formatEther } from 'ethers'
+import { ethers, formatEther } from 'ethers'
 
 // must added to prevent from redirecting from Overview to Vue Dapp but the tab is still Overview
 useHead({
 	title: 'Vue Dapp - Essential Web3 Tools for Vue Developers',
 })
 
-const { address, chainId, status, error, disconnect, onConnected, onDisconnected } = useVueDapp()
+const defaultProvider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com')
+
+const { wallet, isConnected, disconnect, onWalletUpdated, onDisconnected } = useVueDapp()
 const dappStore = useDappStore()
 
 const ensName = ref('')
 async function fetchENSName(address: string) {
-	ensName.value = (await dappStore.provider.lookupAddress(address)) ?? ''
+	ensName.value = (await defaultProvider.lookupAddress(address)) ?? ''
 }
 
 const balance = ref(0n)
-async function fetchBalance(address: string) {
-	balance.value = await dappStore.provider.getBalance(address)
+async function fetchBalance(wallet: ConnWallet) {
+	const provider = new ethers.BrowserProvider(wallet.provider)
+	balance.value = await provider.getBalance(wallet.address)
 }
 
-onConnected((wallet: ConnWallet) => {
+onWalletUpdated((wallet: ConnWallet) => {
 	fetchENSName(wallet.address)
-	fetchBalance(wallet.address)
+	fetchBalance(wallet)
 })
 
 onDisconnected(() => {
@@ -66,9 +69,9 @@ function onClickConnectButton() {
 			<p v-if="wallet.error">{{ wallet.error }}</p>
 
 			<div class="text-gray-600 text-sm mt-5">
-				<p v-if="chainId" class="">Chain ID: {{ chainId }}</p>
-				<p v-if="address">{{ 'Address: ' + shortenAddress(address) }}</p>
-				<p v-if="balance">{{ 'Balance: ' + formatEther(balance) }}</p>
+				<p v-if="wallet.chainId" class="">Chain ID: {{ wallet.chainId }}</p>
+				<p v-if="wallet.address">{{ 'Address: ' + shortenAddress(wallet.address) }}</p>
+				<p v-if="isConnected">{{ 'Balance: ' + formatEther(balance) }}</p>
 				<p v-if="ensName">{{ 'ENS: ' + ensName }}</p>
 			</div>
 		</div>
