@@ -33,7 +33,7 @@ onDisconnected(() => {
 })
 
 function onClickConnectButton() {
-	if (status.value === 'connected') {
+	if (wallet.status === 'connected') {
 		disconnect()
 		return
 	}
@@ -54,16 +54,16 @@ function onClickConnectButton() {
 		<div class="mt-10 px-10 flex flex-col items-center justify-center gap-3">
 			<n-button
 				size="medium"
-				:loading="status === 'connecting'"
-				:disabled="status === 'connecting'"
+				:loading="wallet.status === 'connecting'"
+				:disabled="wallet.status === 'connecting'"
 				@click="onClickConnectButton"
 			>
-				<p v-if="status === 'idle'">Connect Wallet</p>
-				<p v-else-if="status === 'connecting'">Connecting...</p>
-				<p v-if="status === 'connected'">Disconnect</p>
+				<p v-if="wallet.status === 'idle'">Connect Wallet</p>
+				<p v-else-if="wallet.status === 'connecting'">Connecting...</p>
+				<p v-if="wallet.status === 'connected'">Disconnect</p>
 			</n-button>
 
-			<p v-if="error">{{ error }}</p>
+			<p v-if="wallet.error">{{ wallet.error }}</p>
 
 			<div class="text-gray-600 text-sm mt-5">
 				<p v-if="chainId" class="">Chain ID: {{ chainId }}</p>
