@@ -101,6 +101,14 @@ const sidebarMenu = [
 ]
 
 const showDrawer = ref(false)
+
+function openDrawer() {
+	showDrawer.value = true
+}
+
+function closeDrawer() {
+	showDrawer.value = false
+}
 </script>
 
 <template>
@@ -108,7 +116,7 @@ const showDrawer = ref(false)
 		<n-layout-header bordered class="grid grid-cols-2">
 			<div class="flex items-center">
 				<!-- drawer button -->
-				<div class="pl-5 md:hidden flex justify-center items-center" @click="() => (showDrawer = true)">
+				<div class="pl-5 md:hidden flex justify-center items-center" @click="openDrawer">
 					<Icon size="20" name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
 				</div>
 				<!-- logo -->
@@ -142,12 +150,12 @@ const showDrawer = ref(false)
 			<n-drawer v-model:show="showDrawer" height="100vh" placement="top" :trap-focus="false">
 				<n-drawer-content closable>
 					<template #header>
-						<NuxtLink to="/" class="h-5 flex justify-center items-center gap-1" @click="showDrawer = false">
+						<NuxtLink to="/" class="h-5 flex justify-center items-center gap-1" @click="closeDrawer">
 							<img class="w-5" src="/sheaf-of-rice/favicon-32x32.png" alt="" />
 							<p class="text-gray-500 text-sm">Vue Dapp</p>
 						</NuxtLink>
 					</template>
-					<n-menu :options="sidebarMenu" default-expand-all />
+					<n-menu :options="sidebarMenu" default-expand-all @click="closeDrawer" />
 				</n-drawer-content>
 			</n-drawer>
 		</n-layout>
