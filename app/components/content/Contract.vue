@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ConnectButton from '@/components/button/ConnectButton.vue'
-import { shortenAddress, type ConnWallet } from '@vue-dapp/core'
+import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import { Interface, ethers } from 'ethers'
 
 const defaultProvider = new ethers.JsonRpcProvider('https://arbitrum-sepolia-rpc.publicnode.com')
@@ -20,22 +20,7 @@ const contract = new ethers.Contract(contractAddress, iface, defaultProvider)
 
 // ======================== Wallet ========================
 
-const { isConnected, wallet, chainId, error: ConnectError } = useVueDapp()
-
-let signer: ethers.Signer | null = null
-
-watch(
-	isConnected,
-	async () => {
-		if (isConnected.value) {
-			const provider = new ethers.BrowserProvider(wallet.provider!)
-			signer = await provider.getSigner()
-		}
-	},
-	{
-		immediate: true,
-	},
-)
+const { isConnected, wallet, error: ConnectError } = useVueDapp()
 
 onMounted(() => {
 	fetchData()
@@ -77,19 +62,21 @@ const waiting = ref(false)
 
 async function sendTransaction() {
 	error.value = null
+
 	try {
 		waiting.value = true
 
-		if (!signer) {
-			throw new Error('Signer is not ready')
-		}
+		if (!isConnected.value) throw new Error('please connect your wallet first.')
 
+		const provider = new ethers.BrowserProvider(wallet.provider!)
+		const signer = await provider.getSigner()
 		const tx = await (contract.connect(signer) as ethers.Contract).store(newNum.value)
 		await tx.wait()
+
 		fetchData()
 		fetchEventLogs()
 	} catch (err: any) {
-		error.value = err.message
+		error.value = err
 	} finally {
 		waiting.value = false
 	}
@@ -137,7 +124,7 @@ async function fetchEventLogs() {
 
 // ======================== Computed ========================
 
-const showSwitchButton = computed(() => isConnected.value && chainId.value !== supportedChainId)
+const showSwitchButton = computed(() => isConnected.value && wallet.chainId !== supportedChainId)
 const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 </script>
 
@@ -146,7 +133,10 @@ const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 		<div class="flex flex-col gap-2">
 			<div>Current Number: {{ loading ? 'loading...' : currentNum }}</div>
 			<div class="flex gap-2">
+				<!-- Number Input -->
 				<n-input-number v-model:value="newNum" min="0" class="w-32" />
+
+				<!-- Send button -->
 				<n-button
 					v-if="isReady"
 					:disabled="currentNum === newNum"
@@ -161,6 +151,7 @@ const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 
 		<ConnectButton />
 
+		<!-- Switch button -->
 		<div class="flex gap-2">
 			<n-button
 				v-if="showSwitchButton"
