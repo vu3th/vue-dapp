@@ -20,14 +20,22 @@ const contract = new ethers.Contract(contractAddress, iface, defaultProvider)
 
 // ======================== Wallet ========================
 
-const { isConnected, chainId, error: ConnectError, onConnected } = useVueDapp()
+const { isConnected, wallet, chainId, error: ConnectError } = useVueDapp()
 
 let signer: ethers.Signer | null = null
 
-onConnected(async (wallet: ConnWallet) => {
-	const provider = new ethers.BrowserProvider(wallet.provider)
-	signer = await provider.getSigner()
-})
+watch(
+	isConnected,
+	async () => {
+		if (isConnected.value) {
+			const provider = new ethers.BrowserProvider(wallet.provider!)
+			signer = await provider.getSigner()
+		}
+	},
+	{
+		immediate: true,
+	},
+)
 
 onMounted(() => {
 	fetchData()
