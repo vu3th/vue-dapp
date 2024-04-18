@@ -1,5 +1,4 @@
 ---
-title: 'Vue Dapp - Contract'
 description: ''
 head:
   meta:

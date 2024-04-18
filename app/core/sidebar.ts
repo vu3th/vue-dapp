@@ -10,29 +10,7 @@ export const sidebarMenu = [
 				},
 				{ default: () => 'Overview' },
 			),
-		key: 'Overview',
-	},
-	{
-		label: () =>
-			h(
-				NuxtLink,
-				{
-					to: '/wallet',
-				},
-				{ default: () => 'Wallet' },
-			),
-		key: 'Wallet',
-	},
-	{
-		label: () =>
-			h(
-				NuxtLink,
-				{
-					to: '/vue-dapp-provider',
-				},
-				{ default: () => 'VueDappProvider' },
-			),
-		key: 'VueDappProvider',
+		key: '/overview',
 	},
 	{
 		label: 'Examples',
@@ -47,29 +25,18 @@ export const sidebarMenu = [
 						},
 						{ default: () => 'Contract' },
 					),
-				key: 'Contract',
+				key: '/examples/contract',
 			},
 			{
 				label: () =>
 					h(
 						NuxtLink,
 						{
-							to: '/',
+							to: '/examples/multicall',
 						},
-						{ default: () => 'VueDappProvider' },
+						{ default: () => 'Multicall' },
 					),
-				key: 'Multicall',
-			},
-			{
-				label: () =>
-					h(
-						NuxtLink,
-						{
-							to: '/',
-						},
-						{ default: () => 'VueDappProvider' },
-					),
-				key: 'Switch chain',
+				key: '/examples/multicall',
 			},
 		],
 	},

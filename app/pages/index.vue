@@ -4,6 +4,11 @@ import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import type { ConnWallet } from '@vue-dapp/core'
 import { formatEther } from 'ethers'
 
+// must added to prevent from redirecting from Overview to Vue Dapp but the tab is still Overview
+useHead({
+	title: 'Vue Dapp - Essential Web3 Tools for Vue Developers',
+})
+
 const { address, chainId, status, error, disconnect, onConnected, onDisconnected } = useVueDapp()
 const dappStore = useDappStore()
 

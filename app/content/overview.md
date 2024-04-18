@@ -1,5 +1,4 @@
 ---
-title: 'Vue Dapp - Overview'
 description: ''
 head:
   meta:

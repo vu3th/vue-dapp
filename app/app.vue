@@ -9,6 +9,13 @@ import '@vue-dapp/modal/dist/style.css'
 import { INFURA_ID } from './constants'
 import { lightTheme } from 'naive-ui'
 
+useHead({
+	titleTemplate: title => {
+		if (title) return `${title} - Vue Dapp`
+		else return 'Vue Dapp - Essential Web3 Tools for Vue Developers'
+	},
+})
+
 const dappStore = useDappStore()
 
 const { addConnectors } = useVueDapp()

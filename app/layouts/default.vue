@@ -13,7 +13,7 @@ const headerLeftMenu = [
 				},
 				{ default: () => 'Vue Dapp' },
 			),
-		key: 'vue-dapp',
+		key: '/',
 		icon: () => h('img', { src: '/sheaf-of-rice/favicon-32x32.png' }),
 	},
 ]
@@ -57,7 +57,19 @@ function closeDrawer() {
 	showDrawer.value = false
 }
 
-const sidebarBreakpoint = 'lg'
+// prevent the menu from being selected when the route is '/'
+const menuSelected = ref('')
+
+const route = useRoute()
+watch(
+	() => route.path,
+	() => {
+		if (route.path === '/') {
+			menuSelected.value = ''
+		}
+	},
+)
+// end
 </script>
 
 <template>
@@ -65,7 +77,7 @@ const sidebarBreakpoint = 'lg'
 		<n-layout-header bordered class="grid grid-cols-2">
 			<div class="flex items-center">
 				<!-- drawer button -->
-				<div :class="`pl-5 ${sidebarBreakpoint}:hidden flex justify-center items-center`" @click="openDrawer">
+				<div class="pl-5 lg:hidden flex justify-center items-center" @click="openDrawer">
 					<Icon size="20" name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
 				</div>
 				<!-- logo -->
@@ -80,14 +92,20 @@ const sidebarBreakpoint = 'lg'
 		<n-layout has-sider class="flex-1">
 			<!-- sidebar -->
 			<n-layout-sider
-				:class="`hidden ${sidebarBreakpoint}:block`"
+				class="hidden lg:block"
 				bordered
 				collapse-mode="width"
 				:collapsed-width="0"
 				:width="240"
 				:native-scrollbar="false"
 			>
-				<n-menu :collapsed-width="64" :collapsed-icon-size="20" :options="sidebarMenu" default-expand-all />
+				<n-menu
+					v-model:value="menuSelected"
+					:collapsed-width="64"
+					:collapsed-icon-size="20"
+					:options="sidebarMenu"
+					default-expand-all
+				/>
 			</n-layout-sider>
 
 			<!-- pages -->
