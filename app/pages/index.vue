@@ -19,10 +19,10 @@ async function fetchENSName(address: string) {
 	ensName.value = (await defaultProvider.lookupAddress(address)) ?? ''
 }
 
-const balance = ref(0n)
+const balance = ref(0)
 async function fetchBalance(wallet: ConnWallet) {
 	const provider = new ethers.BrowserProvider(wallet.provider)
-	balance.value = await provider.getBalance(wallet.address)
+	balance.value = Number(formatEther(await provider.getBalance(wallet.address)))
 }
 
 onWalletUpdated((wallet: ConnWallet) => {
@@ -32,7 +32,7 @@ onWalletUpdated((wallet: ConnWallet) => {
 
 onDisconnected(() => {
 	ensName.value = ''
-	balance.value = 0n
+	balance.value = 0
 })
 
 function onClickConnectButton() {
@@ -71,7 +71,7 @@ function onClickConnectButton() {
 			<div class="text-gray-600 text-sm mt-5">
 				<p v-if="wallet.chainId" class="">Chain ID: {{ wallet.chainId }}</p>
 				<p v-if="wallet.address">{{ 'Address: ' + shortenAddress(wallet.address) }}</p>
-				<p v-if="isConnected">{{ 'Balance: ' + formatEther(balance) }}</p>
+				<p v-if="isConnected">{{ 'Balance: ' + balance }}</p>
 				<p v-if="ensName">{{ 'ENS: ' + ensName }}</p>
 			</div>
 		</div>
