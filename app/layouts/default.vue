@@ -109,6 +109,8 @@ function openDrawer() {
 function closeDrawer() {
 	showDrawer.value = false
 }
+
+const sidebarBreakpoint = 'lg'
 </script>
 
 <template>
@@ -116,7 +118,7 @@ function closeDrawer() {
 		<n-layout-header bordered class="grid grid-cols-2">
 			<div class="flex items-center">
 				<!-- drawer button -->
-				<div class="pl-5 md:hidden flex justify-center items-center" @click="openDrawer">
+				<div :class="`pl-5 ${sidebarBreakpoint}:hidden flex justify-center items-center`" @click="openDrawer">
 					<Icon size="20" name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
 				</div>
 				<!-- logo -->
@@ -131,7 +133,7 @@ function closeDrawer() {
 		<n-layout has-sider class="flex-1">
 			<!-- sidebar -->
 			<n-layout-sider
-				class="hidden lg:block"
+				:class="`hidden ${sidebarBreakpoint}:block`"
 				bordered
 				collapse-mode="width"
 				:collapsed-width="0"
