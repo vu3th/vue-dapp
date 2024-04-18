@@ -16,9 +16,9 @@ head:
 
 
 ## Reference
-- Source code: https://github.com/vu3th/vue-dapp/tree/main/app/components/content/Contract.vue
-- Address: 0x4022Be091550EFB5dB2E5Ba93457ee69BF6e1aDA
 - Network: Arbitrum Sepolia
+- Address: 0x4022Be091550EFB5dB2E5Ba93457ee69BF6e1aDA
+- Source code: https://github.com/vu3th/vue-dapp/tree/main/app/components/content/Contract.vue
 
 ### Contract source code
 ```solidity
@@ -41,4 +41,14 @@ contract Storage {
         return number;
     }
 }
+```
+
+### Foundry Cast to send the transaction
+
+```bash
+cast send --account dev \
+  --rpc-url https://arbitrum-sepolia-rpc.publicnode.com \
+	0x4022Be091550EFB5dB2E5Ba93457ee69BF6e1aDA \
+	"function store(uint256 num)" \
+	24
 ```

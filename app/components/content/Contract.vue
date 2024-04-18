@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ConnectButton from '@/components/button/ConnectButton.vue'
-import type { ConnWallet } from '@vue-dapp/core'
+import { shortenAddress, type ConnWallet } from '@vue-dapp/core'
 import { Interface, ethers } from 'ethers'
 
 const defaultProvider = new ethers.JsonRpcProvider('https://arbitrum-sepolia-rpc.publicnode.com')
@@ -16,6 +16,8 @@ const iface = new Interface([
 	'event Updated(address indexed addr, uint256 num)',
 ])
 
+const contract = new ethers.Contract(contractAddress, iface, defaultProvider)
+
 // ======================== Wallet ========================
 
 const { isConnected, chainId, error: ConnectError, onConnected } = useVueDapp()
@@ -29,6 +31,16 @@ onConnected(async (wallet: ConnWallet) => {
 
 onMounted(() => {
 	fetchData()
+	fetchEventLogs()
+
+	// listen to events
+	contract.on('Updated', (_addr, _num) => {
+		fetchEventLogs()
+	})
+})
+
+onUnmounted(() => {
+	contract.removeAllListeners()
 })
 
 // ======================== Contract Read ========================
@@ -40,9 +52,9 @@ async function fetchData() {
 	error.value = null
 	try {
 		loading.value = true
-		const contract = new ethers.Contract(contractAddress, iface, defaultProvider)
 		const data = Number(await contract.retrieve())
 		currentNum.value = data
+		newNum.value = data
 		return data
 	} catch (err: any) {
 		error.value = err.message
@@ -64,10 +76,10 @@ async function sendTransaction() {
 			throw new Error('Signer is not ready')
 		}
 
-		const contract = new ethers.Contract(contractAddress, iface, signer)
-		const tx = await contract.store(newNum.value)
+		const tx = await (contract.connect(signer) as ethers.Contract).store(newNum.value)
 		await tx.wait()
-		await fetchData()
+		fetchData()
+		fetchEventLogs()
 	} catch (err: any) {
 		error.value = err.message
 	} finally {
@@ -92,6 +104,26 @@ async function switchChain() {
 		})
 	} catch (err: any) {
 		error.value = err.message
+	}
+}
+
+// ======================== Events ========================
+const events = ref<ethers.EventLog[]>([])
+const eventLoading = ref(false)
+
+const displayEvents = computed(() => events.value.slice().reverse().slice(0, 3))
+
+async function fetchEventLogs() {
+	try {
+		eventLoading.value = true
+
+		// https://github.com/ethers-io/ethers.js/discussions/1816
+		events.value = (await contract.queryFilter(contract.filters.Updated, -40000)) as ethers.EventLog[]
+		console.log('events', events.value)
+	} catch (err: any) {
+		error.value = err.message
+	} finally {
+		eventLoading.value = false
 	}
 }
 
@@ -135,7 +167,45 @@ const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 		</div>
 
 		<div class="text-red-500">{{ error || ConnectError }}</div>
+
+		<!-- Event logs -->
+		<div>
+			<p>Events</p>
+
+			<n-skeleton v-if="eventLoading && !displayEvents.length" text :repeat="3" />
+			<div v-else-if="!displayEvents.length" class="text-gray-500">No event found.</div>
+
+			<n-list v-else class="p-0" hoverable bordered>
+				<TransitionGroup name="list">
+					<n-list-item class="p-0 m-0" v-for="event in displayEvents" :key="event.blockHash">
+						{{
+							`Number ${event.args['num']} updated by ${shortenAddress(event.args['addr'])} at ${event.blockNumber}`
+						}}
+					</n-list-item>
+					<n-list-item class="p-0 m-0" key="0">
+						<NuxtLink
+							external
+							target="_blank"
+							to="https://sepolia.arbiscan.io/address/0x4022Be091550EFB5dB2E5Ba93457ee69BF6e1aDA#events"
+						>
+							More on explorer
+						</NuxtLink>
+					</n-list-item>
+				</TransitionGroup>
+			</n-list>
+		</div>
 	</div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+// https://vuejs.org/guide/built-ins/transition-group.html#transitiongroup
+.list-enter-active,
+.list-leave-active {
+	transition: all 1s ease;
+}
+.list-enter-from,
+.list-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
+}
+</style>
