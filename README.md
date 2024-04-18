@@ -43,7 +43,7 @@
 
 ## Overview
 
-<img src="https://github.com/vu3th/vue-dapp/blob/main/overview.png" alt="Vue Dapp Overview" style="max-width:100%;" width="800">
+<img src="https://github.com/vu3th/vue-dapp/blob/main/app/public/images/overview.png" alt="Vue Dapp Overview" style="max-width:100%;" width="800">
 
 
 ## Installation
