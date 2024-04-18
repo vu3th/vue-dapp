@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, readonly } from 'vue'
 import { useStore } from '../store'
 import { ConnectOptions, ConnectorName, RDNS } from '../types'
 import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
@@ -123,7 +123,7 @@ export function useConnect(pinia?: any) {
 	}
 
 	return {
-		wallet: computed(() => walletStore.wallet),
+		wallet: readonly(walletStore.wallet),
 
 		status: computed(() => walletStore.wallet.status),
 		error: computed(() => walletStore.wallet.error),
