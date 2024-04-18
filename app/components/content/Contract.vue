@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import ConnectButton from '@/components/button/ConnectButton.vue'
+import type { ConnWallet } from '@vue-dapp/core'
 import { Interface, ethers } from 'ethers'
 
 const defaultProvider = new ethers.JsonRpcProvider('https://arbitrum-sepolia-rpc.publicnode.com')
 const supportedChainId = 421614
 const supportedChainName = 'Arbitrum Sepolia'
-
-const ethersStore = useEthersStore()
 
 // ======================== Contract ========================
 const contractAddress = '0x4022Be091550EFB5dB2E5Ba93457ee69BF6e1aDA'
@@ -17,36 +16,66 @@ const iface = new Interface([
 	'event Updated(address indexed addr, uint256 num)',
 ])
 
-// ======================== State ========================
+// ======================== Wallet ========================
 
-const { isConnected, chainId } = useVueDapp()
+const { isConnected, chainId, error: ConnectError, onConnected } = useVueDapp()
 
-const { data: currentNum, pending, error: fetchError, refresh } = await useAsyncData('retrieve', () => fetchData())
+let signer: ethers.Signer | null = null
 
-const waiting = ref(false)
-const newNum = ref(currentNum.value || 0)
-const error = ref(null)
+onConnected(async (wallet: ConnWallet) => {
+	const provider = new ethers.BrowserProvider(wallet.provider)
+	signer = await provider.getSigner()
+})
+
+onMounted(() => {
+	fetchData()
+})
 
 // ======================== Contract Read ========================
+const error = ref(null)
+const currentNum = ref(0)
+const loading = ref(false)
+
 async function fetchData() {
-	const contract = new ethers.Contract(contractAddress, iface, defaultProvider)
-	return Number(await contract.retrieve())
+	error.value = null
+	try {
+		loading.value = true
+		const contract = new ethers.Contract(contractAddress, iface, defaultProvider)
+		const data = Number(await contract.retrieve())
+		currentNum.value = data
+		return data
+	} catch (err: any) {
+		error.value = err.message
+	} finally {
+		loading.value = false
+	}
 }
 
 // ======================== Contract Write ========================
+const newNum = ref(0)
+const waiting = ref(false)
+
 async function sendTransaction() {
+	error.value = null
 	try {
 		waiting.value = true
-		const contract = new ethers.Contract(contractAddress, iface, ethersStore.signer)
+
+		if (!signer) {
+			throw new Error('Signer is not ready')
+		}
+
+		const contract = new ethers.Contract(contractAddress, iface, signer)
 		const tx = await contract.store(newNum.value)
 		await tx.wait()
+		await fetchData()
 	} catch (err: any) {
 		error.value = err.message
 	} finally {
 		waiting.value = false
-		refresh()
 	}
 }
+
+// ======================== Switch Chain ========================
 
 async function switchChain() {
 	const { connector } = useVueDapp()
@@ -66,6 +95,8 @@ async function switchChain() {
 	}
 }
 
+// ======================== Computed ========================
+
 const showSwitchButton = computed(() => isConnected.value && chainId.value !== supportedChainId)
 const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 </script>
@@ -73,7 +104,7 @@ const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 <template>
 	<div class="flex flex-col gap-2">
 		<div class="flex flex-col gap-2">
-			<div>Current Value: {{ pending ? 'loading...' : currentNum }}</div>
+			<div>Current Number: {{ loading ? 'loading...' : currentNum }}</div>
 			<div class="flex gap-2">
 				<n-input-number v-model:value="newNum" min="0" class="w-32" />
 				<n-button
@@ -103,7 +134,7 @@ const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 			</n-button>
 		</div>
 
-		<div class="text-red-500">{{ error || fetchError }}</div>
+		<div class="text-red-500">{{ error || ConnectError }}</div>
 	</div>
 </template>
 

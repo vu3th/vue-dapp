@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import { useVueDapp, shortenAddress } from '@vue-dapp/core'
-import type { ConnWallet } from '@vue-dapp/core'
 
-const { address, chainId, status, error, disconnect, onConnected, onDisconnected } = useVueDapp()
+const { address, status, error, disconnect } = useVueDapp()
 const dappStore = useDappStore()
-
-onConnected((wallet: ConnWallet) => {})
-
-onDisconnected(() => {})
 
 function onClickConnectButton() {
 	if (status.value === 'connected') {

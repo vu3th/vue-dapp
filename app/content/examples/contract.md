@@ -15,10 +15,12 @@ head:
 
 
 
-## Contract source
+## Reference
+- Source code: https://github.com/vu3th/vue-dapp/tree/main/app/components/content/Contract.vue
 - Address: 0x4022Be091550EFB5dB2E5Ba93457ee69BF6e1aDA
-- Chain: Arbitrum Sepolia
+- Network: Arbitrum Sepolia
 
+### Contract source code
 ```solidity
 // SPDX-License-Identifier: GPL-3.0
 
