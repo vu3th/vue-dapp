@@ -1,4 +1,7 @@
 {
 	// https://nuxt.com/docs/guide/concepts/typescript
 	"extends": "./.nuxt/tsconfig.json",
+	"compilerOptions": {
+		"moduleResolution": "node", // just for import type { ConnWallet } from '@vue-dapp/core' in index.vue
+	},
 }

@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import copy from 'copy-to-clipboard'
-import { useDappStore } from '@/stores/useDappStore'
+import { useDappStore } from '~/stores/dappStore'
 
 const { disconnect } = useVueDapp()
 const { connector, status, address, isConnected } = useVueDapp()

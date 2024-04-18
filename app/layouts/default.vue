@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { NuxtLink } from '#components'
 import packageJsonCore from '../../packages/core/package.json'
+import { sidebarMenu } from '~/core/sidebar'
 
 const headerLeftMenu = [
 	{
@@ -12,7 +13,7 @@ const headerLeftMenu = [
 				},
 				{ default: () => 'Vue Dapp' },
 			),
-		key: 'vue-dapp',
+		key: '/',
 		icon: () => h('img', { src: '/sheaf-of-rice/favicon-32x32.png' }),
 	},
 ]
@@ -46,61 +47,29 @@ const headerRightMenu = [
 	},
 ]
 
-const sidebarMenu = [
-	{
-		label: () =>
-			h(
-				NuxtLink,
-				{
-					to: '/overview',
-				},
-				{ default: () => 'Overview' },
-			),
-		key: 'Overview',
-	},
-	{
-		label: () =>
-			h(
-				NuxtLink,
-				{
-					to: '/wallet',
-				},
-				{ default: () => 'Wallet' },
-			),
-		key: 'Wallet',
-	},
-	{
-		label: () =>
-			h(
-				NuxtLink,
-				{
-					to: '/vue-dapp-provider',
-				},
-				{ default: () => 'VueDappProvider' },
-			),
-		key: 'VueDappProvider',
-	},
-	{
-		label: 'Examples',
-		key: 'Examples',
-		children: [
-			{
-				label: 'Contract',
-				key: 'Contract',
-			},
-			{
-				label: 'Multicall',
-				key: 'Multicall',
-			},
-			{
-				label: 'Switch chain',
-				key: 'Switch chain',
-			},
-		],
-	},
-]
-
 const showDrawer = ref(false)
+
+function openDrawer() {
+	showDrawer.value = true
+}
+
+function closeDrawer() {
+	showDrawer.value = false
+}
+
+// prevent the menu from being selected when the route is '/'
+const menuSelected = ref('')
+
+const route = useRoute()
+watch(
+	() => route.path,
+	() => {
+		if (route.path === '/') {
+			menuSelected.value = ''
+		}
+	},
+)
+// end
 </script>
 
 <template>
@@ -108,7 +77,7 @@ const showDrawer = ref(false)
 		<n-layout-header bordered class="grid grid-cols-2">
 			<div class="flex items-center">
 				<!-- drawer button -->
-				<div class="pl-5 md:hidden flex justify-center items-center" @click="() => (showDrawer = true)">
+				<div class="pl-5 lg:hidden flex justify-center items-center" @click="openDrawer">
 					<Icon size="20" name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
 				</div>
 				<!-- logo -->
@@ -123,14 +92,20 @@ const showDrawer = ref(false)
 		<n-layout has-sider class="flex-1">
 			<!-- sidebar -->
 			<n-layout-sider
-				class="hidden md:block"
+				class="hidden lg:block"
 				bordered
 				collapse-mode="width"
 				:collapsed-width="0"
 				:width="240"
 				:native-scrollbar="false"
 			>
-				<n-menu :collapsed-width="64" :collapsed-icon-size="20" :options="sidebarMenu" default-expand-all />
+				<n-menu
+					v-model:value="menuSelected"
+					:collapsed-width="64"
+					:collapsed-icon-size="20"
+					:options="sidebarMenu"
+					default-expand-all
+				/>
 			</n-layout-sider>
 
 			<!-- pages -->
@@ -142,12 +117,12 @@ const showDrawer = ref(false)
 			<n-drawer v-model:show="showDrawer" height="100vh" placement="top" :trap-focus="false">
 				<n-drawer-content closable>
 					<template #header>
-						<NuxtLink to="/" class="h-5 flex justify-center items-center gap-1" @click="showDrawer = false">
+						<NuxtLink to="/" class="h-5 flex justify-center items-center gap-1" @click="closeDrawer">
 							<img class="w-5" src="/sheaf-of-rice/favicon-32x32.png" alt="" />
 							<p class="text-gray-500 text-sm">Vue Dapp</p>
 						</NuxtLink>
 					</template>
-					<n-menu :options="sidebarMenu" default-expand-all />
+					<n-menu :options="sidebarMenu" default-expand-all @click="closeDrawer" />
 				</n-drawer-content>
 			</n-drawer>
 		</n-layout>

@@ -1,21 +1,12 @@
+---
+description: ''
+head:
+  meta:
+    - name: 'keywords'
+      content: 'vue-dapp, overview'
+---
+
 # Overview
 
-## header 2
-
-### header 3
-
-code block
-
-```
-code block
-
-```
-
-Hello world
-
-::card
-The content of the card
-::
-
-image
+<a href="/images/overview.png" target="_blank"><img src="/images/overview.png" alt="overview" /></a>
 

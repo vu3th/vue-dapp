@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watchImmediate } from '@vueuse/core'
-import { useDappStore } from '@/stores/useDappStore'
+import { useDappStore } from '~/stores/dappStore'
 import pkg from '../../packages/core/package.json'
 
 const dappStore = useDappStore()

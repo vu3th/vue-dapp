@@ -1,21 +1,38 @@
 <script setup lang="ts">
 import pkg from '~/package.json'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
-import type { ConnWallet } from '../../packages/core/dist'
+import type { ConnWallet } from '@vue-dapp/core'
+import { ethers, formatEther } from 'ethers'
 
-const { wallet, disconnect, onConnected, onDisconnected } = useVueDapp()
+// must added to prevent from redirecting from Overview to Vue Dapp but the tab is still Overview
+useHead({
+	title: 'Vue Dapp - Essential Web3 Tools for Vue Developers',
+})
+
+const defaultProvider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com')
+
+const { wallet, isConnected, disconnect, onWalletUpdated, onDisconnected } = useVueDapp()
 const dappStore = useDappStore()
 
 const ensName = ref('')
+async function fetchENSName(address: string) {
+	ensName.value = (await defaultProvider.lookupAddress(address)) ?? ''
+}
 
-onConnected(async (wallet: ConnWallet) => {
-	const ens = await dappStore.provider.lookupAddress(wallet.address)
-	if (ens) {
-		ensName.value = ens
-	}
+const balance = ref(0)
+async function fetchBalance(wallet: ConnWallet) {
+	const provider = new ethers.BrowserProvider(wallet.provider)
+	balance.value = Number(formatEther(await provider.getBalance(wallet.address)))
+}
+
+onWalletUpdated((wallet: ConnWallet) => {
+	fetchENSName(wallet.address)
+	fetchBalance(wallet)
 })
+
 onDisconnected(() => {
 	ensName.value = ''
+	balance.value = 0
 })
 
 function onClickConnectButton() {
@@ -30,7 +47,7 @@ function onClickConnectButton() {
 <template>
 	<div class="">
 		<!-- banner -->
-		<div class="mt-40 flex flex-col items-center justify-center">
+		<div class="mt-20 flex flex-col items-center justify-center">
 			<img class="w-90" src="/logo.png" alt="logo" />
 			<p class="bold text-md md:text-xl px-4 text-gray-500 text-center">
 				{{ pkg.description }}
@@ -53,16 +70,10 @@ function onClickConnectButton() {
 
 			<div class="text-gray-600 text-sm mt-5">
 				<p v-if="wallet.chainId" class="">Chain ID: {{ wallet.chainId }}</p>
-				<p class="">{{ wallet.address && shortenAddress(wallet.address) }}</p>
-				<p>{{ ensName }}</p>
+				<p v-if="wallet.address">{{ 'Address: ' + shortenAddress(wallet.address) }}</p>
+				<p v-if="isConnected">{{ 'Balance: ' + balance }}</p>
+				<p v-if="ensName">{{ 'ENS: ' + ensName }}</p>
 			</div>
-		</div>
-
-		<!-- todo: Contract call/send -->
-		<div class="mt-10 px-10 flex">
-			<div></div>
-
-			<div></div>
 		</div>
 	</div>
 </template>

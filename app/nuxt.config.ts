@@ -6,7 +6,20 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	devtools: { enabled: true },
-	// naive-ui: https://www.naiveui.com/en-US/os-theme/docs/ssr
+	modules: [
+		'@vue-dapp/nuxt',
+		[
+			'@pinia/nuxt',
+			{
+				autoImports: ['defineStore', 'storeToRefs'],
+			},
+		],
+		'@pinia-plugin-persistedstate/nuxt',
+		'@vueuse/nuxt',
+		'nuxt-icon',
+		'@nuxt/content',
+	],
+	// naiveui ssr: https://www.naiveui.com/en-US/os-theme/docs/ssr
 	build: {
 		transpile:
 			process.env.NODE_ENV === 'production'
@@ -27,25 +40,6 @@ export default defineNuxtConfig({
 				process.env.NODE_ENV === 'development' ? ['naive-ui', 'vueuc', 'date-fns-tz/formatInTimeZone'] : [],
 		},
 	},
-	components: [
-		{
-			path: '~/components',
-			pathPrefix: false, // auto-import components based only on its name, not path
-		},
-	],
-	modules: [
-		'@vue-dapp/nuxt',
-		[
-			'@pinia/nuxt',
-			{
-				autoImports: ['defineStore', 'storeToRefs'],
-			},
-		],
-		'@pinia-plugin-persistedstate/nuxt',
-		'@vueuse/nuxt',
-		'nuxt-icon',
-		'@nuxt/content',
-	],
 	postcss: {
 		plugins: {
 			tailwindcss: {},
@@ -53,11 +47,6 @@ export default defineNuxtConfig({
 		},
 	},
 	css: ['~/styles/main.scss'],
-	runtimeConfig: {
-		public: {
-			apiBase: '',
-		},
-	},
 	app: {
 		// opengraph https://www.opengraph.xyz/url/https%3A%2F%2Fvue-dapp.vercel.app%2F
 		head: {
