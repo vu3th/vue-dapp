@@ -38,7 +38,6 @@ if (process.client) {
 }
 
 async function handleConnect({ provider, address, chainId }: ConnWallet) {
-	console.log('handleConnect')
 	const ethersProvider = new ethers.BrowserProvider(provider)
 	const signer = await ethersProvider.getSigner()
 
@@ -50,7 +49,6 @@ async function handleConnect({ provider, address, chainId }: ConnWallet) {
 }
 
 function handleDisconnect() {
-	console.log('handleDisconnect')
 	dappStore.resetUser()
 }
 

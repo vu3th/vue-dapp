@@ -1,19 +1,27 @@
 <script setup lang="ts">
 import pkg from '~/package.json'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
-import type { ConnWallet } from '../../packages/core/dist'
+import type { ConnWallet } from '@vue-dapp/core'
+import { formatEther } from 'ethers'
 
 const { address, chainId, status, error, disconnect, onConnected, onDisconnected } = useVueDapp()
 const dappStore = useDappStore()
 
 const ensName = ref('')
+async function fetchENSName(address: string) {
+	ensName.value = (await dappStore.provider.lookupAddress(address)) ?? ''
+}
 
-onConnected(async (wallet: ConnWallet) => {
-	const ens = await dappStore.provider.lookupAddress(wallet.address)
-	if (ens) {
-		ensName.value = ens
-	}
+const balance = ref(0n)
+async function fetchBalance(address: string) {
+	balance.value = await dappStore.provider.getBalance(address)
+}
+
+onConnected((wallet: ConnWallet) => {
+	fetchENSName(wallet.address)
+	fetchBalance(wallet.address)
 })
+
 onDisconnected(() => {
 	ensName.value = ''
 })
@@ -30,7 +38,7 @@ function onClickConnectButton() {
 <template>
 	<div class="">
 		<!-- banner -->
-		<div class="mt-40 flex flex-col items-center justify-center">
+		<div class="mt-20 flex flex-col items-center justify-center">
 			<img class="w-90" src="/logo.png" alt="logo" />
 			<p class="bold text-md md:text-xl px-4 text-gray-500 text-center">
 				{{ pkg.description }}
@@ -54,6 +62,7 @@ function onClickConnectButton() {
 			<div class="text-gray-600 text-sm mt-5">
 				<p v-if="chainId" class="">Chain ID: {{ chainId }}</p>
 				<p class="">{{ address && shortenAddress(address) }}</p>
+				<p v-if="balance">{{ formatEther(balance) }}</p>
 				<p>{{ ensName }}</p>
 			</div>
 		</div>
