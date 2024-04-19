@@ -10,7 +10,6 @@
 
 ```ts
 const isModalOpen = ref(false)
-
 ```
 
 Must add `v-model`
@@ -23,8 +22,6 @@ Must add `v-model`
 
 ### pinia store
 
-- only works with SPA
-
 ```ts
 import { useVueDappStore } from '@vue-dapp/modal'
 
@@ -36,4 +33,10 @@ Don't add `v-model`
 <VueDappModal
 	autoConnect
 />
+```
+
+If you're using Nuxt, you must add `useNuxtApp().$pinia`
+
+```ts
+const { open } = useVueDappModal(useNuxtApp().$pinia)
 ```
