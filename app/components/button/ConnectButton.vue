@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useVueDapp, shortenAddress } from '@vue-dapp/core'
+import { useVueDappModal } from '@vue-dapp/modal'
 
 const { address, status, error, disconnect } = useVueDapp()
 const dappStore = useDappStore()
@@ -9,7 +10,8 @@ function onClickConnectButton() {
 		disconnect()
 		return
 	}
-	dappStore.connectModalOpen = !dappStore.connectModalOpen
+	const { open } = useVueDappModal(useNuxtApp().$pinia)
+	open()
 }
 </script>
 

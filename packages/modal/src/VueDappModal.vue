@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Modal from './components/Modal.vue'
 import WalletConnectIcon from './components/logos/WalletConnectIcon.vue'
 import { useVueDapp, ConnectorName, RDNS } from '@vue-dapp/core'
+import { useVueDappModal } from './store'
 
 const props = withDefaults(
 	defineProps<{
-		modelValue: boolean
+		modelValue?: boolean | undefined
 		dark?: boolean
 		autoConnect?: boolean
 		connectTimeout?: number
@@ -15,6 +16,7 @@ const props = withDefaults(
 		autoConnectErrorHandler?: (err: any) => void
 	}>(),
 	{
+		modelValue: undefined,
 		dark: false,
 		autoConnect: false,
 		connectTimeout: 0,
@@ -26,9 +28,17 @@ const props = withDefaults(
 
 const emit = defineEmits(['update:modelValue'])
 
+const store = useVueDappModal()
+
 function closeModal() {
-	emit('update:modelValue', false)
+	if (props.modelValue === undefined) {
+		store.close()
+	} else {
+		emit('update:modelValue', false)
+	}
 }
+
+const modalOpen = computed(() => props.modelValue ?? store.isModalOpen)
 
 const isAutoConnecting = ref(false)
 
@@ -56,20 +66,17 @@ async function handleAutoConnect() {
 onMounted(async () => handleAutoConnect())
 
 // ============================ feat: auto click BrowserWallet if it's the only connector ============================
-watch(
-	() => props.modelValue,
-	async () => {
-		if (props.autoConnectBrowserWalletIfSolo && props.modelValue) {
-			if (
-				connectors.value.length === 1 && // only one connector
-				providerDetails.value.length === 1 && // only one browser provider
-				connectors.value[0].name === 'BrowserWallet'
-			) {
-				await onClickWallet(connectors.value[0].name)
-			}
+watch(modalOpen, async () => {
+	if (props.autoConnectBrowserWalletIfSolo && modalOpen.value) {
+		if (
+			connectors.value.length === 1 && // only one connector
+			providerDetails.value.length === 1 && // only one browser provider
+			connectors.value[0].name === 'BrowserWallet'
+		) {
+			await onClickWallet(connectors.value[0].name)
 		}
-	},
-)
+	}
+})
 
 async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
 	try {
@@ -113,7 +120,7 @@ const vClickOutside = {
 
 <template>
 	<div>
-		<Modal :modalOpen="modelValue" @close="closeModal" :dark="dark">
+		<Modal :modalOpen="modalOpen" @close="closeModal" :dark="dark">
 			<div id="vd-modal" v-click-outside="closeModal">
 				<div
 					v-for="detail in providerDetails"

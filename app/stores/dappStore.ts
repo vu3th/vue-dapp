@@ -6,7 +6,6 @@ import { HARDHAT_PRIV_KEY, MULTICALL3_ADDRESS } from '@/constants'
 import { networkMap, type AppNetwork } from '@/constants'
 
 export type DappState = {
-	connectModalOpen: boolean
 	user: User
 	network: AppNetwork
 	blockNumber: number
@@ -23,7 +22,6 @@ export const networkOptions = [...networkMap.keys()]
 
 export const useDappStore = defineStore('dapp', {
 	state: (): DappState => ({
-		connectModalOpen: false,
 		user: {
 			address: '',
 			signer: null,

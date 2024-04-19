@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import { BrowserWalletConnector, useVueDapp } from '@vue-dapp/core'
 import VueDappModal from './VueDappModal.vue'
+import { useVueDappModal } from './store'
+
+const store = useVueDappModal()
 
 const isModalOpen = ref(false)
 
@@ -12,6 +15,7 @@ addConnector(new BrowserWalletConnector())
 function onClickConnectButton() {
 	if (!isConnected.value) {
 		isModalOpen.value = true
+		// store.open()
 	} else {
 		disconnect()
 	}
@@ -28,6 +32,8 @@ function autoConnectErrorHandler(err: any) {
 <template>
 	<div>
 		<button @click="onClickConnectButton">{{ isConnected ? 'Disconnect' : 'Connect Wallet' }}</button>
+		<button @click="store.open">open</button>
+
 		<div>{{ error }}</div>
 		<p v-if="chainId">Chain ID: {{ chainId }}</p>
 		<p>{{ address }}</p>
@@ -35,7 +41,7 @@ function autoConnectErrorHandler(err: any) {
 		<VueDappModal
 			v-model="isModalOpen"
 			autoConnect
-			autoConnectBrowserWalletIfSolo
+			:autoConnectBrowserWalletIfSolo="false"
 			dark
 			:connectErrorHandler="connectErrorHandler"
 			:autoConnectErrorHandler="autoConnectErrorHandler"

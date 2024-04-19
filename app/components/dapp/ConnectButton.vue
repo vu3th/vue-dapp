@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import copy from 'copy-to-clipboard'
 import { useDappStore } from '~/stores/dappStore'
+import { useVueDappModal } from '@vue-dapp/modal'
 
 const { disconnect } = useVueDapp()
 const { connector, status, address, isConnected } = useVueDapp()
@@ -11,7 +12,8 @@ const dappStore = useDappStore()
 const { isNetworkUnmatched } = storeToRefs(dappStore)
 
 function onClickConnectButton() {
-	dappStore.connectModalOpen = !dappStore.connectModalOpen
+	const { open } = useVueDappModal(useNuxtApp().$pinia)
+	open()
 }
 
 async function onSwitchChain() {

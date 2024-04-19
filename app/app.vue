@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { BrowserWalletConnector, useVueDapp, type ConnWallet, VueDappProvider } from '@vue-dapp/core'
-import { WalletConnectConnector } from '@vue-dapp/walletconnect'
-import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
+// import { WalletConnectConnector } from '@vue-dapp/walletconnect'
+// import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
 import { ethers } from 'ethers'
 import { useDappStore } from '~/stores/dappStore'
 import { VueDappModal } from '@vue-dapp/modal'
@@ -22,25 +22,25 @@ const { addConnectors } = useVueDapp()
 if (process.client) {
 	addConnectors([
 		new BrowserWalletConnector(),
-		new WalletConnectConnector({
-			projectId: 'd1e65611568666138126d315c0bafd7d',
-			chains: [1],
-			showQrModal: true,
-			qrModalOptions: {
-				themeMode: 'light',
-				themeVariables: undefined,
-				desktopWallets: undefined,
-				walletImages: undefined,
-				mobileWallets: undefined,
-				enableExplorer: true,
-				privacyPolicyUrl: undefined,
-				termsOfServiceUrl: undefined,
-			},
-		}),
-		new CoinbaseWalletConnector({
-			appName: 'Vue Dapp',
-			jsonRpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
-		}),
+		// new WalletConnectConnector({
+		// 	projectId: 'd1e65611568666138126d315c0bafd7d',
+		// 	chains: [1],
+		// 	showQrModal: true,
+		// 	qrModalOptions: {
+		// 		themeMode: 'light',
+		// 		themeVariables: undefined,
+		// 		desktopWallets: undefined,
+		// 		walletImages: undefined,
+		// 		mobileWallets: undefined,
+		// 		enableExplorer: true,
+		// 		privacyPolicyUrl: undefined,
+		// 		termsOfServiceUrl: undefined,
+		// 	},
+		// }),
+		// new CoinbaseWalletConnector({
+		// 	appName: 'Vue Dapp',
+		// 	jsonRpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
+		// }),
 	])
 }
 
@@ -74,7 +74,7 @@ function handleDisconnect() {
 				<NuxtPage />
 
 				<ClientOnly>
-					<VueDappModal v-model="dappStore.connectModalOpen" autoConnect />
+					<VueDappModal autoConnect />
 				</ClientOnly>
 			</VueDappProvider>
 		</NuxtLayout>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import pkg from '~/package.json'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
+import { useVueDappModal } from '@vue-dapp/modal'
 import type { ConnWallet } from '@vue-dapp/core'
 import { ethers, formatEther } from 'ethers'
 
@@ -12,7 +13,6 @@ useHead({
 const defaultProvider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com')
 
 const { wallet, isConnected, disconnect, onWalletUpdated, onDisconnected } = useVueDapp()
-const dappStore = useDappStore()
 
 const ensName = ref('')
 async function fetchENSName(address: string) {
@@ -42,7 +42,8 @@ function onClickConnectButton() {
 		disconnect()
 		return
 	}
-	dappStore.connectModalOpen = !dappStore.connectModalOpen
+	const { open } = useVueDappModal(useNuxtApp().$pinia)
+	open()
 }
 </script>
 

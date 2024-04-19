@@ -54,7 +54,8 @@
 	},
 	"peerDependencies": {
 		"@vue-dapp/core": "*",
-		"vue": "^3.3.6"
+		"vue": ">=3.3.6",
+		"pinia": ">=2.1.7"
 	},
 	"gitHead": "32a6d53db2bd674115648f41c80582140175c25b"
 }
