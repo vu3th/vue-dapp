@@ -140,6 +140,7 @@ function handleDisconnect() {
 ## Development
 
 ```
+pnpm build
 pnpm dev
 pnpm -F core watch
 ```
