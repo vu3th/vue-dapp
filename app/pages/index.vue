@@ -41,7 +41,7 @@ function onClickConnectButton() {
 		disconnect()
 		return
 	}
-	const { open } = useVueDappModal(useNuxtApp().$pinia)
+	const { open } = useVueDappModal()
 	open()
 }
 </script>
