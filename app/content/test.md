@@ -1,4 +1,12 @@
-# Test
+---
+description: ''
+head:
+  meta:
+    - name: 'keywords'
+      content: ''
+---
+
+# Template
 
 ## header 2
 

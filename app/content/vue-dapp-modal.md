@@ -8,7 +8,7 @@ head:
 
 # @vue-dapp/modal
 
-<a href="https://www.npmjs.com/package/@vue-dapp/modal"><img src="https://badgen.net/npm/v/@vue-dapp/modal" alt="Version"></a>
+Use it first, then remove it later as you wish to customize your modal.
 
 ## Get started
 
@@ -38,7 +38,7 @@ Template
 <VueDappModal dark auto-connect />
 ```
 
-## VueDappModal Props
+## VueDappModal
 
 - autoConnectBrowserWalletIfSolo: Auto click BrowserWallet if it's the only connector
 
