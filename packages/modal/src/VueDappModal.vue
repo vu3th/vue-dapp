@@ -10,23 +10,17 @@ const props = withDefaults(
 		modelValue?: boolean | undefined
 		dark?: boolean
 		autoConnect?: boolean
-		connectTimeout?: number
 		autoConnectBrowserWalletIfSolo?: boolean
-		connectErrorHandler?: (err: any) => void
-		autoConnectErrorHandler?: (err: any) => void
 	}>(),
 	{
 		modelValue: undefined,
 		dark: false,
 		autoConnect: false,
-		connectTimeout: 0,
 		autoConnectBrowserWalletIfSolo: false,
-		connectErrorHandler: undefined,
-		autoConnectErrorHandler: undefined,
 	},
 )
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'connectError', 'autoConnectError'])
 
 const store = useVueDappModal()
 
@@ -50,13 +44,10 @@ async function handleAutoConnect() {
 	if (props.autoConnect) {
 		try {
 			isAutoConnecting.value = true
+			// throw new Error('test autoConnect error')
 			await autoConnect(RDNS.metamask)
 		} catch (err: any) {
-			if (props.autoConnectErrorHandler) {
-				props.autoConnectErrorHandler(err)
-			} else {
-				console.error('VueDappError:', err)
-			}
+			emit('autoConnectError', err)
 		} finally {
 			isAutoConnecting.value = false
 		}
@@ -81,13 +72,10 @@ watch(modalOpen, async () => {
 async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
 	try {
 		closeModal()
+		// throw new Error('test connect error')
 		await connectTo(connName, { rdns })
 	} catch (err: any) {
-		if (props.connectErrorHandler) {
-			props.connectErrorHandler(err)
-		} else {
-			console.error('VueDappError:', err)
-		}
+		emit('connectError', err)
 	}
 }
 

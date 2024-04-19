@@ -6,7 +6,6 @@ import { ethers } from 'ethers'
 import { useDappStore } from '~/stores/dappStore'
 import { VueDappModal } from '@vue-dapp/modal'
 import '@vue-dapp/modal/dist/style.css'
-import { INFURA_ID } from './constants'
 import { lightTheme } from 'naive-ui'
 
 useHead({
@@ -73,9 +72,7 @@ function handleDisconnect() {
 			<VueDappProvider @connect="handleConnect" @disconnect="handleDisconnect">
 				<NuxtPage />
 
-				<ClientOnly>
-					<VueDappModal autoConnect />
-				</ClientOnly>
+				<VueDappModal autoConnect />
 			</VueDappProvider>
 		</NuxtLayout>
 	</n-config-provider>

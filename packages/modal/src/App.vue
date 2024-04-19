@@ -22,10 +22,10 @@ function onClickConnectButton() {
 }
 
 function connectErrorHandler(err: any) {
-	console.error('ConnectError', err)
+	console.error('ConnectError:', err.message)
 }
 function autoConnectErrorHandler(err: any) {
-	console.error('AutoConnectError', err)
+	console.error('AutoConnectError:', err.message)
 }
 </script>
 
@@ -39,12 +39,12 @@ function autoConnectErrorHandler(err: any) {
 		<p>{{ address }}</p>
 
 		<VueDappModal
+			dark
 			v-model="isModalOpen"
 			autoConnect
-			:autoConnectBrowserWalletIfSolo="false"
-			dark
-			:connectErrorHandler="connectErrorHandler"
-			:autoConnectErrorHandler="autoConnectErrorHandler"
+			autoConnectBrowserWalletIfSolo
+			@connectError="connectErrorHandler"
+			@autoConnectError="autoConnectErrorHandler"
 		/>
 	</div>
 </template>

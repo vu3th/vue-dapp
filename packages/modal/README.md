@@ -2,11 +2,53 @@
 
 <a href="https://www.npmjs.com/package/@vue-dapp/modal"><img src="https://badgen.net/npm/v/@vue-dapp/modal" alt="Version"></a>
 
+## Get started
+
+Install
+
+```bash
+# spa
+pnpm add pinia @vue-dapp/core@latest @vue-dapp/modal@latest
+
+# nuxt
+pnpm add pinia @pinia/nuxt @vue-dapp/core@latest @vue-dapp/nuxt@latest @vue-dapp/modal@latest
+```
+
+Script
+
+```ts
+import { BrowserWalletConnector } from '@vue-dapp/core'
+import { VueDappModal, useVueDappModal } from '@vue-dapp/modal'
+import '@vue-dapp/modal/dist/style.css' // must add
+
+const { open } = useVueDappModal()
+```
+
+Template
+
+```vue
+<VueDappModal dark auto-connect />
+```
+
+## VueDappModal Props
+
+- autoConnectBrowserWalletIfSolo: Auto click BrowserWallet if it's the only connector
+
+```vue
+<VueDappModal
+	dark
+	v-model="isModalOpen"
+	autoConnect
+	autoConnectBrowserWalletIfSolo
+	@connectError="connectErrorHandler"
+	@autoConnectError="autoConnectErrorHandler"
+/>
+```
 
 
 ## Two approach to open/close the modal
 
-### v-model
+### v-model approach
 
 ```ts
 const isModalOpen = ref(false)
@@ -20,23 +62,16 @@ Must add `v-model`
 />
 ```
 
-### pinia store
+### pinia approach
 
 ```ts
-import { useVueDappStore } from '@vue-dapp/modal'
+import { useVueDappModal } from '@vue-dapp/modal'
 
-const { open, close } = useVueDappStore()
+const { open, close } = useVueDappModal()
 ```
 
 Don't add `v-model`
 ```vue
-<VueDappModal
-	autoConnect
-/>
+<VueDappModal autoConnect />
 ```
 
-If you're using Nuxt, you must add `useNuxtApp().$pinia`
-
-```ts
-const { open } = useVueDappModal(useNuxtApp().$pinia)
-```
