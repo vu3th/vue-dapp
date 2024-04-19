@@ -13,6 +13,17 @@ export const sidebarMenu = [
 		key: '/overview',
 	},
 	{
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/modal',
+				},
+				{ default: () => '@vue-dapp/modal' },
+			),
+		key: '/modal',
+	},
+	{
 		label: 'Examples',
 		key: 'Examples',
 		children: [
