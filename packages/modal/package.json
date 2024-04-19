@@ -1,6 +1,6 @@
 {
 	"name": "@vue-dapp/modal",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Empower dapp developers with Vue integration for crypto wallets",
 	"repository": "https://github.com/vu3th/vue-dapp",
 	"bugs": {
@@ -44,7 +44,7 @@
 	},
 	"devDependencies": {
 		"@vitejs/plugin-vue": "^5.0.3",
-		"@vue-dapp/core": "^1.2.0",
+		"@vue-dapp/core": "^1.2.1",
 		"pinia": "^2.1.7",
 		"typescript": "^5.3.3",
 		"vite": "^5.2.9",
@@ -54,8 +54,8 @@
 	},
 	"peerDependencies": {
 		"@vue-dapp/core": "*",
-		"vue": ">=3.3.6",
-		"pinia": ">=2.1.7"
+		"pinia": ">=2.1.7",
+		"vue": ">=3.3.6"
 	},
 	"gitHead": "32a6d53db2bd674115648f41c80582140175c25b"
 }
