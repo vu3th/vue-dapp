@@ -3,7 +3,7 @@ description: ''
 head:
   meta:
     - name: 'keywords'
-      content: 'vue-dapp, contract'
+      content: ''
 ---
 
 # @vue-dapp/modal
