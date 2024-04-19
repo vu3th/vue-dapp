@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { BrowserWalletConnector, useVueDapp, type ConnWallet, VueDappProvider } from '@vue-dapp/core'
-// import { WalletConnectConnector } from '@vue-dapp/walletconnect'
-// import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
-import { ethers } from 'ethers'
-import { useDappStore } from '~/stores/dappStore'
+import { BrowserWalletConnector, useVueDapp, type ConnWallet } from '@vue-dapp/core'
 import { VueDappModal } from '@vue-dapp/modal'
 import '@vue-dapp/modal/dist/style.css'
+// import { WalletConnectConnector } from '@vue-dapp/walletconnect'
+// import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
+
 import { lightTheme } from 'naive-ui'
 
 useHead({
@@ -15,9 +14,7 @@ useHead({
 	},
 })
 
-const dappStore = useDappStore()
-
-const { addConnectors } = useVueDapp()
+const { addConnectors, onWalletUpdated, onDisconnected } = useVueDapp()
 if (process.client) {
 	addConnectors([
 		new BrowserWalletConnector(),
@@ -43,25 +40,15 @@ if (process.client) {
 	])
 }
 
-const ethersStore = useEthersStore()
+const { setWallet, resetWallet } = useEthers()
 
-async function handleConnect({ provider, address, chainId }: ConnWallet) {
-	const ethersProvider = new ethers.BrowserProvider(provider)
-	const signer = await ethersProvider.getSigner()
+onWalletUpdated(async (wallet: ConnWallet) => {
+	setWallet(wallet.provider)
+})
 
-	dappStore.setUser({
-		address,
-		signer: markRaw(signer),
-		chainId,
-	})
-
-	ethersStore.setWallet(provider)
-}
-
-function handleDisconnect() {
-	dappStore.resetUser()
-	ethersStore.resetWallet()
-}
+onDisconnected(() => {
+	resetWallet()
+})
 </script>
 
 <template>
@@ -69,11 +56,9 @@ function handleDisconnect() {
 		<NuxtLayout>
 			<NuxtLoadingIndicator />
 
-			<VueDappProvider @connect="handleConnect" @disconnect="handleDisconnect">
-				<NuxtPage />
+			<NuxtPage />
 
-				<VueDappModal autoConnect />
-			</VueDappProvider>
+			<VueDappModal autoConnect />
 		</NuxtLayout>
 	</n-config-provider>
 </template>

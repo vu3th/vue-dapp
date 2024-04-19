@@ -3,14 +3,13 @@ import { useVueDapp, shortenAddress } from '@vue-dapp/core'
 import { useVueDappModal } from '@vue-dapp/modal'
 
 const { address, status, error, disconnect } = useVueDapp()
-const dappStore = useDappStore()
 
 function onClickConnectButton() {
 	if (status.value === 'connected') {
 		disconnect()
 		return
 	}
-	const { open } = useVueDappModal(useNuxtApp().$pinia)
+	const { open } = useVueDappModal()
 	open()
 }
 </script>

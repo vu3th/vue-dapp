@@ -15,9 +15,9 @@ head:
 
 These two states will be frequently used in dapp development.
 
-The `isConnected` is a [computed](https://vuejs.org/api/reactivity-core.html#computed), and the `wallet` is a [readonly](https://vuejs.org/api/reactivity-core.html#readonly) [reactive](https://vuejs.org/api/reactivity-core.html#reactive).
+The `isConnected` is a [computed](https://vuejs.org/api/reactivity-core.html#computed){:target="_blank"}, and the `wallet` is a [readonly](https://vuejs.org/api/reactivity-core.html#readonly) [reactive](https://vuejs.org/api/reactivity-core.html#reactive){:target="_blank"}.
 
-The types are defined [here](https://github.com/vu3th/vue-dapp/blob/main/packages/core/src/types/wallet.ts).
+The types are defined [here](https://github.com/vu3th/vue-dapp/blob/main/packages/core/src/types/wallet.ts){:target="_blank"}.
 
 ```ts
 const { isConnected, wallet } = useVueDapp()
@@ -34,7 +34,7 @@ if(isConnected.value) {
 }
 ```
 
-The wallet comprises 8 properties, each of which can be obtained from the `useVueDapp` as a [ref](https://vuejs.org/api/reactivity-core.html#ref).
+The wallet comprises 8 properties, each of which can be obtained from the `useVueDapp` as a [computed](https://vuejs.org/api/reactivity-core.html#ref){:target="_blank"}.
 
 ```ts
 const { error, chainId } = useVueDapp()

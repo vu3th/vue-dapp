@@ -17,15 +17,26 @@ export const sidebarMenu = [
 			h(
 				NuxtLink,
 				{
-					to: '/modal',
+					to: '/eip-6963',
+				},
+				{ default: () => 'EIP-6963' },
+			),
+		key: '/eip-6963',
+	},
+	{
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/vue-dapp-modal',
 				},
 				{ default: () => '@vue-dapp/modal' },
 			),
-		key: '/modal',
+		key: '/vue-dapp-modal',
 	},
 	{
 		label: 'Examples',
-		key: 'Examples',
+		key: '/examples',
 		children: [
 			{
 				label: () =>
@@ -50,5 +61,38 @@ export const sidebarMenu = [
 				key: '/examples/multicall',
 			},
 		],
+	},
+	{
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/common-errors',
+				},
+				{ default: () => 'Common Errors' },
+			),
+		key: '/common-errors',
+	},
+	{
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/eips',
+				},
+				{ default: () => 'EIPs' },
+			),
+		key: '/eips',
+	},
+	{
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/donate',
+				},
+				{ default: () => 'Donate' },
+			),
+		key: '/donate',
 	},
 ]

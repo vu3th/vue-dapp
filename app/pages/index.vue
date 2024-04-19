@@ -5,9 +5,8 @@ import { useVueDappModal } from '@vue-dapp/modal'
 import type { ConnWallet } from '@vue-dapp/core'
 import { ethers, formatEther } from 'ethers'
 
-// must added to prevent from redirecting from Overview to Vue Dapp but the tab is still Overview
 useHead({
-	title: 'Vue Dapp - Essential Web3 Tools for Vue Developers',
+	title: '', // must add to prevent from redirecting from Overview to Vue Dapp but the tab is still Overview
 })
 
 const defaultProvider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com')
@@ -42,7 +41,7 @@ function onClickConnectButton() {
 		disconnect()
 		return
 	}
-	const { open } = useVueDappModal(useNuxtApp().$pinia)
+	const { open } = useVueDappModal()
 	open()
 }
 </script>

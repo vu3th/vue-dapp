@@ -40,6 +40,12 @@ export default defineNuxtConfig({
 				process.env.NODE_ENV === 'development' ? ['naive-ui', 'vueuc', 'date-fns-tz/formatInTimeZone'] : [],
 		},
 	},
+	content: {
+		highlight: {
+			theme: 'github-dark',
+			langs: ['json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml', 'solidity'],
+		},
+	},
 	postcss: {
 		plugins: {
 			tailwindcss: {},
