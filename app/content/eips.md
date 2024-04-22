@@ -8,7 +8,8 @@ head:
 
 # EIPs
 
-Collect the EIPs related to Vue Dapp
+Collect the EIPs related to DApp development, especially in frontend.
+
 
 ## EIP-1193
 - [EIP-1193: Ethereum Provider JavaScript API](https://eips.ethereum.org/EIPS/eip-1193){:target="_blank"}
