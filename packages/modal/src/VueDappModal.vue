@@ -11,12 +11,14 @@ const props = withDefaults(
 		dark?: boolean
 		autoConnect?: boolean
 		autoConnectBrowserWalletIfSolo?: boolean
+		hideConnectingModal?: boolean
 	}>(),
 	{
 		modelValue: undefined,
 		dark: false,
 		autoConnect: false,
 		autoConnectBrowserWalletIfSolo: false,
+		hideConnectingModal: false,
 	},
 )
 
@@ -154,7 +156,7 @@ const vClickOutside = {
 			</div>
 		</Modal>
 
-		<slot name="connecting">
+		<slot v-if="!hideConnectingModal" name="connecting">
 			<Modal :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
 				<div class="vd-loading-modal" v-if="status === 'connecting'">
 					<p>Connecting...</p>
