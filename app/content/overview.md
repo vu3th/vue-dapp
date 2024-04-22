@@ -13,7 +13,7 @@ head:
 
 ## Wallet & isConnected
 
-These two states will be frequently used in dapp development.
+These two states will be frequently used in development.
 
 The `isConnected` is a [computed](https://vuejs.org/api/reactivity-core.html#computed){:target="_blank"}, and the `wallet` is a [readonly](https://vuejs.org/api/reactivity-core.html#readonly) [reactive](https://vuejs.org/api/reactivity-core.html#reactive){:target="_blank"}.
 
@@ -34,7 +34,7 @@ if(isConnected.value) {
 }
 ```
 
-The wallet comprises 8 properties, each of which can be obtained from the `useVueDapp` as a [computed](https://vuejs.org/api/reactivity-core.html#ref){:target="_blank"}.
+The wallet comprises 8 properties, each of which can be obtained from the `useVueDapp` as a [computed](https://vuejs.org/api/reactivity-core.html#computed){:target="_blank"}.
 
 ```ts
 const { error, chainId } = useVueDapp()
