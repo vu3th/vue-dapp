@@ -11,12 +11,14 @@ const props = withDefaults(
 		dark?: boolean
 		autoConnect?: boolean
 		autoConnectBrowserWalletIfSolo?: boolean
+		hideConnectingModal?: boolean
 	}>(),
 	{
 		modelValue: undefined,
 		dark: false,
 		autoConnect: false,
 		autoConnectBrowserWalletIfSolo: false,
+		hideConnectingModal: false,
 	},
 )
 
@@ -44,8 +46,7 @@ async function handleAutoConnect() {
 	if (props.autoConnect) {
 		try {
 			isAutoConnecting.value = true
-			// throw new Error('test autoConnect error')
-			await autoConnect(RDNS.metamask)
+			await autoConnect()
 		} catch (err: any) {
 			emit('autoConnectError', err)
 		} finally {
@@ -154,7 +155,7 @@ const vClickOutside = {
 			</div>
 		</Modal>
 
-		<slot name="connecting">
+		<slot v-if="!hideConnectingModal" name="connecting">
 			<Modal :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
 				<div class="vd-loading-modal" v-if="status === 'connecting'">
 					<p>Connecting...</p>

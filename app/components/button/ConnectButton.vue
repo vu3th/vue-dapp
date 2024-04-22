@@ -2,7 +2,7 @@
 import { useVueDapp, shortenAddress } from '@vue-dapp/core'
 import { useVueDappModal } from '@vue-dapp/modal'
 
-const { address, status, error, disconnect } = useVueDapp()
+const { address, status, disconnect } = useVueDapp()
 
 function onClickConnectButton() {
 	if (status.value === 'connected') {
@@ -27,7 +27,6 @@ function onClickConnectButton() {
 			<div v-if="status === 'connected'">Disconnect</div>
 		</n-button>
 		<div v-if="address">{{ shortenAddress(address) }}</div>
-		<div v-if="error">{{ error }}</div>
 	</div>
 </template>
 

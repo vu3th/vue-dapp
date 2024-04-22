@@ -1,7 +1,13 @@
 import { reactive, ref, toRefs } from 'vue'
 import { defineStore } from 'pinia'
-import { Connector, EIP6963ProviderDetail, OnDisconnectCallback } from './types'
-import { Wallet, OnAccountsChangedCallback, OnChainChangedCallback } from './types'
+import {
+	Wallet,
+	Connector,
+	EIP6963ProviderDetail,
+	OnDisconnectCallback,
+	OnAccountsChangedCallback,
+	OnChainChangedCallback,
+} from './types'
 
 /**
  * Pinia Setup Store

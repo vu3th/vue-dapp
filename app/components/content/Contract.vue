@@ -172,7 +172,16 @@ const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 			<p>Events</p>
 
 			<n-skeleton v-if="eventLoading && !displayEvents.length" text :repeat="3" />
-			<div v-else-if="!displayEvents.length" class="text-gray-500">No event found.</div>
+			<div v-else-if="!displayEvents.length" class="text-gray-500">
+				<div>No event found in the last 40,000 blocks.</div>
+				<NuxtLink
+					external
+					target="_blank"
+					to="https://sepolia.arbiscan.io/address/0x4022Be091550EFB5dB2E5Ba93457ee69BF6e1aDA#events"
+				>
+					More on explorer
+				</NuxtLink>
+			</div>
 
 			<n-list v-else class="p-0" hoverable bordered>
 				<TransitionGroup name="list">

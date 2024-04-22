@@ -4,6 +4,11 @@ import { ConnectOptions, ConnectorName, RDNS } from '../types'
 import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
 import { normalizeChainId } from '../utils'
 import { BrowserWalletConnector } from '../browserWalletConnector'
+import {
+	getLastConnectedBrowserWallet,
+	removeLastConnectedBrowserWallet,
+	setLastConnectedBrowserWallet,
+} from './localStorage'
 
 export function useConnect(pinia?: any) {
 	const walletStore = useStore(pinia)
@@ -41,14 +46,14 @@ export function useConnect(pinia?: any) {
 			walletStore.wallet.provider = provider
 			walletStore.wallet.address = account
 			walletStore.wallet.chainId = normalizeChainId(chainId)
+
+			walletStore.wallet.status = 'connected'
+			if (info?.rdns) setLastConnectedBrowserWallet(info.rdns)
 		} catch (err: any) {
 			await disconnect() // will resetWallet()
 			walletStore.wallet.error = err.message
 			throw new ConnectError(err)
 		}
-
-		walletStore.wallet.status = 'connected'
-		localStorage.removeItem('VUE_DAPP__disconnected')
 
 		// ============================= listen EIP-1193 events =============================
 		// Events: disconnect, chainChanged, and accountsChanged
@@ -82,46 +87,38 @@ export function useConnect(pinia?: any) {
 	}
 
 	async function disconnect() {
-		// console.log('useConnect.disconnect')
-		if (walletStore.wallet.connector) {
-			try {
+		try {
+			if (walletStore.wallet.connector) {
 				await walletStore.wallet.connector.disconnect()
-			} catch (err: any) {
-				resetWallet()
-				throw new Error(err)
 			}
-		}
-		resetWallet()
-
-		localStorage.setItem('VUE_DAPP__disconnected', 'true')
-	}
-
-	async function autoConnect(rdns: RDNS | string) {
-		if (localStorage.getItem('VUE_DAPP__disconnected')) {
-			// console.warn('No auto-connect: has disconnected')
-			return
-		}
-
-		const browserWalletConn = walletStore.connectors.find(conn => conn.name === 'BrowserWallet')
-
-		if (browserWalletConn) {
-			try {
-				const isConnected = await BrowserWalletConnector.checkConnection(rdns)
-				if (isConnected) {
-					await connectTo(browserWalletConn.name, {
-						rdns,
-					})
-				} else {
-					// console.warn('No auto-connect to MetaMask: not connected')
-				}
-			} catch (err: any) {
-				throw new AutoConnectError(err)
-			}
-		} else {
-			// console.warn('No auto-connect to MetaMask: connector not found')
+		} catch (err: any) {
+			walletStore.error = `Failed to disconnect, wallet reset: ${err.message}`
+			throw new Error(`Failed to disconnect, wallet reset: ${err.message}`)
+		} finally {
+			resetWallet()
+			removeLastConnectedBrowserWallet()
 		}
 	}
 
+	async function autoConnect(rdns?: RDNS | string) {
+		const lastRdns = getLastConnectedBrowserWallet()
+		if (!lastRdns) return
+
+		rdns = rdns || lastRdns
+
+		const bwConnector = walletStore.connectors.find(conn => conn.name === 'BrowserWallet')
+
+		if (!bwConnector || !rdns) return
+
+		try {
+			const isConnected = await BrowserWalletConnector.checkConnection(rdns)
+			if (isConnected) {
+				await connectTo(bwConnector.name, { rdns })
+			}
+		} catch (err: any) {
+			throw new AutoConnectError(err)
+		}
+	}
 	return {
 		wallet: readonly(walletStore.wallet),
 

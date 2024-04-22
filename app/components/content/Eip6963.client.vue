@@ -1,29 +1,4 @@
----
-description: ''
-head:
-  meta:
-    - name: 'keywords'
-      content: ''
----
-
-# EIP-6963 Multi Injected Provider Discovery
-
-Using window events to announce [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193){:target="_blank"} providers instead of `window.ethereum`.
-
-
-- [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963){:target="_blank"}
-
-
-## Provider details
-
-
-::Eip6963
-::
-
-
-## Source code
-
-```ts [setup script]
+<script setup lang="ts">
 import { useVueDapp, shortenAddress, type ConnectorName, RDNS } from '@vue-dapp/core'
 import { useVueDappModal } from '@vue-dapp/modal'
 
@@ -43,9 +18,8 @@ async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
 	useVueDappModal().close()
 	await connectTo(connName, { rdns })
 }
-```
+</script>
 
-```vue [template]
 <template>
 	<div class="flex flex-col gap-2">
 		<div class="flex flex-wrap gap-2">
@@ -93,4 +67,5 @@ async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
 		</div>
 	</div>
 </template>
-```
+
+<style lang="scss"></style>
