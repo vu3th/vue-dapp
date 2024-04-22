@@ -13,7 +13,7 @@ head:
 ::contract
 ::
 
-## Source Code
+## Source code of this page
 
 - [source code link](https://github.com/vu3th/vue-dapp/tree/main/app/components/content/Contract.vue){:target="_blank"}
 
@@ -142,12 +142,12 @@ async function fetchEventLogs() {
 }
 ```
 
+### Contract source code
 
-## Reference
 - Network: Arbitrum Sepolia
 - Address: 0x4022Be091550EFB5dB2E5Ba93457ee69BF6e1aDA
 
-### Contract source code
+
 ```solidity
 // SPDX-License-Identifier: GPL-3.0
 
