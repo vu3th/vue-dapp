@@ -46,8 +46,7 @@ async function handleAutoConnect() {
 	if (props.autoConnect) {
 		try {
 			isAutoConnecting.value = true
-			// throw new Error('test autoConnect error')
-			await autoConnect(RDNS.metamask)
+			await autoConnect()
 		} catch (err: any) {
 			emit('autoConnectError', err)
 		} finally {

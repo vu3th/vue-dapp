@@ -3,7 +3,6 @@ import { useVueDapp, shortenAddress, type ConnectorName, RDNS } from '@vue-dapp/
 import { useVueDappModal } from '@vue-dapp/modal'
 
 const { providerDetails, wallet, address, status, connectTo, disconnect, error, isConnected } = useVueDapp()
-const { close } = useVueDappModal()
 
 const providerList = computed(() => {
 	return providerDetails.value.slice().sort((a, b) => {
@@ -16,7 +15,7 @@ const providerList = computed(() => {
 })
 
 async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
-	close()
+	useVueDappModal().close()
 	await connectTo(connName, { rdns })
 }
 </script>
@@ -33,13 +32,35 @@ async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
 			>
 				<div>{{ detail.info.name }}</div>
 			</n-button>
+			<p v-if="!providerList.length">No provider was found in this browser.</p>
 		</div>
 
-		<div>
+		<div
+			:class="{
+				'h-[200px]': status !== 'idle',
+			}"
+		>
 			<div class="flex flex-col gap-1">
 				<div v-if="status === 'connecting'">Connecting...</div>
-				<div v-if="isConnected">{{ wallet.providerInfo?.name }} is connected.</div>
-				<div v-if="isConnected">{{ shortenAddress(address || '') }}</div>
+				<div v-if="isConnected" class="flex flex-col gap-1">
+					<div>uuid: {{ wallet.providerInfo?.uuid }}</div>
+					<div>name: {{ wallet.providerInfo?.name }}</div>
+
+					<div class="flex items-center gap-2">
+						<span class="">icon:</span>
+						<img
+							class="w-5 h-5 m-0 p-0"
+							:src="wallet.providerInfo?.icon"
+							:alt="wallet.providerInfo?.name"
+						/>
+					</div>
+					<div>rdns: {{ wallet.providerInfo?.rdns }}</div>
+
+					<div class="mt-5 flex items-center gap-2">
+						<n-button @click="disconnect">Disconnect</n-button>
+						<div>{{ shortenAddress(address || '') }}</div>
+					</div>
+				</div>
 			</div>
 
 			<p class="text-red-500">{{ error }}</p>
