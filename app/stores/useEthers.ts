@@ -7,7 +7,7 @@ export const useEthers = defineStore('useEthers', () => {
 	const signer = ref<ethers.JsonRpcSigner | null>(null)
 
 	async function setWallet(p: EIP1193Provider) {
-		provider.value = new ethers.BrowserProvider(p)
+		provider.value = markRaw(new ethers.BrowserProvider(p))
 		signer.value = markRaw(await provider.value.getSigner())
 	}
 
