@@ -7,7 +7,6 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 export default defineNuxtConfig({
 	devtools: { enabled: true },
 	modules: [
-		'@vue-dapp/nuxt',
 		[
 			'@pinia/nuxt',
 			{

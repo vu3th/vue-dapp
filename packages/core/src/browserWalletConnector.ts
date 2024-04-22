@@ -15,7 +15,8 @@ import {
 	SwitchChainError,
 } from './errors'
 import { normalizeChainId, toHex } from './utils'
-import { useEIP6963 } from './services/eip6963'
+import { useVueDapp } from './store'
+// import { useEIP6963 } from './services/eip6963'
 
 export type BrowserWalletConnectorOptions = {
 	appUrl?: string
@@ -32,7 +33,7 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 	constructor(options: BrowserWalletConnectorOptions = {}) {
 		super(options)
 
-		useEIP6963().subscribe()
+		useVueDapp().subscribe()
 	}
 
 	static async checkConnection(RDNS: string | RDNS) {
@@ -92,17 +93,17 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 	}
 
 	static getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
-		const { providerDetails } = useEIP6963()
-		if (providerDetails.value.length < 1) throw new ProviderNotFoundError('providerDetails.length < 1')
+		const { providerDetails } = useVueDapp()
+		if (providerDetails.length < 1) throw new ProviderNotFoundError('providerDetails.length < 1')
 
 		// without rdns, return the first provider
 		if (!rdns) {
-			if (providerDetails.value.length >= 1) {
-				return providerDetails.value[0]
+			if (providerDetails.length >= 1) {
+				return providerDetails[0]
 			}
 		} else {
 			// with rdns, return the provider with the same rdns
-			const detail = providerDetails.value.find(({ info }) => info.rdns === rdns)
+			const detail = providerDetails.find(({ info }) => info.rdns === rdns)
 			if (!detail) throw new ProviderNotFoundError('rdns not found')
 			return detail
 		}

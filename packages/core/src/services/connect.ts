@@ -1,30 +1,44 @@
 import { computed, readonly } from 'vue'
-import { useStore } from '../store'
-import { ConnectOptions, ConnectorName, RDNS } from '../types'
+import {
+	ConnectOptions,
+	Connector,
+	ConnectorName,
+	OnAccountsChangedCallback,
+	OnChainChangedCallback,
+	OnDisconnectCallback,
+	RDNS,
+	Wallet,
+} from '../types'
 import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
 import { normalizeChainId } from '../utils'
 import { BrowserWalletConnector } from '../browserWalletConnector'
 
-export function useConnect(pinia?: any) {
-	const walletStore = useStore(pinia)
+export function useConnect(store: {
+	wallet: Wallet
+	connectors: Connector[]
+	onDisconnectCallback: OnDisconnectCallback | null
+	onAccountsChangedCallback: OnAccountsChangedCallback | null
+	onChainChangedCallback: OnChainChangedCallback | null
+}) {
+	const { wallet, connectors, onDisconnectCallback, onAccountsChangedCallback, onChainChangedCallback } = store
 
 	async function resetWallet() {
-		walletStore.wallet.status = 'idle'
-		walletStore.wallet.error = null
-		walletStore.wallet.connectorName = null
-		walletStore.wallet.provider = null
-		walletStore.wallet.providerInfo = null
-		walletStore.wallet.connector = null
-		walletStore.wallet.address = null
-		walletStore.wallet.chainId = null
+		wallet.status = 'idle'
+		wallet.error = null
+		wallet.connectorName = null
+		wallet.provider = null
+		wallet.providerInfo = null
+		wallet.connector = null
+		wallet.address = null
+		wallet.chainId = null
 	}
 
 	async function connectTo(connectorName: ConnectorName | string, options?: ConnectOptions) {
-		walletStore.wallet.error = ''
-		walletStore.wallet.status = 'connecting'
+		wallet.error = ''
+		wallet.status = 'connecting'
 
 		// find connector
-		const connector = walletStore.connectors.find(conn => conn.name === connectorName)
+		const connector = connectors.find(conn => conn.name === connectorName)
 		if (!connector) throw new ConnectorNotFoundError()
 
 		try {
@@ -33,28 +47,28 @@ export function useConnect(pinia?: any) {
 			// console.log('useConnect.connectTo -> account', account)
 
 			if (connector.name === 'BrowserWallet') {
-				walletStore.wallet.providerInfo = info!
+				wallet.providerInfo = info!
 			}
 
-			walletStore.wallet.connector = connector
-			walletStore.wallet.connectorName = connector.name as ConnectorName
-			walletStore.wallet.provider = provider
-			walletStore.wallet.address = account
-			walletStore.wallet.chainId = normalizeChainId(chainId)
+			wallet.connector = connector
+			wallet.connectorName = connector.name as ConnectorName
+			wallet.provider = provider
+			wallet.address = account
+			wallet.chainId = normalizeChainId(chainId)
 		} catch (err: any) {
 			await disconnect() // will resetWallet()
-			walletStore.wallet.error = err.message
+			wallet.error = err.message
 			throw new ConnectError(err)
 		}
 
-		walletStore.wallet.status = 'connected'
+		wallet.status = 'connected'
 		localStorage.removeItem('VUE_DAPP__disconnected')
 
 		// ============================= listen EIP-1193 events =============================
 		// Events: disconnect, chainChanged, and accountsChanged
 
-		walletStore.wallet.connector.onDisconnect((...args: any[]) => {
-			walletStore.onDisconnectCallback && walletStore.onDisconnectCallback(...args)
+		wallet.connector.onDisconnect((...args: any[]) => {
+			onDisconnectCallback && onDisconnectCallback(...args)
 
 			// TODO:
 			/**
@@ -64,28 +78,28 @@ export function useConnect(pinia?: any) {
 			 * because the wallet state was cleared.
 			 * @todo better solution
 			 */
-			if (walletStore.wallet.connectorName === 'BrowserWallet') {
+			if (wallet.connectorName === 'BrowserWallet') {
 				return
 			}
 			disconnect()
 		})
 
-		walletStore.wallet.connector.onAccountsChanged(async (accounts: string[]) => {
-			walletStore.onAccountsChangedCallback && walletStore.onAccountsChangedCallback(accounts)
-			walletStore.wallet.address = accounts[0]
+		wallet.connector.onAccountsChanged(async (accounts: string[]) => {
+			onAccountsChangedCallback && onAccountsChangedCallback(accounts)
+			wallet.address = accounts[0]
 		})
 
-		walletStore.wallet.connector.onChainChanged(async (chainId: number) => {
-			walletStore.onChainChangedCallback && walletStore.onChainChangedCallback(normalizeChainId(chainId))
-			walletStore.wallet.chainId = normalizeChainId(chainId)
+		wallet.connector.onChainChanged(async (chainId: number) => {
+			onChainChangedCallback && onChainChangedCallback(normalizeChainId(chainId))
+			wallet.chainId = normalizeChainId(chainId)
 		})
 	}
 
 	async function disconnect() {
 		// console.log('useConnect.disconnect')
-		if (walletStore.wallet.connector) {
+		if (wallet.connector) {
 			try {
-				await walletStore.wallet.connector.disconnect()
+				await wallet.connector.disconnect()
 			} catch (err: any) {
 				resetWallet()
 				throw new Error(err)
@@ -102,7 +116,7 @@ export function useConnect(pinia?: any) {
 			return
 		}
 
-		const browserWalletConn = walletStore.connectors.find(conn => conn.name === 'BrowserWallet')
+		const browserWalletConn = connectors.find(conn => conn.name === 'BrowserWallet')
 
 		if (browserWalletConn) {
 			try {
@@ -123,18 +137,18 @@ export function useConnect(pinia?: any) {
 	}
 
 	return {
-		wallet: readonly(walletStore.wallet),
+		// wallet: wallet,
 
-		status: computed(() => walletStore.wallet.status),
-		error: computed(() => walletStore.wallet.error),
-		connectorName: computed(() => walletStore.wallet.connectorName),
-		provider: computed(() => walletStore.wallet.provider),
-		providerInfo: computed(() => walletStore.wallet.providerInfo),
-		connector: computed(() => walletStore.wallet.connector),
-		address: computed(() => walletStore.wallet.address),
-		chainId: computed(() => walletStore.wallet.chainId),
+		// status: computed(() => wallet.status),
+		// error: computed(() => wallet.error),
+		// connectorName: computed(() => wallet.connectorName),
+		// provider: computed(() => wallet.provider),
+		// providerInfo: computed(() => wallet.providerInfo),
+		// connector: computed(() => wallet.connector),
+		// address: computed(() => wallet.address),
+		// chainId: computed(() => wallet.chainId),
 
-		isConnected: computed(() => walletStore.wallet.status === 'connected'),
+		// isConnected: computed(() => wallet.status === 'connected'),
 
 		resetWallet,
 		connectTo,

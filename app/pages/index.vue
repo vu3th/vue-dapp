@@ -11,7 +11,8 @@ useHead({
 
 const defaultProvider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com')
 
-const { wallet, isConnected, disconnect, onWalletUpdated, onDisconnected } = useVueDapp()
+const { wallet, disconnect, onWalletUpdated, onDisconnected } = useVueDapp()
+const { isConnected } = storeToRefs(useVueDapp())
 
 const ensName = ref('')
 async function fetchENSName(address: string) {

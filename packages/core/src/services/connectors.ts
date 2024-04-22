@@ -1,10 +1,20 @@
-import { useStore } from '../store'
-import { Connector, ConnectorName } from '../types'
+import {
+	Connector,
+	ConnectorName,
+	OnAccountsChangedCallback,
+	OnChainChangedCallback,
+	OnDisconnectCallback,
+	Wallet,
+} from '../types'
 import { computed, markRaw } from 'vue'
 
-export function useConnectors(pinia: any) {
-	const walletStore = useStore(pinia)
-
+export function useConnectors(walletStore: {
+	wallet: Wallet
+	connectors: Connector[]
+	onDisconnectCallback: OnDisconnectCallback | null
+	onAccountsChangedCallback: OnAccountsChangedCallback | null
+	onChainChangedCallback: OnChainChangedCallback | null
+}) {
 	function hasConnector(connectorName: ConnectorName | string) {
 		return walletStore.connectors.some((conn: Connector) => conn.name === connectorName)
 	}
