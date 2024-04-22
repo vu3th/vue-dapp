@@ -29,7 +29,7 @@ async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
 				:key="detail.info.uuid"
 				@click="onClickWallet('BrowserWallet', detail.info.rdns)"
 				size="medium"
-				:loading="status === 'connecting'"
+				:disabled="status === 'connecting' || wallet.providerInfo?.rdns === detail.info.rdns"
 			>
 				<div>{{ detail.info.name }}</div>
 			</n-button>

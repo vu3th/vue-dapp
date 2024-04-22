@@ -5,7 +5,14 @@ import '@vue-dapp/modal/dist/style.css'
 // import { WalletConnectConnector } from '@vue-dapp/walletconnect'
 // import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
 
-import { lightTheme } from 'naive-ui'
+import { darkTheme, lightTheme, type GlobalThemeOverrides } from 'naive-ui'
+
+const lightThemeOverrides: GlobalThemeOverrides = {
+	common: {
+		primaryColor: darkTheme.common.primaryColor,
+		successColor: darkTheme.common.successColor,
+	},
+}
 
 useHead({
 	titleTemplate: title => {
@@ -49,16 +56,22 @@ onWalletUpdated(async (wallet: ConnWallet) => {
 onDisconnected(() => {
 	resetWallet()
 })
+
+const hideConnectingModal = computed(() => {
+	const route = useRoute()
+	if (route.path === '/eip-6963') return true
+	return false
+})
 </script>
 
 <template>
-	<n-config-provider :theme="lightTheme">
+	<n-config-provider :theme="lightTheme" :theme-overrides="lightThemeOverrides">
 		<NuxtLayout>
 			<NuxtLoadingIndicator />
 
 			<NuxtPage />
 
-			<VueDappModal autoConnect />
+			<VueDappModal autoConnect :hideConnectingModal="hideConnectingModal" />
 		</NuxtLayout>
 	</n-config-provider>
 </template>
