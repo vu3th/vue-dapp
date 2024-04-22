@@ -60,6 +60,28 @@ export const sidebarMenu = [
 					),
 				key: '/examples/multicall',
 			},
+			{
+				label: () =>
+					h(
+						NuxtLink,
+						{
+							to: '/examples/meta-transactions',
+						},
+						{ default: () => 'Meta Transactions' },
+					),
+				key: '/examples/meta-transactions',
+			},
+			{
+				label: () =>
+					h(
+						NuxtLink,
+						{
+							to: '/examples/siwe',
+						},
+						{ default: () => 'Sign-In with Ethereum' },
+					),
+				key: '/examples/siwe',
+			},
 		],
 	},
 	{
