@@ -4,6 +4,7 @@ import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import { useVueDappModal } from '@vue-dapp/modal'
 import type { ConnWallet } from '@vue-dapp/core'
 import { ethers, formatEther } from 'ethers'
+import type { Header, Item } from 'vue3-easy-data-table'
 
 useHead({
 	title: '', // must add to prevent from redirecting from Overview to Vue Dapp but the tab is still Overview
@@ -51,19 +52,43 @@ function onClickConnectButton() {
 	const { open } = useVueDappModal()
 	open()
 }
+
+const headers: Header[] = [
+	{ text: 'Name', value: 'name' },
+	{ text: 'Value', value: 'value' },
+]
+
+const items = computed<Item[]>(() => [
+	{
+		name: 'Chain ID',
+		value: wallet.chainId ?? 'N/A',
+	},
+	{
+		name: 'Address',
+		value: wallet.address ? shortenAddress(wallet.address) : 'N/A',
+	},
+	{
+		name: 'Balance',
+		value: isConnected.value ? balance.value : 'N/A',
+	},
+	{
+		name: 'ENS',
+		value: ensName.value || 'N/A',
+	},
+])
 </script>
 
 <template>
-	<div class="">
+	<div class="pb-14">
 		<!-- banner -->
-		<div class="mt-20 flex flex-col items-center justify-center">
+		<div class="mt-5 flex flex-col items-center justify-center">
 			<img class="w-90" src="/logo.png" alt="logo" />
 			<p class="bold text-md md:text-xl px-4 text-gray-500 text-center">
 				{{ pkg.description }}
 			</p>
 		</div>
 
-		<div class="mt-10 px-10 flex flex-col items-center justify-center gap-3">
+		<div class="mt-10 px-10 flex flex-col items-center justify-center gap-5">
 			<n-button
 				size="medium"
 				:loading="wallet.status === 'connecting'"
@@ -75,16 +100,24 @@ function onClickConnectButton() {
 				<p v-if="wallet.status === 'connected'">Disconnect</p>
 			</n-button>
 
-			<p v-if="wallet.error">{{ wallet.error }}</p>
+			<p class="text-red-500" v-if="wallet.error">{{ wallet.error }}</p>
 
-			<div class="text-gray-600 text-sm mt-5">
-				<p v-if="wallet.chainId" class="">Chain ID: {{ wallet.chainId }}</p>
-				<p v-if="wallet.address">{{ 'Address: ' + shortenAddress(wallet.address) }}</p>
-				<p v-if="isConnected">{{ 'Balance: ' + balance }}</p>
-				<p v-if="ensName">{{ 'ENS: ' + ensName }}</p>
-			</div>
+			<ClientOnly>
+				<Vue3EasyDataTable
+					class="min-w-[240px]"
+					hide-rows-per-page
+					hide-footer
+					:headers="headers"
+					:items="items"
+				>
+				</Vue3EasyDataTable>
+			</ClientOnly>
 		</div>
 	</div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.wallet-table {
+	min-width: 240px;
+}
+</style>

@@ -34,7 +34,8 @@
 		"siwe": "^2.1.4",
 		"tiny-invariant": "^1.3.1",
 		"viem": "^2.5.0",
-		"vs-vue3-select": "^1.3.5"
+		"vs-vue3-select": "^1.3.5",
+		"vue3-easy-data-table": "^1.5.47"
 	},
 	"devDependencies": {
 		"@css-render/vue3-ssr": "^0.15.12",
