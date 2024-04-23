@@ -105,12 +105,33 @@ const vClickOutside = {
 		document.removeEventListener(clickHandler, clickOutsideEvent)
 	},
 }
+
+const columnAmount = computed(() => {
+	let total = providerDetails.value.length
+	if (hasConnector('WalletConnect')) total++
+	if (hasConnector('CoinbaseWallet')) total++
+	if (total < 2) return 1
+	return 2
+})
+
+const isOneColumn = computed(() => columnAmount.value === 1)
+const isNoWalletFound = computed(
+	() => providerDetails.value.length === 0 && !hasConnector('WalletConnect') && !hasConnector('CoinbaseWallet'),
+)
 </script>
 
 <template>
 	<div>
 		<Modal :modalOpen="modalOpen" @close="closeModal" :dark="dark">
-			<div id="vd-modal" v-click-outside="closeModal">
+			<div
+				id="vd-modal"
+				:style="{
+					'grid-template-columns': `repeat(${columnAmount}, minmax(0, 1fr))`,
+					width: isOneColumn ? '300px' : '450px',
+					height: isOneColumn ? '100px' : 'auto',
+				}"
+				v-click-outside="closeModal"
+			>
 				<div
 					v-for="detail in providerDetails"
 					:key="detail.info.uuid"
@@ -152,6 +173,9 @@ const vClickOutside = {
 					/>
 					<div>Coinbase Wallet</div>
 				</div>
+
+				<slot v-if="isNoWalletFound && $slots['no-wallet-found']" name="no-wallet-found"></slot>
+				<div id="vd-no-wallet-found" v-else-if="isNoWalletFound">No wallet provider found 😔</div>
 			</div>
 		</Modal>
 
@@ -178,11 +202,7 @@ const vClickOutside = {
 
 <style scoped>
 #vd-modal {
-	width: 450px;
-	height: auto;
-
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 5px;
 	padding: 15px 15px;
 }
@@ -302,13 +322,10 @@ const vClickOutside = {
 	border-style: solid;
 }
 
-/* =============== deprecated =============== */
-.vd-wallet-disabled {
-	opacity: 0.5;
-}
-
-.vd-wallet-disabled:hover {
-	background-color: rgba(255, 255, 255, 0);
-	cursor: default;
+#vd-no-wallet-found {
+	color: rgb(107 114 128);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 </style>

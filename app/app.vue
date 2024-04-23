@@ -71,7 +71,7 @@ const hideConnectingModal = computed(() => {
 
 			<NuxtPage />
 
-			<VueDappModal autoConnect :hideConnectingModal="hideConnectingModal" />
+			<VueDappModal autoConnect :hideConnectingModal="hideConnectingModal"> </VueDappModal>
 		</NuxtLayout>
 	</n-config-provider>
 </template>
