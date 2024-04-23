@@ -24,6 +24,13 @@ async function fetchBalance(wallet: ConnWallet) {
 	balance.value = Number(formatEther(await provider.getBalance(wallet.address)))
 }
 
+onMounted(() => {
+	if (isConnected.value) {
+		fetchENSName(wallet.address!)
+		fetchBalance(wallet as ConnWallet)
+	}
+})
+
 onWalletUpdated((wallet: ConnWallet) => {
 	console.log('wallet', wallet)
 

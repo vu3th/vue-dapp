@@ -6,24 +6,24 @@
 export {}
 
 declare module 'vue' {
-	export interface GlobalComponents {
-		NButton: (typeof import('naive-ui'))['NButton']
-		NConfigProvider: (typeof import('naive-ui'))['NConfigProvider']
-		NDrawer: (typeof import('naive-ui'))['NDrawer']
-		NDrawerContent: (typeof import('naive-ui'))['NDrawerContent']
-		NIcon: (typeof import('naive-ui'))['NIcon']
-		NInputNumber: (typeof import('naive-ui'))['NInputNumber']
-		NLayout: (typeof import('naive-ui'))['NLayout']
-		NLayoutFooter: (typeof import('naive-ui'))['NLayoutFooter']
-		NLayoutHeader: (typeof import('naive-ui'))['NLayoutHeader']
-		NLayoutSider: (typeof import('naive-ui'))['NLayoutSider']
-		NList: (typeof import('naive-ui'))['NList']
-		NListItem: (typeof import('naive-ui'))['NListItem']
-		NMenu: (typeof import('naive-ui'))['NMenu']
-		NSkeleton: (typeof import('naive-ui'))['NSkeleton']
-		NTabPane: (typeof import('naive-ui'))['NTabPane']
-		NTabs: (typeof import('naive-ui'))['NTabs']
-		RouterLink: (typeof import('vue-router'))['RouterLink']
-		RouterView: (typeof import('vue-router'))['RouterView']
-	}
+  export interface GlobalComponents {
+    NButton: typeof import('naive-ui')['NButton']
+    NConfigProvider: typeof import('naive-ui')['NConfigProvider']
+    NDrawer: typeof import('naive-ui')['NDrawer']
+    NDrawerContent: typeof import('naive-ui')['NDrawerContent']
+    NIcon: typeof import('naive-ui')['NIcon']
+    NInputNumber: typeof import('naive-ui')['NInputNumber']
+    NLayout: typeof import('naive-ui')['NLayout']
+    NLayoutFooter: typeof import('naive-ui')['NLayoutFooter']
+    NLayoutHeader: typeof import('naive-ui')['NLayoutHeader']
+    NLayoutSider: typeof import('naive-ui')['NLayoutSider']
+    NList: typeof import('naive-ui')['NList']
+    NListItem: typeof import('naive-ui')['NListItem']
+    NMenu: typeof import('naive-ui')['NMenu']
+    NSkeleton: typeof import('naive-ui')['NSkeleton']
+    NTabPane: typeof import('naive-ui')['NTabPane']
+    NTabs: typeof import('naive-ui')['NTabs']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
+  }
 }
