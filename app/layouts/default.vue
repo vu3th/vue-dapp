@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { NuxtLink } from '#components'
+import { Icon, NuxtLink } from '#components'
 import packageJsonCore from '../../packages/core/package.json'
 import { sidebarMenu } from '~/core/sidebar'
 
@@ -28,7 +28,7 @@ const headerRightMenu = [
 					external: true,
 					target: '_blank',
 				},
-				{ default: () => 'Github' },
+				{ default: () => h(Icon, { name: 'i-mdi-github', class: 'w-6 h-6' }) },
 			),
 		key: 'github',
 	},
@@ -88,14 +88,14 @@ watch(
 			<div class="flex items-center">
 				<!-- drawer button -->
 				<div class="pl-5 lg:hidden flex justify-center items-center" @click="openDrawer">
-					<Icon size="20" name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
+					<Icon size="26" name="ic:baseline-sort" class="hover:cursor-pointer hover:text-primary-dark" />
 				</div>
 				<!-- logo -->
 				<n-menu mode="horizontal" :options="headerLeftMenu" />
 			</div>
 			<!-- right side menu -->
 			<div class="place-self-end">
-				<n-menu mode="horizontal" :options="headerRightMenu" />
+				<n-menu id="header-right-menu" mode="horizontal" :options="headerRightMenu" />
 			</div>
 		</n-layout-header>
 
@@ -140,3 +140,9 @@ watch(
 		<n-layout-footer bordered> </n-layout-footer>
 	</n-layout>
 </template>
+
+<style scoped>
+:deep(#header-right-menu .n-menu-item-content) {
+	padding: 10px;
+}
+</style>
