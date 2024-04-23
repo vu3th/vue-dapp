@@ -8,6 +8,8 @@ head:
 
 # @vue-dapp/modal
 
+Use it first, then remove it later as you wish to customize your modal.
+
 ## Get started
 
 ::code-group

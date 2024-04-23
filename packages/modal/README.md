@@ -1,6 +1,8 @@
 
 # @vue-dapp/modal
 
+Use it first, then remove it later as you wish to customize your modal.
+
 ## Get started
 
 ::code-group
@@ -99,4 +101,3 @@ Don't add `v-model`
 ```vue
 <VueDappModal autoConnect />
 ```
-
