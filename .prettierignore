@@ -1,5 +1,3 @@
 # app/
-.nuxt
-
-# docs/.vitepress/
-cache
+app/.nuxt
+app/components.d.ts
