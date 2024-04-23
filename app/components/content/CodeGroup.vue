@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { RendererElement, RendererNode } from 'vue'
-import { ContentCopyFilled } from '@vicons/material'
-import copy from 'copy-to-clipboard'
+import CopyButton from '@/components/button/CopyButton.vue'
 
 const slots = useSlots()
 
@@ -69,18 +68,14 @@ const activeTabIndex = ref(0)
 			</n-tab-pane>
 
 			<template #suffix>
-				<n-button text class="mr-3 text-lg" @click="copy(defaultSlots[activeTabIndex].props?.code)">
-					<n-icon>
-						<ContentCopyFilled />
-					</n-icon>
-				</n-button>
+				<CopyButton class="mr-3 text-lg" :content="defaultSlots[activeTabIndex].props?.code" />
 			</template>
 		</n-tabs>
 	</div>
 </template>
 
 <style scoped>
-:deep(.n-tabs-nav) {
+/* :deep(.n-tabs-nav) {
 	--n-tab-text-color-active: #42b883;
-}
+} */
 </style>

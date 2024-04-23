@@ -9,7 +9,7 @@ import { darkTheme, lightTheme, type GlobalThemeOverrides } from 'naive-ui'
 
 const lightThemeOverrides: GlobalThemeOverrides = {
 	common: {
-		primaryColor: darkTheme.common.primaryColor,
+		primaryColor: '#42b883',
 		successColor: darkTheme.common.successColor,
 	},
 }
