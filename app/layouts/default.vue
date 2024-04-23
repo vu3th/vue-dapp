@@ -124,7 +124,7 @@ watch(
 			</n-layout>
 
 			<!-- top-down drawer -->
-			<n-drawer v-model:show="showDrawer" height="100vh" placement="top" :trap-focus="false">
+			<n-drawer v-model:show="showDrawer" height="100%" placement="top" :trap-focus="false">
 				<n-drawer-content closable>
 					<template #header>
 						<NuxtLink to="/" class="h-5 flex justify-center items-center gap-1" @click="closeDrawer">
