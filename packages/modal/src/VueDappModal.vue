@@ -128,7 +128,7 @@ const isNoWalletFound = computed(
 				:style="{
 					'grid-template-columns': `repeat(${columnAmount}, minmax(0, 1fr))`,
 					width: isOneColumn ? '300px' : '450px',
-					height: isOneColumn ? '100px' : 'auto',
+					height: isOneColumn ? '80px' : 'auto',
 				}"
 				v-click-outside="closeModal"
 			>
@@ -179,24 +179,22 @@ const isNoWalletFound = computed(
 			</div>
 		</Modal>
 
-		<slot v-if="!hideConnectingModal" name="connecting">
-			<Modal :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
-				<div class="vd-loading-modal" v-if="status === 'connecting'">
-					<p>Connecting...</p>
-					<p class="mt-4">Approve or reject request using your wallet</p>
+		<Modal v-if="!hideConnectingModal" :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
+			<div class="vd-loading-modal" v-if="status === 'connecting'">
+				<p>Connecting...</p>
+				<p class="mt-4">Approve or reject request using your wallet</p>
 
-					<button
-						class="vd-cancel-btn"
-						:class="{
-							'vd-cancel-btn--dark': dark,
-						}"
-						@click="onClickCancelConnecting"
-					>
-						Cancel
-					</button>
-				</div>
-			</Modal>
-		</slot>
+				<button
+					class="vd-cancel-btn"
+					:class="{
+						'vd-cancel-btn--dark': dark,
+					}"
+					@click="onClickCancelConnecting"
+				>
+					Cancel
+				</button>
+			</div>
+		</Modal>
 	</div>
 </template>
 
@@ -323,7 +321,7 @@ const isNoWalletFound = computed(
 }
 
 #vd-no-wallet-found {
-	color: rgb(107 114 128);
+	color: rgb(86, 91, 104);
 	display: flex;
 	justify-content: center;
 	align-items: center;
