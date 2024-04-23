@@ -8,7 +8,32 @@ head:
 
 # Template
 
-## header 2
+## Code Group
+
+::code-group
+
+```js [config.js]
+/**
+ * @type {import('vitepress').UserConfig}
+ */
+const config = {
+  // ...
+}
+
+export default config
+```
+
+```ts [config.ts]
+import type { UserConfig } from 'vitepress'
+
+const config: UserConfig = {
+  // ...
+}
+
+export default config
+```
+
+::
 
 ### header 3
 

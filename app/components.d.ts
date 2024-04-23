@@ -11,6 +11,7 @@ declare module 'vue' {
 		NConfigProvider: (typeof import('naive-ui'))['NConfigProvider']
 		NDrawer: (typeof import('naive-ui'))['NDrawer']
 		NDrawerContent: (typeof import('naive-ui'))['NDrawerContent']
+		NIcon: (typeof import('naive-ui'))['NIcon']
 		NInputNumber: (typeof import('naive-ui'))['NInputNumber']
 		NLayout: (typeof import('naive-ui'))['NLayout']
 		NLayoutFooter: (typeof import('naive-ui'))['NLayoutFooter']
@@ -20,6 +21,8 @@ declare module 'vue' {
 		NListItem: (typeof import('naive-ui'))['NListItem']
 		NMenu: (typeof import('naive-ui'))['NMenu']
 		NSkeleton: (typeof import('naive-ui'))['NSkeleton']
+		NTabPane: (typeof import('naive-ui'))['NTabPane']
+		NTabs: (typeof import('naive-ui'))['NTabs']
 		RouterLink: (typeof import('vue-router'))['RouterLink']
 		RouterView: (typeof import('vue-router'))['RouterView']
 	}
