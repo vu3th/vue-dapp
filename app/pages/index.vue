@@ -83,9 +83,7 @@ const items = computed<Item[]>(() => [
 		<!-- banner -->
 		<div class="mt-5 flex flex-col items-center justify-center">
 			<img class="w-90" src="/logo.png" alt="logo" />
-			<p class="bold text-md md:text-xl px-4 text-gray-500 text-center">
-				{{ pkg.description }}
-			</p>
+			<p class="bold text-md md:text-xl px-4 text-gray-500 text-center">{{ $t('subtitle') }}</p>
 		</div>
 
 		<div class="mt-10 px-10 flex flex-col items-center justify-center gap-5">

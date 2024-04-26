@@ -2,6 +2,7 @@
 import { Icon, NuxtLink } from '#components'
 import packageJsonCore from '../../packages/core/package.json'
 import { sidebarMenu } from '~/core/sidebar'
+import { NPopselect, NButton } from 'naive-ui'
 
 const headerLeftMenu = [
 	{
@@ -18,7 +19,36 @@ const headerLeftMenu = [
 	},
 ]
 
+const { locale, locales, setLocale } = useI18n()
+
+const localeOptions = computed(() => {
+	return locales.value.map(l => ({
+		label: l.label,
+		value: l.code,
+	}))
+})
+
 const headerRightMenu = [
+	{
+		label: () =>
+			h(
+				NPopselect,
+				{
+					value: locale.value,
+					'onUpdate:value': setLocale,
+					options: localeOptions.value,
+				},
+				{
+					default: () =>
+						h(
+							NButton,
+							{ size: 'small', text: true, class: 'flex justify-center items-center', focusable: false },
+							{ default: () => h(Icon, { name: 'i-ion-language', class: 'w-5 h-5' }) },
+						),
+				},
+			),
+		key: 'language',
+	},
 	{
 		label: () =>
 			h(
