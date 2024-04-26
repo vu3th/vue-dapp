@@ -65,6 +65,7 @@ const { data: arbitrumDaiData } = useAsyncData('arbitrum', () => fetchArbitrumDa
 
 const tokenList = computed(() => {
 	function sliceData(data: any) {
+		if (!data) return []
 		return [data.slice(0, 3), data.slice(3, 6), data.slice(6, 9)]
 	}
 
