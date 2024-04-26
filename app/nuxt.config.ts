@@ -18,6 +18,7 @@ export default defineNuxtConfig({
 		'@vueuse/nuxt',
 		'nuxt-icon',
 		'@nuxt/content',
+		'@nuxtjs/i18n',
 	],
 	// naiveui ssr: https://www.naiveui.com/en-US/os-theme/docs/ssr
 	build: {
@@ -45,6 +46,22 @@ export default defineNuxtConfig({
 			theme: 'github-dark',
 			langs: ['json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml', 'solidity'],
 		},
+	},
+	i18n: {
+		vueI18n: './i18n.config.ts',
+		strategy: 'no_prefix',
+		locales: [
+			{
+				label: 'English',
+				code: 'en',
+				iso: 'en',
+			},
+			{
+				label: '繁體中文',
+				code: 'zh-TW',
+				iso: 'zh-TW',
+			},
+		],
 	},
 	postcss: {
 		plugins: {
