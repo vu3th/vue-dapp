@@ -111,10 +111,7 @@ export function useConnect(pinia?: any) {
 		if (!bwConnector || !rdns) return
 
 		try {
-			const isConnected = await BrowserWalletConnector.checkConnection(rdns)
-			if (isConnected) {
-				await connectTo(bwConnector.name, { rdns })
-			}
+			await connectTo(bwConnector.name, { rdns })
 		} catch (err: any) {
 			throw new AutoConnectError(err)
 		}
