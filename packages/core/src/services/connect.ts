@@ -3,7 +3,6 @@ import { useStore } from '../store'
 import { ConnectOptions, ConnectorName, RDNS } from '../types'
 import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
 import { normalizeChainId } from '../utils'
-import { BrowserWalletConnector } from '../browserWalletConnector'
 import {
 	getLastConnectedBrowserWallet,
 	removeLastConnectedBrowserWallet,
@@ -100,22 +99,32 @@ export function useConnect(pinia?: any) {
 		}
 	}
 
-	async function autoConnect(rdns?: RDNS | string) {
-		const lastRdns = getLastConnectedBrowserWallet()
-		if (!lastRdns) return
+	async function autoConnect(rdns?: RDNS | string, isWindowEthereum = false) {
+		const connectorName = 'BrowserWallet'
+		const bwConnector = walletStore.connectors.find(conn => conn.name === connectorName)
+		if (!bwConnector) return
 
-		rdns = rdns || lastRdns
+		let options = {}
 
-		const bwConnector = walletStore.connectors.find(conn => conn.name === 'BrowserWallet')
+		if (isWindowEthereum) {
+			options = { isWindowEthereum }
+		} else {
+			const lastRdns = getLastConnectedBrowserWallet()
+			if (!lastRdns) return
 
-		if (!bwConnector || !rdns) return
+			rdns = rdns || lastRdns
+			if (!rdns) return
+
+			options = { rdns }
+		}
 
 		try {
-			await connectTo(bwConnector.name, { rdns })
+			await connectTo(bwConnector.name, options)
 		} catch (err: any) {
 			throw new AutoConnectError(err)
 		}
 	}
+
 	return {
 		wallet: readonly(walletStore.wallet),
 

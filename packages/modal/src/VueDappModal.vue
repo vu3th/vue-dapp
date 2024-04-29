@@ -42,23 +42,47 @@ const { connectors, connectTo, autoConnect, status, providerDetails, hasConnecto
 
 // ============================ feat: autoConnect ============================
 
-async function handleAutoConnect() {
+onMounted(async () => {
 	if (props.autoConnect) {
 		try {
 			isAutoConnecting.value = true
-			await autoConnect()
+			if (isMobileAppBrowser()) {
+				await autoConnect(undefined, true)
+			} else {
+				await autoConnect()
+			}
 		} catch (err: any) {
 			emit('autoConnectError', err)
 		} finally {
 			isAutoConnecting.value = false
 		}
 	}
+})
+
+// Check whether the browser is within a mobile app (such as a WebView) rather than a standalone mobile browser like Chrome App
+function isMobileAppBrowser() {
+	const userAgent = navigator.userAgent
+
+	// for ios
+	if (!userAgent.includes('Safari/') && userAgent.includes('Mobile/')) {
+		return true
+	}
+
+	// for android
+	if (userAgent.includes('wv') || userAgent.includes('WebView')) {
+		return true
+	}
+
+	return false
 }
 
-onMounted(async () => handleAutoConnect())
-
-// ============================ feat: auto click BrowserWallet if it's the only connector ============================
 watch(modalOpen, async () => {
+	// ============================ feat: connect to window.ethereum if there's no EIP-6963 providers ============================
+	if (modalOpen.value && providerDetails.value.length === 0 && isMobileAppBrowser()) {
+		await onClickWallet('BrowserWallet', undefined, true)
+	}
+
+	// ============================ feat: auto click BrowserWallet if it's the only connector ============================
 	if (props.autoConnectBrowserWalletIfSolo && modalOpen.value) {
 		if (
 			connectors.value.length === 1 && // only one connector
@@ -70,11 +94,11 @@ watch(modalOpen, async () => {
 	}
 })
 
-async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
+async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string, isWindowEthereum = false) {
 	try {
 		closeModal()
 		// throw new Error('test connect error')
-		await connectTo(connName, { rdns, isWindowEthereum: true })
+		await connectTo(connName, { rdns, isWindowEthereum })
 	} catch (err: any) {
 		emit('connectError', err)
 	}
