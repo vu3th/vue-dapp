@@ -74,7 +74,7 @@ async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string) {
 	try {
 		closeModal()
 		// throw new Error('test connect error')
-		await connectTo(connName, { rdns })
+		await connectTo(connName, { rdns, isWindowEthereum: true })
 	} catch (err: any) {
 		emit('connectError', err)
 	}
