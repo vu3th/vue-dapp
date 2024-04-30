@@ -1,12 +1,14 @@
 import { EIP1193Provider } from './eip1193'
 
-export enum RDNS {
+export enum RdnsEnum {
 	'rabby' = 'io.rabby',
 	'metamask' = 'io.metamask',
 	'brave' = 'com.brave.wallet',
 	'coinbase' = 'com.coinbase.wallet',
 	'bitget' = 'com.bitget.web3wallet',
 }
+
+export type RDNS = string
 
 export interface EIP6963ProviderInfo {
 	uuid: string

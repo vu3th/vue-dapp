@@ -1,4 +1,4 @@
-import { Connector, ConnectorName } from './connector'
+import { Connector, ConnectorName, ProviderTarget } from './connector'
 import { EIP1193Provider } from './eip1193'
 import { EIP6963ProviderInfo } from './eip6963'
 
@@ -7,10 +7,11 @@ export type ConnWallet = {
 	error: null
 	connectorName: ConnectorName
 	provider: EIP1193Provider
-	providerInfo: EIP6963ProviderInfo | null // if the connector is not BrowserWallet, this will be null
 	connector: Connector
 	address: string
 	chainId: number
+	providerInfo: EIP6963ProviderInfo | null // Only available when connectorName is 'BrowserWallet'
+	providerTarget: ProviderTarget | null // Only available when connectorName is 'BrowserWallet'
 }
 
 export type OnConnectedCB = (wallet: ConnWallet) => void

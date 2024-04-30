@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import Modal from './components/Modal.vue'
 import WalletConnectIcon from './components/logos/WalletConnectIcon.vue'
-import { useVueDapp, ConnectorName, RDNS } from '@vue-dapp/core'
+import { useVueDapp, ConnectorName, ConnectOptions } from '@vue-dapp/core'
 import { useVueDappModal } from './store'
 
 const props = withDefaults(
@@ -55,9 +55,9 @@ onMounted(async () => {
 		try {
 			isAutoConnecting.value = true
 			if (isMobileAppBrowser()) {
-				await autoConnect(undefined, true)
+				await autoConnect('window.ethereum')
 			} else {
-				await autoConnect()
+				await autoConnect('rdns')
 			}
 		} catch (err: any) {
 			emit('autoConnectError', err)
@@ -68,10 +68,12 @@ onMounted(async () => {
 })
 
 watch(modalOpen, async () => {
-	// ============================ feat: connect to window.ethereum if window.ethereum is available and there's no EIP-6963 providers ============================
+	// ============================ feat: connect to window.ethereum if window.ethereum is available ============================
 	if (modalOpen.value && providerDetails.value.length === 0 && isMobileAppBrowser()) {
 		if (isWindowEthereumAvailable) {
-			await onClickWallet('BrowserWallet', undefined, true)
+			await onClickWallet('BrowserWallet', {
+				target: 'window.ethereum',
+			})
 		}
 		return
 	}
@@ -83,16 +85,18 @@ watch(modalOpen, async () => {
 			providerDetails.value.length === 1 && // only one browser provider
 			connectors.value[0].name === 'BrowserWallet'
 		) {
-			await onClickWallet(connectors.value[0].name)
+			await onClickWallet('BrowserWallet', {
+				target: 'rdns',
+				rdns: providerDetails.value[0].info.rdns,
+			})
 		}
 	}
 })
 
-async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string, isWindowEthereum = false) {
+async function onClickWallet(connName: ConnectorName, options?: ConnectOptions) {
 	try {
 		closeModal()
-		// throw new Error('test connect error')
-		await connectTo(connName, { rdns, isWindowEthereum })
+		await connectTo(connName, options)
 	} catch (err: any) {
 		emit('connectError', err)
 	}
@@ -170,7 +174,12 @@ const isNoWalletFound = computed(
 				<div
 					v-for="detail in providerDetails"
 					:key="detail.info.uuid"
-					@click="onClickWallet('BrowserWallet', detail.info.rdns)"
+					@click="
+						onClickWallet('BrowserWallet', {
+							target: 'rdns',
+							rdns: detail.info.rdns,
+						})
+					"
 					class="vd-wallet-block"
 					:class="{
 						'vd-wallet-block--dark': dark,

@@ -1,7 +1,8 @@
 import { EIP1193Provider } from './eip1193'
-import { EIP6963ProviderDetail, EIP6963ProviderInfo, RDNS } from './eip6963'
+import { EIP6963ProviderInfo } from './eip6963'
 
 export type ConnectorName = 'BrowserWallet' | 'WalletConnect' | 'CoinbaseWallet'
+export type ProviderTarget = 'window.ethereum' | 'rdns' // only for BrowserWalletConnector
 
 export type ConnectorData<Provider = any> = {
 	provider: Provider
@@ -11,8 +12,8 @@ export type ConnectorData<Provider = any> = {
 }
 
 export type ConnectOptions = {
-	rdns?: string | RDNS
-	isWindowEthereum?: boolean
+	target?: ProviderTarget
+	rdns?: string
 	timeout?: number
 }
 
@@ -28,7 +29,8 @@ export abstract class Connector<Provider = EIP1193Provider, Options = any> {
 
 	abstract connect(optionsOrTimeout?: ConnectOptions | number): Promise<ConnectorData>
 
-	abstract getProvider(): Promise<Provider> | EIP6963ProviderDetail // EIP6963ProviderDetail is returned by BrowserWalletConnector
+	abstract getProvider(): Promise<Provider> | { provider: EIP1193Provider; info?: EIP6963ProviderInfo }
+
 	abstract disconnect(): Promise<void>
 	abstract onDisconnect(handler: (...args: any[]) => any): void
 	abstract onAccountsChanged(handler: (accounts: string[]) => any): void

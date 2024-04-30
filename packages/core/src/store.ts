@@ -28,10 +28,11 @@ export const useStore = defineStore('vd-store', () => {
 		error: null,
 		connectorName: null,
 		provider: null,
-		providerInfo: null,
 		connector: null,
 		address: null,
 		chainId: null,
+		providerInfo: null,
+		providerTarget: null,
 	})
 
 	const onDisconnectCallback = ref<OnDisconnectCallback | null>(null)
