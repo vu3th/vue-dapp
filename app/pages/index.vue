@@ -33,8 +33,6 @@ onMounted(() => {
 })
 
 onWalletUpdated((wallet: ConnWallet) => {
-	console.log('wallet', wallet)
-
 	fetchENSName(wallet.address)
 	fetchBalance(wallet)
 })

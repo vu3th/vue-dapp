@@ -76,6 +76,12 @@ export function useConnect(pinia?: any) {
 
 		walletStore.wallet.connector.onAccountsChanged(async (accounts: string[]) => {
 			walletStore.onAccountsChangedCallback && walletStore.onAccountsChangedCallback(accounts)
+
+			if (!accounts.length) {
+				disconnect()
+				return
+			}
+
 			walletStore.wallet.address = accounts[0]
 		})
 
