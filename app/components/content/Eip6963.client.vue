@@ -14,7 +14,7 @@ const providerList = computed(() => {
 	})
 })
 
-async function onClickWallet(rdns?: RDNS) {
+async function onClickWallet(rdns: RDNS) {
 	useVueDappModal().close()
 	await connectTo('BrowserWallet', { target: 'rdns', rdns })
 }

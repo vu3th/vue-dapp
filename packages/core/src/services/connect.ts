@@ -1,6 +1,6 @@
 import { computed, readonly } from 'vue'
 import { useStore } from '../store'
-import { ConnectOptions, ConnectorName, ProviderTarget, RDNS } from '../types'
+import { ConnectOptions, ConnectorName, ProviderTarget } from '../types'
 import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
 import { normalizeChainId } from '../utils'
 import {
@@ -24,7 +24,7 @@ export function useConnect(pinia?: any) {
 		walletStore.wallet.providerTarget = null
 	}
 
-	async function connectTo(connectorName: ConnectorName | string, options?: ConnectOptions) {
+	async function connectTo<T extends ConnectorName>(connectorName: T, options: ConnectOptions<T>) {
 		walletStore.wallet.error = ''
 		walletStore.wallet.status = 'connecting'
 
@@ -114,12 +114,14 @@ export function useConnect(pinia?: any) {
 		const browserWallet = walletStore.connectors.find(conn => conn.name === 'BrowserWallet')
 		if (!browserWallet) return
 
-		let options: ConnectOptions
+		let options: ConnectOptions<'BrowserWallet'>
 
 		switch (target) {
 			case 'window.ethereum':
 				if (!isWindowEthereumAvailable) return
-				options = { target: 'window.ethereum' }
+				options = {
+					target: 'window.ethereum',
+				}
 				break
 			case 'rdns':
 				const lastRdns = getLastConnectedBrowserWallet()
@@ -132,7 +134,7 @@ export function useConnect(pinia?: any) {
 		}
 
 		try {
-			await connectTo(browserWallet.name, options)
+			await connectTo('BrowserWallet', options)
 		} catch (err: any) {
 			throw new AutoConnectError(err)
 		}
