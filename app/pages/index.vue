@@ -1,54 +1,52 @@
 <script setup lang="ts">
-import pkg from '~/package.json'
 import { shortenAddress, useVueDapp } from '@vue-dapp/core'
 import { useVueDappModal } from '@vue-dapp/modal'
 import type { ConnWallet } from '@vue-dapp/core'
-import { ethers, formatEther } from 'ethers'
+import { ethers } from 'ethers'
 import type { Header, Item } from 'vue3-easy-data-table'
 
 useHead({
-	title: '', // must add to prevent from redirecting from Overview to Vue Dapp but the tab is still Overview
+	title: '', // To prevent redirection from the /overview to the index.vue while keeping the tab as Overview.
 })
 
 const defaultProvider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com')
 
 const { wallet, isConnected, disconnect, onWalletUpdated, onDisconnected } = useVueDapp()
 
-const ensName = ref('')
-async function fetchENSName(address: string) {
-	ensName.value = (await defaultProvider.lookupAddress(address)) ?? ''
-}
+const {
+	ensName,
+	loading: ensLoading,
+	fetch: fetchEnsName,
+	ignorePreviousFetch: ignorePreviousFetchEnsName,
+} = useEnsName(defaultProvider)
 
-const balance = ref(0)
-async function fetchBalance(wallet: ConnWallet) {
-	const provider = new ethers.BrowserProvider(wallet.provider)
-	balance.value = Number(formatEther(await provider.getBalance(wallet.address)))
-}
+const {
+	balance,
+	loading: balanceLoading,
+	fetch: fetchBalance,
+	ignorePreviousFetch: ignorePreviousFetchBalance,
+} = useBalance(defaultProvider)
 
 onMounted(() => {
 	if (isConnected.value) {
-		fetchENSName(wallet.address!)
-		fetchBalance(wallet as ConnWallet)
+		fetchEnsName(wallet.address!)
+		fetchBalance(wallet.address!)
 	}
 })
 
 onWalletUpdated((wallet: ConnWallet) => {
-	fetchENSName(wallet.address)
-	fetchBalance(wallet)
+	fetchEnsName(wallet.address)
+	fetchBalance(wallet.address)
 })
 
 onDisconnected(() => {
-	ensName.value = ''
-	balance.value = 0
+	ignorePreviousFetchEnsName()
+	ignorePreviousFetchBalance()
 })
 
 function onClickConnectButton() {
-	if (wallet.status === 'connected') {
-		disconnect()
-		return
-	}
-	const { open } = useVueDappModal()
-	open()
+	if (isConnected.value) disconnect()
+	else useVueDappModal().open()
 }
 
 const headers: Header[] = [
@@ -67,11 +65,11 @@ const items = computed<Item[]>(() => [
 	},
 	{
 		name: 'Balance',
-		value: isConnected.value ? balance.value : 'N/A',
+		value: balanceLoading.value ? 'Loading...' : isConnected.value ? balance.value : 'N/A',
 	},
 	{
 		name: 'ENS',
-		value: ensName.value || 'N/A',
+		value: ensLoading.value ? 'Loading...' : ensName.value || 'N/A',
 	},
 ])
 </script>
