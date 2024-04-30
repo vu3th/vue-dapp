@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useVueDapp, shortenAddress, RdnsEnum, type ConnectorName, type RDNS } from '@vue-dapp/core'
+import { useVueDapp, shortenAddress, RdnsEnum, type RDNS } from '@vue-dapp/core'
 import { useVueDappModal } from '@vue-dapp/modal'
 
 const { providerDetails, wallet, address, status, connectTo, disconnect, error, isConnected } = useVueDapp()
@@ -14,9 +14,9 @@ const providerList = computed(() => {
 	})
 })
 
-async function onClickWallet(connName: ConnectorName, rdns?: RDNS) {
+async function onClickWallet(rdns?: RDNS) {
 	useVueDappModal().close()
-	await connectTo(connName, { rdns })
+	await connectTo('BrowserWallet', { target: 'rdns', rdns })
 }
 </script>
 
@@ -26,7 +26,7 @@ async function onClickWallet(connName: ConnectorName, rdns?: RDNS) {
 			<n-button
 				v-for="detail in providerList"
 				:key="detail.info.uuid"
-				@click="onClickWallet('BrowserWallet', detail.info.rdns)"
+				@click="onClickWallet(detail.info.rdns)"
 				size="medium"
 				:disabled="status === 'connecting' || wallet.providerInfo?.rdns === detail.info.rdns"
 			>
