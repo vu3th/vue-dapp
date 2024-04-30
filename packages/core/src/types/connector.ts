@@ -11,11 +11,18 @@ export type ConnectorData<Provider = any> = {
 	info?: EIP6963ProviderInfo // Only available for BrowserWalletConnector
 }
 
-export type ConnectOptions = {
+export type ConnectOptionsBase = {
 	target?: ProviderTarget
 	rdns?: string
 	timeout?: number
 }
+
+type ConnectOptionsForBrowserWallet<T extends ProviderTarget = ProviderTarget> = ConnectOptionsBase &
+	(T extends 'rdns' ? { target: T; rdns: string } : { target: T })
+
+export type ConnectOptions<T extends ConnectorName> = T extends 'BrowserWallet'
+	? ConnectOptionsForBrowserWallet
+	: ConnectOptionsBase | undefined
 
 export abstract class Connector<Provider = EIP1193Provider, Options = any> {
 	// Connector name
@@ -27,7 +34,7 @@ export abstract class Connector<Provider = EIP1193Provider, Options = any> {
 		this.options = options
 	}
 
-	abstract connect(optionsOrTimeout?: ConnectOptions | number): Promise<ConnectorData>
+	abstract connect<T extends ConnectorName>(optionsOrTimeout?: ConnectOptions<T> | number): Promise<ConnectorData>
 
 	abstract getProvider(): Promise<Provider> | { provider: EIP1193Provider; info?: EIP6963ProviderInfo }
 

@@ -37,7 +37,7 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 		useEIP6963().subscribe()
 	}
 
-	async connect(options: ConnectOptions) {
+	async connect(options: ConnectOptions<'BrowserWallet'>) {
 		const { target, rdns, timeout } = options
 
 		const { provider, info } = this.getProvider(target, rdns)

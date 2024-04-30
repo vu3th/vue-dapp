@@ -93,10 +93,10 @@ watch(modalOpen, async () => {
 	}
 })
 
-async function onClickWallet(connName: ConnectorName, options?: ConnectOptions) {
+async function onClickWallet<T extends ConnectorName>(connName: T, options?: ConnectOptions<T>) {
 	try {
 		closeModal()
-		await connectTo(connName, options)
+		await connectTo<ConnectorName>(connName, options)
 	} catch (err: any) {
 		emit('connectError', err)
 	}
