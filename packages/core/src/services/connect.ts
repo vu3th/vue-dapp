@@ -36,11 +36,8 @@ export function useConnect(pinia?: any) {
 			const { provider, account, chainId, info } = await connector.connect(options)
 
 			if (connector.name === 'BrowserWallet') {
-				if (!info) throw new Error('BrowserWallet connector requires provider info')
-				if (!options?.target) throw new Error('BrowserWallet connector requires target')
-
-				walletStore.wallet.providerInfo = info
-				walletStore.wallet.providerTarget = options?.target
+				walletStore.wallet.providerInfo = info || null
+				walletStore.wallet.providerTarget = options?.target || null
 			}
 
 			walletStore.wallet.connector = connector
