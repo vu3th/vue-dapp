@@ -46,90 +46,59 @@
 <img src="https://github.com/vu3th/vue-dapp/blob/main/app/public/images/overview.png" alt="Vue Dapp Overview" style="max-width:100%;" width="800">
 
 
-## Installation
+## Getting Started
 
-Minimum
-```bash
-npm install pinia @vue-dapp/core
-```
+### SPA with Vite
 
-With the wallet modal
 ```bash
 npm install pinia @vue-dapp/core @vue-dapp/modal
 ```
 
-Maximum
-```bash
-npm install pinia @vue-dapp/core @vue-dapp/modal @vue-dapp/walletconnect @vue-dapp/coinbase
+```ts [main.ts]
+import { createPinia } from 'pinia'
+app.use(createPinia())
 ```
-
-## Example
 
 ```vue
 <script lang="ts" setup>
-import {
-	useVueDapp,
-	BrowserWalletConnector,
-	VueDappProvider,
-	type ConnWallet,
-} from '@vue-dapp/core'
-import { VueDappModal } from '@vue-dapp/modal'
-import '@vue-dapp/modal/dist/style.css' // make sure to add css for the modal
+import { BrowserWalletConnector, useVueDapp } from '@vue-dapp/core'
+import { VueDappModal, useVueDappModal } from '@vue-dapp/modal'
+import '@vue-dapp/modal/dist/style.css'
 
-const { status, isConnected, address, chainId, error, disconnect, addConnector } = useVueDapp()
+const { addConnectors, isConnected, wallet, disconnect } = useVueDapp()
 
-const isModalOpen = ref(false)
+addConnectors([new BrowserWalletConnector()])
 
-function onClickConnectBtn() {
+function onClickConnectButton() {
 	if (isConnected.value) disconnect()
-	else isModalOpen.value = true
-}
-
-if (process.client) { // only when using Nuxt 3
-	addConnector(new BrowserWalletConnector())
-}
-
-function handleConnect(wallet: ConnWallet) {
-	console.log('handleConnect', wallet)
-	
-	// example with ethers v6
-	const ethersProvider = new ethers.providers.Web3Provider(provider)
-	const signer = await ethersProvider.getSigner()
-
-	dappStore.setUser({
-		address,
-		signer: markRaw(signer),
-		chainId,
-	})
-}
-
-function handleDisconnect() {
-	console.log('handleDisconnect')
-
-	// example
-	dappStore.resetUser()
+	else useVueDappModal().open()
 }
 </script>
 
 <template>
-	<div>
-		<VueDappProvider @connect="handleConnect" @disconnect="handleDisconnect">
-			<button @click="onClickConnectBtn">{{ isConnected ? 'Disconnect' : 'Connect' }}</button>
+	<button @click="onClickConnectButton">{{ isConnected ? 'Disconnect' : 'Connect' }}</button>
 
-			<div>status: {{ status }}</div>
-			<div>isConnected: {{ isConnected }}</div>
-			<div>error: {{ error }}</div>
+	<div>status: {{ wallet.status }}</div>
+	<div>isConnected: {{ isConnected }}</div>
+	<div>error: {{ wallet.error }}</div>
 
-			<div v-if="isConnected">
-				<div>chainId: {{ chainId }}</div>
-				<div>address: {{ address }}</div>
-			</div>
-
-			<VueDappModal v-model="isModalOpen" dark auto-connect />
-		</VueDappProvider>
+	<div v-if="isConnected">
+		<div>chainId: {{ wallet.chainId }}</div>
+		<div>address: {{ wallet.address }}</div>
 	</div>
-</template>
 
+	<VueDappModal dark auto-connect />
+</template>
+```
+
+### SSR with Nuxt 3
+
+```bash
+npm install pinia @pinia/nuxt @vue-dapp/core @vue-dapp/nuxt @vue-dapp/modal
+```
+
+```ts
+modules: ['@pinia/nuxt', '@vue-dapp/nuxt']
 ```
 
 ## Examples
@@ -140,9 +109,11 @@ function handleDisconnect() {
 ## Development
 
 ```
+pnpm i
 pnpm build
-pnpm dev
 pnpm -F core watch
+pnpm -F modal watch
+pnpm dev
 ```
 
 
