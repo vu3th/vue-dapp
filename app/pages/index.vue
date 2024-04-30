@@ -60,6 +60,10 @@ const items = computed<Item[]>(() => [
 		value: wallet.connectorName ?? 'N/A',
 	},
 	{
+		name: 'Provider Target',
+		value: wallet.providerTarget ?? 'N/A',
+	},
+	{
 		name: 'Provider Name',
 		value: wallet.providerInfo?.name ?? 'N/A',
 	},

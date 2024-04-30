@@ -1,6 +1,6 @@
 import { computed, readonly } from 'vue'
 import { useStore } from '../store'
-import { ConnectOptions, ConnectorName, RDNS } from '../types'
+import { ConnectOptions, ConnectorName, ProviderTarget, RDNS } from '../types'
 import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
 import { normalizeChainId } from '../utils'
 import {
@@ -17,10 +17,11 @@ export function useConnect(pinia?: any) {
 		walletStore.wallet.error = null
 		walletStore.wallet.connectorName = null
 		walletStore.wallet.provider = null
-		walletStore.wallet.providerInfo = null
 		walletStore.wallet.connector = null
 		walletStore.wallet.address = null
 		walletStore.wallet.chainId = null
+		walletStore.wallet.providerInfo = null
+		walletStore.wallet.providerTarget = null
 	}
 
 	async function connectTo(connectorName: ConnectorName | string, options?: ConnectOptions) {
@@ -34,10 +35,12 @@ export function useConnect(pinia?: any) {
 		try {
 			const { provider, account, chainId, info } = await connector.connect(options)
 
-			// console.log('useConnect.connectTo -> account', account)
-
 			if (connector.name === 'BrowserWallet') {
-				walletStore.wallet.providerInfo = info!
+				if (!info) throw new Error('BrowserWallet connector requires provider info')
+				if (!options?.target) throw new Error('BrowserWallet connector requires target')
+
+				walletStore.wallet.providerInfo = info
+				walletStore.wallet.providerTarget = options?.target
 			}
 
 			walletStore.wallet.connector = connector
@@ -107,22 +110,25 @@ export function useConnect(pinia?: any) {
 
 	const isWindowEthereumAvailable = typeof window !== 'undefined' && !!window.ethereum
 
-	async function autoConnect(rdns?: RDNS | string, isWindowEthereum = false) {
+	async function autoConnect(target: ProviderTarget) {
 		const browserWallet = walletStore.connectors.find(conn => conn.name === 'BrowserWallet')
 		if (!browserWallet) return
 
-		let options = {}
+		let options: ConnectOptions
 
-		if (isWindowEthereum) {
-			if (!isWindowEthereumAvailable) return
-			options = { isWindowEthereum }
-		} else {
-			const lastRdns = getLastConnectedBrowserWallet()
+		switch (target) {
+			case 'window.ethereum':
+				if (!isWindowEthereumAvailable) return
+				options = { target: 'window.ethereum' }
+				break
+			case 'rdns':
+				const lastRdns = getLastConnectedBrowserWallet()
+				if (!lastRdns) return
 
-			rdns = rdns || lastRdns
-			if (!rdns) return
-
-			options = { rdns }
+				options = { target: 'rdns', rdns: lastRdns }
+				break
+			default:
+				throw new Error('target is required')
 		}
 
 		try {

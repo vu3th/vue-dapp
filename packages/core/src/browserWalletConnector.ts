@@ -6,6 +6,8 @@ import {
 	ConnectOptions,
 	RDNS,
 	EIP6963ProviderDetail,
+	ProviderTarget,
+	EIP6963ProviderInfo,
 } from './types'
 import {
 	AddChainError,
@@ -35,23 +37,10 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 		useEIP6963().subscribe()
 	}
 
-	async connect(options?: ConnectOptions) {
-		const { timeout, rdns, isWindowEthereum } = options ?? {
-			timeout: undefined,
-			rdns: undefined,
-			isWindowEthereum: false,
-		}
+	async connect(options: ConnectOptions) {
+		const { target, rdns, timeout } = options
 
-		let provider, info
-
-		if (isWindowEthereum) {
-			provider = this.getWindowEthereumProvider()
-			if (!provider) throw new ProviderNotFoundError('window.ethereum not found')
-		} else {
-			const { provider: _provider, info: _info } = this.getProvider(rdns)
-			provider = _provider
-			info = _info
-		}
+		const { provider, info } = this.getProvider(target, rdns)
 
 		let accounts, chainId
 
@@ -90,30 +79,44 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 		}
 	}
 
-	getWindowEthereumProvider(): EIP1193Provider | null {
+	getProvider(
+		target?: ProviderTarget,
+		rdns?: RDNS | string,
+	): { provider: EIP1193Provider; info?: EIP6963ProviderInfo } {
+		switch (target) {
+			case 'window.ethereum':
+				const provider = this.getProviderByWindowEthereum()
+				if (!provider) throw new ProviderNotFoundError('No provider found by window.ethereum')
+				return {
+					provider,
+					info: undefined,
+				}
+			case 'rdns':
+				if (!rdns) throw new Error('rdns is required')
+				const res = this.getProviderByRdns(rdns)
+				if (!res) throw new ProviderNotFoundError('No provider found by the given rdns')
+				return {
+					provider: res.provider,
+					info: res.info,
+				}
+			default:
+				throw new Error('target is required')
+		}
+	}
+
+	getProviderByWindowEthereum(): EIP1193Provider | undefined {
 		if (typeof window !== 'undefined' && !!window.ethereum) {
 			return window.ethereum
 		}
-		return null
+		return undefined
 	}
 
-	getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
+	getProviderByRdns(rdns: RDNS | string): EIP6963ProviderDetail | undefined {
 		const { providerDetails } = useEIP6963()
-		if (providerDetails.value.length < 1) throw new ProviderNotFoundError('providerDetails.length < 1')
-
-		// without rdns, return the first provider
-		if (!rdns) {
-			if (providerDetails.value.length >= 1) {
-				return providerDetails.value[0]
-			}
-		} else {
-			// with rdns, return the provider with the same rdns
-			const detail = providerDetails.value.find(({ info }) => info.rdns === rdns)
-			if (!detail) throw new ProviderNotFoundError('rdns not found')
-			return detail
+		if (!providerDetails.value.length) {
+			throw new ProviderNotFoundError('No providerDetails found')
 		}
-
-		throw new ProviderNotFoundError('getProvider failed')
+		return providerDetails.value.find(({ info }) => info.rdns === rdns)
 	}
 
 	/**
