@@ -77,7 +77,23 @@ const tokenList = computed(() => {
 
 const balances = ref<{ mainnet: number[]; arbitrum: number[] }>({ mainnet: [], arbitrum: [] })
 
-const { onWalletUpdated, onDisconnected } = useVueDapp()
+const { isConnected, wallet, onWalletUpdated, onDisconnected } = useVueDapp()
+
+onMounted(async () => {
+	if (isConnected.value) {
+		const mainnetBalance = await Promise.all([
+			mainnetDai.balanceOf(wallet.address),
+			mainnetUsdc.balanceOf(wallet.address),
+			mainnetAusdc.balanceOf(wallet.address),
+		])
+		const arbitrumBalance = await Promise.all([
+			arbitrumDai.balanceOf(wallet.address),
+			arbitrumUsdc.balanceOf(wallet.address),
+			arbitrumAusdc.balanceOf(wallet.address),
+		])
+		balances.value = { mainnet: mainnetBalance, arbitrum: arbitrumBalance }
+	}
+})
 
 onWalletUpdated(async (wallet: ConnWallet) => {
 	const mainnetBalance = await Promise.all([
