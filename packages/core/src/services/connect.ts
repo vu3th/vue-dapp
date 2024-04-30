@@ -138,6 +138,18 @@ export function useConnect(pinia?: any) {
 		}
 	}
 
+	function onDisconnect(callback: (...args: any[]) => void) {
+		walletStore.onDisconnectCallback = callback
+	}
+
+	function onAccountsChanged(callback: (accounts: string[]) => void) {
+		walletStore.onAccountsChangedCallback = callback
+	}
+
+	function onChainChanged(callback: (chainId: number) => void) {
+		walletStore.onChainChangedCallback = callback
+	}
+
 	return {
 		isWindowEthereumAvailable,
 
@@ -158,5 +170,9 @@ export function useConnect(pinia?: any) {
 		connectTo,
 		disconnect,
 		autoConnect,
+
+		onDisconnect,
+		onAccountsChanged,
+		onChainChanged,
 	}
 }
