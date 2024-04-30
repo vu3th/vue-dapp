@@ -56,6 +56,18 @@ const headers: Header[] = [
 
 const items = computed<Item[]>(() => [
 	{
+		name: 'Connector',
+		value: wallet.connectorName ?? 'N/A',
+	},
+	{
+		name: 'Provider Name',
+		value: wallet.providerInfo?.name ?? 'N/A',
+	},
+	{
+		name: 'RDNS',
+		value: wallet.providerInfo?.rdns ?? 'N/A',
+	},
+	{
 		name: 'Chain ID',
 		value: wallet.chainId ?? 'N/A',
 	},
