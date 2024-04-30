@@ -98,7 +98,7 @@ const items = computed<Item[]>(() => [
 				<p v-if="wallet.status === 'connected'">Disconnect</p>
 			</n-button>
 
-			<p class="text-red-500" v-if="wallet.error">{{ wallet.error }}</p>
+			<p class="text-red-500 text-center" v-if="wallet.error">{{ wallet.error }}</p>
 
 			<ClientOnly>
 				<Vue3EasyDataTable

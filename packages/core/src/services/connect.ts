@@ -99,18 +99,19 @@ export function useConnect(pinia?: any) {
 		}
 	}
 
+	const isWindowEthereumAvailable = typeof window !== 'undefined' && !!window.ethereum
+
 	async function autoConnect(rdns?: RDNS | string, isWindowEthereum = false) {
-		const connectorName = 'BrowserWallet'
-		const bwConnector = walletStore.connectors.find(conn => conn.name === connectorName)
-		if (!bwConnector) return
+		const browserWallet = walletStore.connectors.find(conn => conn.name === 'BrowserWallet')
+		if (!browserWallet) return
 
 		let options = {}
 
 		if (isWindowEthereum) {
+			if (!isWindowEthereumAvailable) return
 			options = { isWindowEthereum }
 		} else {
 			const lastRdns = getLastConnectedBrowserWallet()
-			if (!lastRdns) return
 
 			rdns = rdns || lastRdns
 			if (!rdns) return
@@ -119,13 +120,15 @@ export function useConnect(pinia?: any) {
 		}
 
 		try {
-			await connectTo(bwConnector.name, options)
+			await connectTo(browserWallet.name, options)
 		} catch (err: any) {
 			throw new AutoConnectError(err)
 		}
 	}
 
 	return {
+		isWindowEthereumAvailable,
+
 		wallet: readonly(walletStore.wallet),
 
 		status: computed(() => walletStore.wallet.status),

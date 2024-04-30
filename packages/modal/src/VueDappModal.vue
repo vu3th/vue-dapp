@@ -38,10 +38,18 @@ const modalOpen = computed(() => props.modelValue ?? store.isModalOpen)
 
 const isAutoConnecting = ref(false)
 
-const { connectors, connectTo, autoConnect, status, providerDetails, hasConnector, disconnect } = useVueDapp()
+const {
+	isWindowEthereumAvailable,
+	connectors,
+	connectTo,
+	autoConnect,
+	status,
+	providerDetails,
+	hasConnector,
+	disconnect,
+} = useVueDapp()
 
 // ============================ feat: autoConnect ============================
-
 onMounted(async () => {
 	if (props.autoConnect) {
 		try {
@@ -59,27 +67,13 @@ onMounted(async () => {
 	}
 })
 
-// Check whether the browser is within a mobile app (such as a WebView) rather than a standalone mobile browser like Chrome App
-function isMobileAppBrowser() {
-	const userAgent = navigator.userAgent
-
-	// for ios
-	if (!userAgent.includes('Safari/') && userAgent.includes('Mobile/')) {
-		return true
-	}
-
-	// for android
-	if (userAgent.includes('wv') || userAgent.includes('WebView')) {
-		return true
-	}
-
-	return false
-}
-
 watch(modalOpen, async () => {
-	// ============================ feat: connect to window.ethereum if there's no EIP-6963 providers ============================
+	// ============================ feat: connect to window.ethereum if window.ethereum is available and there's no EIP-6963 providers ============================
 	if (modalOpen.value && providerDetails.value.length === 0 && isMobileAppBrowser()) {
-		await onClickWallet('BrowserWallet', undefined, true)
+		if (isWindowEthereumAvailable) {
+			await onClickWallet('BrowserWallet', undefined, true)
+		}
+		return
 	}
 
 	// ============================ feat: auto click BrowserWallet if it's the only connector ============================
@@ -106,6 +100,23 @@ async function onClickWallet(connName: ConnectorName, rdns?: RDNS | string, isWi
 
 function onClickCancelConnecting() {
 	disconnect()
+}
+
+// Check whether the browser is within a mobile app (such as a WebView) rather than a standalone mobile browser like Chrome App
+function isMobileAppBrowser() {
+	const userAgent = navigator.userAgent
+
+	// for ios
+	if (!userAgent.includes('Safari/') && userAgent.includes('Mobile/')) {
+		return true
+	}
+
+	// for android
+	if (userAgent.includes('wv') || userAgent.includes('WebView')) {
+		return true
+	}
+
+	return false
 }
 
 const vClickOutside = {
