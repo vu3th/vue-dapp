@@ -12,6 +12,7 @@ export type ConnectorData<Provider = any> = {
 
 export type ConnectOptions = {
 	rdns?: string | RDNS
+	isWindowEthereum?: boolean
 	timeout?: number
 }
 

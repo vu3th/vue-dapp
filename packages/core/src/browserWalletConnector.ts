@@ -35,20 +35,23 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 		useEIP6963().subscribe()
 	}
 
-	static async checkConnection(RDNS: string | RDNS) {
-		if (typeof window !== 'undefined' && !!window.ethereum) {
-			const { provider } = this.getProvider(RDNS)
-			if ((await provider.request({ method: 'eth_accounts' })).length !== 0) {
-				return true
-			}
-		}
-		return false
-	}
-
 	async connect(options?: ConnectOptions) {
-		const { timeout, rdns } = options ?? { timeout: undefined, rdns: undefined }
+		const { timeout, rdns, isWindowEthereum } = options ?? {
+			timeout: undefined,
+			rdns: undefined,
+			isWindowEthereum: false,
+		}
 
-		const { info, provider } = this.getProvider(rdns)
+		let provider, info
+
+		if (isWindowEthereum) {
+			provider = this.getWindowEthereumProvider()
+			if (!provider) throw new ProviderNotFoundError('window.ethereum not found')
+		} else {
+			const { provider: _provider, info: _info } = this.getProvider(rdns)
+			provider = _provider
+			info = _info
+		}
 
 		let accounts, chainId
 
@@ -87,11 +90,14 @@ export class BrowserWalletConnector extends Connector<EIP1193Provider, BrowserWa
 		}
 	}
 
-	getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
-		return BrowserWalletConnector.getProvider(rdns)
+	getWindowEthereumProvider(): EIP1193Provider | null {
+		if (typeof window !== 'undefined' && !!window.ethereum) {
+			return window.ethereum
+		}
+		return null
 	}
 
-	static getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
+	getProvider(rdns?: RDNS | string): EIP6963ProviderDetail {
 		const { providerDetails } = useEIP6963()
 		if (providerDetails.value.length < 1) throw new ProviderNotFoundError('providerDetails.length < 1')
 
