@@ -77,10 +77,10 @@ const tokenList = computed(() => {
 
 const balances = ref<{ mainnet: number[]; arbitrum: number[] }>({ mainnet: [], arbitrum: [] })
 
-const { isConnected, wallet, onWalletUpdated, onDisconnected } = useVueDapp()
+const { watchWalletUpdated, watchDisconnect } = useVueDapp()
 
-onMounted(async () => {
-	if (isConnected.value) {
+watchWalletUpdated(
+	async (wallet: ConnWallet) => {
 		const mainnetBalance = await Promise.all([
 			mainnetDai.balanceOf(wallet.address),
 			mainnetUsdc.balanceOf(wallet.address),
@@ -92,24 +92,13 @@ onMounted(async () => {
 			arbitrumAusdc.balanceOf(wallet.address),
 		])
 		balances.value = { mainnet: mainnetBalance, arbitrum: arbitrumBalance }
-	}
-})
+	},
+	{
+		immediate: true,
+	},
+)
 
-onWalletUpdated(async (wallet: ConnWallet) => {
-	const mainnetBalance = await Promise.all([
-		mainnetDai.balanceOf(wallet.address),
-		mainnetUsdc.balanceOf(wallet.address),
-		mainnetAusdc.balanceOf(wallet.address),
-	])
-	const arbitrumBalance = await Promise.all([
-		arbitrumDai.balanceOf(wallet.address),
-		arbitrumUsdc.balanceOf(wallet.address),
-		arbitrumAusdc.balanceOf(wallet.address),
-	])
-	balances.value = { mainnet: mainnetBalance, arbitrum: arbitrumBalance }
-})
-
-onDisconnected(() => {
+watchDisconnect(() => {
 	balances.value = { mainnet: [], arbitrum: [] }
 })
 

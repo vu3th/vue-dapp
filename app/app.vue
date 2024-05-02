@@ -21,7 +21,7 @@ useHead({
 	},
 })
 
-const { addConnectors, onWalletUpdated, onDisconnected } = useVueDapp()
+const { addConnectors, watchWalletUpdated, watchDisconnect } = useVueDapp()
 if (process.client) {
 	addConnectors([
 		new BrowserWalletConnector(),
@@ -49,11 +49,16 @@ if (process.client) {
 
 const { setWallet, resetWallet } = useEthers()
 
-onWalletUpdated(async (wallet: ConnWallet) => {
-	setWallet(wallet.provider)
-})
+watchWalletUpdated(
+	async (wallet: ConnWallet) => {
+		setWallet(wallet.provider)
+	},
+	{
+		immediate: true,
+	},
+)
 
-onDisconnected(() => {
+watchDisconnect(() => {
 	resetWallet()
 })
 
