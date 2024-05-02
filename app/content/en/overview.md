@@ -43,7 +43,50 @@ console.log(error.value)
 console.log(chainId.value)
 ```
 
+## Connect
 
+The following explanation can help you better understand how `<VueDappModal>` connects to the wallet.
+
+(If you're using `<VueDappModal>`, the following code snippet may not be necessary as `<VueDappModal>` handles this functionality for you. )
+
+```ts
+const { connectTo } = useVueDapp()
+```
+
+You can connect to a specific connector as follows:
+
+```ts
+connectTo("BrowserWallet", options)
+connectTo("WalletConnect", undefined)
+connectTo("CoinbaseWallet", undefined)
+```
+
+When connecting to a browser wallet, you have the option to use the RDNS specified in EIP-6963 for connection, or use the traditional `window.ethereum`.
+
+```ts
+export enum RdnsEnum {
+	'rabby' = 'io.rabby',
+	'metamask' = 'io.metamask',
+	'brave' = 'com.brave.wallet',
+	'coinbase' = 'com.coinbase.wallet',
+	'bitget' = 'com.bitget.web3wallet',
+}
+
+export type RDNS = string
+```
+
+When a dapp is opened in a browser with wallet extensions installed, the provider can be obtained according to the EIP-6963. However, when the dapp is opened within a dapp browser built into a mobile wallet app, `window.ethereum` is used to obtain the provider.
+
+```ts
+connectTo("BrowserWallet", {
+  target: "rdns",
+  rdns: RdnsEnum.rabby
+})
+
+connectTo("BrowserWallet", {
+  target: "window.ethereum",
+})
+```
 
 
 
