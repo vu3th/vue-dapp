@@ -11,7 +11,7 @@ useHead({
 
 const defaultProvider = new ethers.JsonRpcProvider('https://ethereum-rpc.publicnode.com')
 
-const { wallet, isConnected, disconnect, onWalletUpdated, onDisconnected } = useVueDapp()
+const { wallet, isConnected, disconnect, watchWalletUpdated, watchDisconnect } = useVueDapp()
 
 const {
 	ensName,
@@ -27,19 +27,15 @@ const {
 	ignorePreviousFetch: ignorePreviousFetchBalance,
 } = useBalance(defaultProvider)
 
-onMounted(() => {
-	if (isConnected.value) {
-		fetchEnsName(wallet.address!)
-		fetchBalance(wallet.address!)
-	}
-})
+watchWalletUpdated(
+	(wallet: ConnWallet) => {
+		fetchEnsName(wallet.address)
+		fetchBalance(wallet.address)
+	},
+	{ immediate: true },
+)
 
-onWalletUpdated((wallet: ConnWallet) => {
-	fetchEnsName(wallet.address)
-	fetchBalance(wallet.address)
-})
-
-onDisconnected(() => {
+watchDisconnect(() => {
 	ignorePreviousFetchEnsName()
 	ignorePreviousFetchBalance()
 })

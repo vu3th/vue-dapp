@@ -1,15 +1,13 @@
-import { watch, toRaw } from 'vue'
+import { watch, toRaw, onMounted } from 'vue'
 import { OnConnectedCB, OnAccountOrChainIdChangedCB, OnWalletUpdatedCB, OnDisconnectedCB } from '../types'
 import { useConnect } from './connect'
 import { assertConnected } from '../utils/assert'
-
-// TODO: should return unwatch handler
 
 export function useListeners(pinia?: any) {
 	const { isConnected, address, chainId, wallet } = useConnect(pinia)
 
 	function onConnected(callback: OnConnectedCB) {
-		watch(isConnected, (val, oldVal) => {
+		return watch(isConnected, (val, oldVal) => {
 			if (val && !oldVal) {
 				assertConnected(wallet, 'useListeners - onConnected')
 				callback && callback(toRaw(wallet))
@@ -18,29 +16,65 @@ export function useListeners(pinia?: any) {
 	}
 
 	function onAccountOrChainIdChanged(callback: OnAccountOrChainIdChangedCB) {
-		// TODO: make sure this works
-		watch(address, (val, oldVal) => {
+		const unwatchAddress = watch(address, (val, oldVal) => {
 			if (oldVal && val) {
 				assertConnected(wallet, 'useListeners - onAccountOrChainIdChanged - address')
 				callback && callback(toRaw(wallet))
 			}
 		})
 
-		watch(chainId, (val, oldVal) => {
+		const unwatchChainId = watch(chainId, (val, oldVal) => {
 			if (val && oldVal) {
 				assertConnected(wallet, 'useListeners - onAccountOrChainIdChanged - chainId')
 				callback && callback(toRaw(wallet))
 			}
 		})
+
+		return () => {
+			unwatchAddress()
+			unwatchChainId()
+		}
 	}
 
 	function onWalletUpdated(callback: OnWalletUpdatedCB) {
-		onConnected(callback)
-		onAccountOrChainIdChanged(callback)
+		const unwatchConnected = onConnected(callback)
+		const unwatchAccountOrChainId = onAccountOrChainIdChanged(callback)
+
+		return () => {
+			unwatchConnected()
+			unwatchAccountOrChainId()
+		}
 	}
 
 	function onDisconnected(callback: OnDisconnectedCB) {
-		watch(isConnected, (val, oldVal) => {
+		return watch(isConnected, (val, oldVal) => {
+			if (!val && oldVal) {
+				callback && callback()
+			}
+		})
+	}
+
+	function watchWalletUpdated(callback: OnWalletUpdatedCB, options?: { immediate: boolean }) {
+		if (options?.immediate) {
+			onMounted(() => {
+				if (isConnected.value) {
+					assertConnected(wallet, 'useListeners - watchWalletUpdated - immediate')
+					callback && callback(toRaw(wallet))
+				}
+			})
+		}
+
+		const unwatchConnected = onConnected(callback)
+		const unwatchAccountOrChainId = onAccountOrChainIdChanged(callback)
+
+		return () => {
+			unwatchConnected()
+			unwatchAccountOrChainId()
+		}
+	}
+
+	function watchDisconnect(callback: OnDisconnectedCB) {
+		return watch(isConnected, (val, oldVal) => {
 			if (!val && oldVal) {
 				callback && callback()
 			}
@@ -50,7 +84,9 @@ export function useListeners(pinia?: any) {
 	return {
 		onConnected,
 		onAccountOrChainIdChanged,
-		onWalletUpdated,
-		onDisconnected,
+		onWalletUpdated, // will be deprecated
+		onDisconnected, // will be deprecated
+		watchWalletUpdated,
+		watchDisconnect,
 	}
 }
