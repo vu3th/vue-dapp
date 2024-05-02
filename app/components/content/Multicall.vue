@@ -77,9 +77,9 @@ const tokenList = computed(() => {
 
 const balances = ref<{ mainnet: number[]; arbitrum: number[] }>({ mainnet: [], arbitrum: [] })
 
-const { watchWalletUpdated, watchDisconnect } = useVueDapp()
+const { watchConnect, watchDisconnect } = useVueDapp()
 
-watchWalletUpdated(
+watchConnect(
 	async (wallet: ConnWallet) => {
 		const mainnetBalance = await Promise.all([
 			mainnetDai.balanceOf(wallet.address),
