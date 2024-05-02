@@ -27,14 +27,15 @@ if(isConnected.value) {
   console.log(wallet.error)
   console.log(wallet.connectorName)
   console.log(wallet.provider)
-  console.log(wallet.providerInfo) // see EIP-6963
   console.log(wallet.connector)
   console.log(wallet.address)
   console.log(wallet.chainId)
+  console.log(wallet.providerInfo) // EIP6963ProviderInfo | null
+  console.log(wallet.providerTarget) // 'window.ethereum' | 'rdns' | null
 }
 ```
 
-The wallet comprises 8 properties, each of which can be obtained from the `useVueDapp` as a [computed](https://vuejs.org/api/reactivity-core.html#computed){:target="_blank"}.
+The wallet comprises 9 properties, each of which can be obtained from the `useVueDapp` as a [computed](https://vuejs.org/api/reactivity-core.html#computed){:target="_blank"}.
 
 ```ts
 const { error, chainId } = useVueDapp()

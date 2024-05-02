@@ -1,4 +1,4 @@
-import { computed, readonly } from 'vue'
+import { computed, provide, readonly } from 'vue'
 import { useStore } from '../store'
 import { ConnectOptions, ConnectorName, ProviderTarget } from '../types'
 import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
@@ -158,10 +158,11 @@ export function useConnect(pinia?: any) {
 		error: computed(() => walletStore.wallet.error),
 		connectorName: computed(() => walletStore.wallet.connectorName),
 		provider: computed(() => walletStore.wallet.provider),
-		providerInfo: computed(() => walletStore.wallet.providerInfo),
 		connector: computed(() => walletStore.wallet.connector),
 		address: computed(() => walletStore.wallet.address),
 		chainId: computed(() => walletStore.wallet.chainId),
+		providerInfo: computed(() => walletStore.wallet.providerInfo),
+		providerTarget: computed(() => walletStore.wallet.providerTarget),
 
 		isConnected: computed(() => walletStore.wallet.status === 'connected'),
 
