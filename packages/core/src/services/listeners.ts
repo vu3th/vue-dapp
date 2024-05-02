@@ -54,11 +54,11 @@ export function useListeners(pinia?: any) {
 		})
 	}
 
-	function watchWalletUpdated(callback: OnWalletUpdatedCB, options?: { immediate: boolean }) {
+	function watchConnect(callback: OnWalletUpdatedCB, options?: { immediate: boolean }) {
 		if (options?.immediate) {
 			onMounted(() => {
 				if (isConnected.value) {
-					assertConnected(wallet, 'useListeners - watchWalletUpdated - immediate')
+					assertConnected(wallet, 'useListeners - watchConnect - immediate')
 					callback && callback(toRaw(wallet))
 				}
 			})
@@ -86,7 +86,7 @@ export function useListeners(pinia?: any) {
 		onAccountOrChainIdChanged,
 		onWalletUpdated, // will be deprecated
 		onDisconnected, // will be deprecated
-		watchWalletUpdated,
+		watchConnect,
 		watchDisconnect,
 	}
 }
