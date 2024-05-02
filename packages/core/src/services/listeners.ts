@@ -73,11 +73,20 @@ export function useListeners(pinia?: any) {
 		}
 	}
 
+	function watchDisconnect(callback: OnDisconnectedCB) {
+		return watch(isConnected, (val, oldVal) => {
+			if (!val && oldVal) {
+				callback && callback()
+			}
+		})
+	}
+
 	return {
 		onConnected,
 		onAccountOrChainIdChanged,
-		onWalletUpdated,
-		onDisconnected,
+		onWalletUpdated, // will be deprecated
+		onDisconnected, // will be deprecated
 		watchWalletUpdated,
+		watchDisconnect,
 	}
 }
