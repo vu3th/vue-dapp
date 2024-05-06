@@ -2,7 +2,9 @@
 import { Icon, NuxtLink } from '#components'
 import packageJsonCore from '../../packages/core/package.json'
 import { sidebarMenu } from '~/core/sidebar'
-import { NPopselect, NButton } from 'naive-ui'
+import { NPopselect, NButton, NSwitch } from 'naive-ui'
+import type { CSSProperties } from 'vue'
+import { useAppStore } from '~/stores/appStore'
 
 const headerLeftMenu = [
 	{
@@ -28,7 +30,45 @@ const localeOptions = computed(() => {
 	}))
 })
 
+const { darkMode } = storeToRefs(useAppStore())
+
+function toggleDarkMode() {
+	darkMode.value = !darkMode.value
+}
+const darkModeRailStyle = ({ focused, checked }: { focused: boolean; checked: boolean }) => {
+	const style: CSSProperties = {}
+	if (checked) {
+		// dark mode
+		style.background = '#2f2f2f'
+	} else {
+		// light mode
+		style.background = '#f1f1f1'
+	}
+	return style
+}
+
 const headerRightMenu = [
+	{
+		label: () =>
+			h(
+				NSwitch,
+				{
+					value: darkMode.value,
+					'onUpdate:value': toggleDarkMode,
+					size: 'medium',
+					'rail-style': darkModeRailStyle,
+				},
+				{
+					default: () =>
+						h(
+							NButton,
+							{ size: 'small', text: true, class: 'flex justify-center items-center', focusable: false },
+							{ default: () => h(Icon, { name: 'i-ion-language', class: 'w-5 h-5' }) },
+						),
+				},
+			),
+		key: 'language',
+	},
 	{
 		label: () =>
 			h(
@@ -172,6 +212,12 @@ watch(
 </template>
 
 <style scoped>
+/* dark mode switcher box-shadow remove green box-shadow */
+:deep(.n-switch:focus .n-switch__rail) {
+	box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+}
+
+/* override header-right-menu padding */
 :deep(#header-right-menu .n-menu-item-content) {
 	padding: 10px;
 }

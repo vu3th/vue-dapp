@@ -157,6 +157,11 @@ const isOneColumn = computed(() => columnAmount.value === 1)
 const isNoWalletFound = computed(
 	() => providerDetails.value.length === 0 && !hasConnector('WalletConnect') && !hasConnector('CoinbaseWallet'),
 )
+
+const vdModalPadding = computed(() => {
+	if (isOneColumn.value) return '10px 10px'
+	return '15px 15px'
+})
 </script>
 
 <template>
@@ -168,6 +173,7 @@ const isNoWalletFound = computed(
 					'grid-template-columns': `repeat(${columnAmount}, minmax(0, 1fr))`,
 					width: isOneColumn ? '300px' : '450px',
 					height: isOneColumn ? '80px' : 'auto',
+					padding: vdModalPadding,
 				}"
 				v-click-outside="closeModal"
 			>
@@ -246,10 +252,9 @@ const isNoWalletFound = computed(
 #vd-modal {
 	display: grid;
 	gap: 5px;
-	padding: 15px 15px;
 }
 
-.vd-wallet-block {
+#vd-modal .vd-wallet-block {
 	padding: 10px 20px;
 	display: flex;
 	flex-direction: row;
@@ -260,16 +265,16 @@ const isNoWalletFound = computed(
 }
 
 /* wallet-block dark hover  */
-.vd-wallet-block.vd-wallet-block--dark:hover {
+#vd-modal .vd-wallet-block.vd-wallet-block--dark:hover {
 	background-color: #101a20;
 }
 
 /* wallet-block light hover */
-.vd-wallet-block:not(.vd-wallet-block--dark):hover {
+#vd-modal .vd-wallet-block:not(.vd-wallet-block--dark):hover {
 	background-color: rgba(142, 142, 142, 0.1);
 }
 
-.vd-logo {
+#vd-modal .vd-logo {
 	width: 20px;
 	height: 20px;
 	display: flex;
@@ -278,18 +283,18 @@ const isNoWalletFound = computed(
 
 /* =============== Modal for connecting =============== */
 
-.vd-loading-modal {
+#vd-modal .vd-loading-modal {
 	width: 20rem;
 	padding: 2.5rem;
 	text-align: center;
 }
 
-.vd-loading-modal > p:first-child {
+#vd-modal .vd-loading-modal > p:first-child {
 	font-size: 1.25rem;
 }
 
 /* =============== cancel button for connecting modal (start) =============== */
-.vd-cancel-btn {
+#vd-modal .vd-cancel-btn {
 	margin-top: 15px;
 
 	border-radius: 8px;
@@ -302,32 +307,32 @@ const isNoWalletFound = computed(
 	transition: border-color 0.25s;
 }
 
-.vd-cancel-btn:focus,
-.vd-cancel-btn:focus-visible {
+#vd-modal .vd-cancel-btn:focus,
+#vd-modal .vd-cancel-btn:focus-visible {
 	outline: 0px auto -webkit-focus-ring-color;
 }
 
 /* cancel-btn light */
-.vd-cancel-btn:not(.vd-cancel-btn--dark) {
+#vd-modal .vd-cancel-btn:not(.vd-cancel-btn--dark) {
 	border: gray 1px solid;
 	background-color: rgba(236, 237, 239, 0.737);
 	color: #1a1a1a;
 }
 
 /* cancel-btn light hover */
-.vd-cancel-btn:not(.vd-cancel-btn--dark):hover {
+#vd-modal .vd-cancel-btn:not(.vd-cancel-btn--dark):hover {
 	background-color: rgba(142, 142, 142, 0.1);
 }
 
 /* cancel-btn dark  */
-.vd-cancel-btn.vd-cancel-btn--dark {
+#vd-modal .vd-cancel-btn.vd-cancel-btn--dark {
 	border: inherit 1px solid;
 	background-color: #101a20;
 	color: rgba(236, 237, 239, 0.737);
 }
 
 /* cancel-btn dark hover */
-.vd-cancel-btn.vd-cancel-btn--dark:hover {
+#vd-modal .vd-cancel-btn.vd-cancel-btn--dark:hover {
 	border: white 1px solid;
 	background-color: #101a20;
 }
@@ -340,31 +345,31 @@ const isNoWalletFound = computed(
 		grid-template-columns: repeat(1, minmax(0, 1fr));
 	}
 
-	.vd-loading-modal {
+	#vd-modal .vd-loading-modal {
 		width: 95vw;
 		padding: 1.5rem 5px;
 	}
 
-	.vd-loading-modal > p:first-child {
+	#vd-modal .vd-loading-modal > p:first-child {
 		font-size: 1rem;
 	}
 }
 
-.vd-line {
+#vd-modal .vd-line {
 	border-color: rgba(236, 237, 239, 0.737);
 	border-width: 0px;
 	border-bottom-width: 1px;
 	border-style: solid;
 }
 
-.vd-line--dark {
+#vd-modal .vd-line--dark {
 	border-color: rgba(195, 195, 195, 0.14);
 	border-width: 0px;
 	border-bottom-width: 1px;
 	border-style: solid;
 }
 
-#vd-no-wallet-found {
+#vd-modal #vd-no-wallet-found {
 	color: rgb(86, 91, 104);
 	display: flex;
 	justify-content: center;
