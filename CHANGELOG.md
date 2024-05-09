@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v1.4.1
+- Fix VueDappModal styles
+
 ## v1.4.0
 - Document add Listeners in https://vuedapp.xyz/overview
 - Rename listeners
