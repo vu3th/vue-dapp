@@ -6,6 +6,7 @@ import '@vue-dapp/modal/dist/style.css'
 // import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
 
 import { darkTheme, lightTheme, type GlobalThemeOverrides } from 'naive-ui'
+import { useAppStore } from './stores/appStore'
 
 const lightThemeOverrides: GlobalThemeOverrides = {
 	common: {
@@ -21,7 +22,7 @@ useHead({
 	},
 })
 
-const { addConnectors, watchConnect, watchDisconnect } = useVueDapp()
+const { addConnectors, watchConnect, watchDisconnect, onDisconnect, onAccountsChanged } = useVueDapp()
 if (process.client) {
 	addConnectors([
 		new BrowserWalletConnector(),
@@ -46,6 +47,11 @@ if (process.client) {
 		// }),
 	])
 }
+if (process.client) {
+	onAccountsChanged(() => {
+		console.log('Disconnected')
+	})
+}
 
 const { setWallet, resetWallet } = useEthers()
 
@@ -67,6 +73,8 @@ const hideConnectingModal = computed(() => {
 	if (route.path === '/eip-6963') return true
 	return false
 })
+
+const { darkMode } = storeToRefs(useAppStore())
 </script>
 
 <template>
@@ -76,7 +84,7 @@ const hideConnectingModal = computed(() => {
 
 			<NuxtPage />
 
-			<VueDappModal :hideConnectingModal="hideConnectingModal"> </VueDappModal>
+			<VueDappModal :dark="darkMode" :hideConnectingModal="hideConnectingModal" />
 		</NuxtLayout>
 	</n-config-provider>
 </template>

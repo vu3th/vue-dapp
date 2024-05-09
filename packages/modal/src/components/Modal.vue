@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, computed } from 'vue'
 
 const props = withDefaults(
 	defineProps<{
@@ -13,7 +13,7 @@ const props = withDefaults(
 
 const emit = defineEmits(['close'])
 
-const modalInnerClass = ref(props.dark ? 'modal-inner--dark' : 'modal-inner')
+const modalInnerClass = computed(() => (props.dark ? 'modal-inner--dark' : 'modal-inner'))
 
 // prevent page scrolling when the modal is open
 watch(
@@ -30,8 +30,8 @@ watch(
 
 <template>
 	<teleport to="body">
-		<transition name="modal-animation">
-			<div v-if="modalOpen" class="modal">
+		<transition name="vd-modal-animation">
+			<div v-if="modalOpen" id="vd-modal-base">
 				<div :class="modalInnerClass">
 					<div class="modal-content">
 						<!-- Modal Content -->
@@ -44,7 +44,7 @@ watch(
 </template>
 
 <style scoped>
-.modal {
+#vd-modal-base {
 	position: fixed;
 	display: flex;
 	justify-content: center;
@@ -58,7 +58,7 @@ watch(
 	z-index: 50;
 }
 
-.modal-inner {
+#vd-modal-base .modal-inner {
 	display: flex;
 	background: #ffffff;
 	border-radius: 1rem;
@@ -68,7 +68,7 @@ watch(
 		rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
-.modal-inner--dark {
+#vd-modal-base .modal-inner--dark {
 	display: flex;
 	color: rgb(199, 199, 199);
 	background: #273138;
@@ -79,12 +79,12 @@ watch(
 		rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
-.modal-animation-enter-active,
-.modal-animation-leave-active {
+.vd-modal-animation-enter-active,
+.vd-modal-animation-leave-active {
 	transition: opacity 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
 }
-.modal-animation-enter-from,
-.modal-animation-leave-to {
+.vd-modal-animation-enter-from,
+.vd-modal-animation-leave-to {
 	opacity: 0;
 }
 </style>

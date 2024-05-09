@@ -41,7 +41,7 @@ function autoConnectErrorHandler(err: any) {
 		<VueDappModal
 			dark
 			v-model="isModalOpen"
-			autoConnect
+			auto-connect
 			autoConnectBrowserWalletIfSolo
 			@connectError="connectErrorHandler"
 			@autoConnectError="autoConnectErrorHandler"

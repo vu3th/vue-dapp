@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { Ref, computed, ref, watch } from 'vue'
 import Modal from './components/Modal.vue'
 import WalletConnectIcon from './components/logos/WalletConnectIcon.vue'
-import { useVueDapp, ConnectorName, ConnectOptions } from '@vue-dapp/core'
+import { useVueDapp, useAutoConnect, ConnectorName, ConnectOptions, isMobileAppBrowser } from '@vue-dapp/core'
 import { useVueDappModal } from './store'
 
 const props = withDefaults(
@@ -36,39 +36,26 @@ function closeModal() {
 
 const modalOpen = computed(() => props.modelValue ?? store.isModalOpen)
 
-const isAutoConnecting = ref(false)
-
-const {
-	isWindowEthereumAvailable,
-	connectors,
-	connectTo,
-	autoConnect,
-	status,
-	providerDetails,
-	hasConnector,
-	disconnect,
-} = useVueDapp()
+const { isWindowEthereumAvailable, connectors, connectTo, status, providerDetails, hasConnector, disconnect } =
+	useVueDapp()
 
 // ============================ feat: autoConnect ============================
-onMounted(async () => {
-	if (props.autoConnect) {
-		try {
-			isAutoConnecting.value = true
-			if (isMobileAppBrowser()) {
-				await autoConnect('window.ethereum')
-			} else {
-				await autoConnect('rdns')
-			}
-		} catch (err: any) {
+
+let isAutoConnecting: Ref<boolean>
+
+if (props.autoConnect) {
+	const { isAutoConnecting: _isAutoConnecting, error: autoConnectError } = useAutoConnect()
+	isAutoConnecting = _isAutoConnecting
+
+	watch(autoConnectError, err => {
+		if (err) {
 			emit('autoConnectError', err)
-		} finally {
-			isAutoConnecting.value = false
 		}
-	}
-})
+	})
+}
 
 watch(modalOpen, async () => {
-	// ============================ feat: connect to window.ethereum if window.ethereum is available ============================
+	// ============================ feat: connect to window.ethereum in the mobile app browser ============================
 	if (modalOpen.value && providerDetails.value.length === 0 && isMobileAppBrowser()) {
 		if (isWindowEthereumAvailable) {
 			await onClickWallet('BrowserWallet', {
@@ -106,23 +93,6 @@ function onClickCancelConnecting() {
 	disconnect()
 }
 
-// Check whether the browser is within a mobile app (such as a WebView) rather than a standalone mobile browser like Chrome App
-function isMobileAppBrowser() {
-	const userAgent = navigator.userAgent
-
-	// for ios
-	if (!userAgent.includes('Safari/') && userAgent.includes('Mobile/')) {
-		return true
-	}
-
-	// for android
-	if (userAgent.includes('wv') || userAgent.includes('WebView')) {
-		return true
-	}
-
-	return false
-}
-
 const vClickOutside = {
 	beforeMount: (el: any, binding: any) => {
 		el.clickOutsideEvent = (event: MouseEvent) => {
@@ -157,6 +127,11 @@ const isOneColumn = computed(() => columnAmount.value === 1)
 const isNoWalletFound = computed(
 	() => providerDetails.value.length === 0 && !hasConnector('WalletConnect') && !hasConnector('CoinbaseWallet'),
 )
+
+const vdModalPadding = computed(() => {
+	if (isOneColumn.value) return '10px 10px'
+	return '15px 15px'
+})
 </script>
 
 <template>
@@ -168,6 +143,7 @@ const isNoWalletFound = computed(
 					'grid-template-columns': `repeat(${columnAmount}, minmax(0, 1fr))`,
 					width: isOneColumn ? '300px' : '450px',
 					height: isOneColumn ? '80px' : 'auto',
+					padding: vdModalPadding,
 				}"
 				v-click-outside="closeModal"
 			>
@@ -224,7 +200,7 @@ const isNoWalletFound = computed(
 		</Modal>
 
 		<Modal v-if="!hideConnectingModal" :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
-			<div class="vd-loading-modal" v-if="status === 'connecting'">
+			<div id="vd-loading-modal" v-if="status === 'connecting'">
 				<p>Connecting...</p>
 				<p class="mt-4">Approve or reject request using your wallet</p>
 
@@ -246,10 +222,9 @@ const isNoWalletFound = computed(
 #vd-modal {
 	display: grid;
 	gap: 5px;
-	padding: 15px 15px;
 }
 
-.vd-wallet-block {
+#vd-modal .vd-wallet-block {
 	padding: 10px 20px;
 	display: flex;
 	flex-direction: row;
@@ -260,16 +235,16 @@ const isNoWalletFound = computed(
 }
 
 /* wallet-block dark hover  */
-.vd-wallet-block.vd-wallet-block--dark:hover {
+#vd-modal .vd-wallet-block.vd-wallet-block--dark:hover {
 	background-color: #101a20;
 }
 
 /* wallet-block light hover */
-.vd-wallet-block:not(.vd-wallet-block--dark):hover {
+#vd-modal .vd-wallet-block:not(.vd-wallet-block--dark):hover {
 	background-color: rgba(142, 142, 142, 0.1);
 }
 
-.vd-logo {
+#vd-modal .vd-logo {
 	width: 20px;
 	height: 20px;
 	display: flex;
@@ -278,18 +253,18 @@ const isNoWalletFound = computed(
 
 /* =============== Modal for connecting =============== */
 
-.vd-loading-modal {
+#vd-loading-modal {
 	width: 20rem;
 	padding: 2.5rem;
 	text-align: center;
 }
 
-.vd-loading-modal > p:first-child {
+#vd-loading-modal > p:first-child {
 	font-size: 1.25rem;
 }
 
 /* =============== cancel button for connecting modal (start) =============== */
-.vd-cancel-btn {
+#vd-loading-modal .vd-cancel-btn {
 	margin-top: 15px;
 
 	border-radius: 8px;
@@ -302,32 +277,32 @@ const isNoWalletFound = computed(
 	transition: border-color 0.25s;
 }
 
-.vd-cancel-btn:focus,
-.vd-cancel-btn:focus-visible {
+#vd-loading-modal .vd-cancel-btn:focus,
+#vd-loading-modal .vd-cancel-btn:focus-visible {
 	outline: 0px auto -webkit-focus-ring-color;
 }
 
 /* cancel-btn light */
-.vd-cancel-btn:not(.vd-cancel-btn--dark) {
+#vd-loading-modal .vd-cancel-btn:not(.vd-cancel-btn--dark) {
 	border: gray 1px solid;
 	background-color: rgba(236, 237, 239, 0.737);
 	color: #1a1a1a;
 }
 
 /* cancel-btn light hover */
-.vd-cancel-btn:not(.vd-cancel-btn--dark):hover {
+#vd-loading-modal .vd-cancel-btn:not(.vd-cancel-btn--dark):hover {
 	background-color: rgba(142, 142, 142, 0.1);
 }
 
 /* cancel-btn dark  */
-.vd-cancel-btn.vd-cancel-btn--dark {
+#vd-loading-modal .vd-cancel-btn.vd-cancel-btn--dark {
 	border: inherit 1px solid;
 	background-color: #101a20;
 	color: rgba(236, 237, 239, 0.737);
 }
 
 /* cancel-btn dark hover */
-.vd-cancel-btn.vd-cancel-btn--dark:hover {
+#vd-loading-modal .vd-cancel-btn.vd-cancel-btn--dark:hover {
 	border: white 1px solid;
 	background-color: #101a20;
 }
@@ -340,31 +315,31 @@ const isNoWalletFound = computed(
 		grid-template-columns: repeat(1, minmax(0, 1fr));
 	}
 
-	.vd-loading-modal {
+	#vd-loading-modal {
 		width: 95vw;
 		padding: 1.5rem 5px;
 	}
 
-	.vd-loading-modal > p:first-child {
+	#vd-loading-modal > p:first-child {
 		font-size: 1rem;
 	}
 }
 
-.vd-line {
+#vd-modal .vd-line {
 	border-color: rgba(236, 237, 239, 0.737);
 	border-width: 0px;
 	border-bottom-width: 1px;
 	border-style: solid;
 }
 
-.vd-line--dark {
+#vd-modal .vd-line--dark {
 	border-color: rgba(195, 195, 195, 0.14);
 	border-width: 0px;
 	border-bottom-width: 1px;
 	border-style: solid;
 }
 
-#vd-no-wallet-found {
+#vd-modal #vd-no-wallet-found {
 	color: rgb(86, 91, 104);
 	display: flex;
 	justify-content: center;

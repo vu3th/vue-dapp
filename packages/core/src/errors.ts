@@ -128,13 +128,6 @@ export class ConnectError extends Error {
 	}
 }
 
-export class AutoConnectError extends Error {
-	name = 'AutoConnectError'
-	constructor(msg: string) {
-		super(msg)
-	}
-}
-
 export class AssertConnectedError extends Error {
 	name = 'AssertConnectedError'
 	constructor(msg?: string) {
