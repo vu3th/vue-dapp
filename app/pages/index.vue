@@ -88,7 +88,6 @@ const items = computed<Item[]>(() => [
 
 <template>
 	<div class="pb-14">
-		<!-- banner -->
 		<div class="mt-5 flex flex-col items-center justify-center">
 			<img class="w-90" src="/logo.png" alt="logo" />
 			<p class="bold text-md md:text-xl px-4 text-gray-500 text-center">{{ $t('subtitle') }}</p>
