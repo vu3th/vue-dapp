@@ -33,10 +33,7 @@ watch(
 		<transition name="vd-modal-animation">
 			<div v-if="modalOpen" id="vd-modal-base">
 				<div :class="modalInnerClass">
-					<div class="modal-content">
-						<!-- Modal Content -->
-						<slot />
-					</div>
+					<slot />
 				</div>
 			</div>
 		</transition>
