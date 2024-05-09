@@ -45,6 +45,7 @@ watch(
 
 <style scoped>
 #vd-modal-base {
+	color: #111827;
 	position: fixed;
 	display: flex;
 	justify-content: center;
@@ -69,8 +70,8 @@ watch(
 }
 
 #vd-modal-base .modal-inner--dark {
-	display: flex;
 	color: rgb(199, 199, 199);
+	display: flex;
 	background: #273138;
 	border-radius: 1rem;
 	box-shadow:
