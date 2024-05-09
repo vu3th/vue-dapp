@@ -84,7 +84,12 @@ const { darkMode } = storeToRefs(useAppStore())
 
 			<NuxtPage />
 
-			<VueDappModal :dark="darkMode" :hideConnectingModal="hideConnectingModal" />
+			<VueDappModal
+				:dark="darkMode"
+				auto-connect
+				auto-connect-browser-wallet-if-solo
+				:hideConnectingModal="hideConnectingModal"
+			/>
 		</NuxtLayout>
 	</n-config-provider>
 </template>

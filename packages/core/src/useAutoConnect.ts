@@ -1,9 +1,10 @@
 import { onMounted, ref } from 'vue'
 import { useConnect } from './services/connect'
-import { ConnectOptions, ProviderTarget } from './types'
+import { ConnectOptions, ProviderTarget, RdnsEnum } from './types'
 import { useConnectors } from './services/connectors'
 import { getLastConnectedBrowserWallet } from './services/localStorage'
 import { isWindowEthereumAvailable } from './utils'
+import { useEIP6963 } from './services/eip6963'
 
 export function useAutoConnect(pinia?: any) {
 	const isAutoConnecting = ref(false)
@@ -43,6 +44,27 @@ export function useAutoConnect(pinia?: any) {
 			case 'rdns':
 				const lastRdns = getLastConnectedBrowserWallet()
 				if (!lastRdns) return
+
+				/**
+				 * feat: Don't auto-connect to MetaMask if it's locked
+				 * issue#185: https://github.com/vu3th/vue-dapp/issues/185
+				 */
+
+				// if the wallet is MetaMask, check if it's unlocked
+				if (lastRdns === RdnsEnum.metamask) {
+					const { providerDetails } = useEIP6963()
+					const providerDetail = providerDetails.value.find(p => p.info.rdns === RdnsEnum.metamask)
+					if (providerDetail) {
+						const provider = providerDetail.provider
+						/**
+						 * isUnlocked - API Docs: https://docs.metamask.io/wallet/reference/provider-api/#_metamaskisunlocked
+						 * How to check if a web3 wallet is unlocked? - Stack Overflow: https://stackoverflow.com/questions/69015014/how-to-check-if-a-web3-wallet-is-unlocked
+						 */
+						// @ts-ignore
+						const isUnlocked = await provider._metamask.isUnlocked()
+						if (!isUnlocked) return
+					}
+				}
 
 				options = { target: 'rdns', rdns: lastRdns }
 				break
