@@ -12,8 +12,8 @@ export type Wallet = {
 	connector: Connector | null
 	address: string | null
 	chainId: number | null
-	providerInfo: EIP6963ProviderInfo | null // Only available when connectorName is 'BrowserWallet'
 	providerTarget: ProviderTarget | null // Only available when connectorName is 'BrowserWallet'
+	providerInfo: EIP6963ProviderInfo | null //  Only available when connectorName is 'BrowserWallet' and providerTarget is 'rdns'
 }
 
 export type OnDisconnectCallback = (...args: any[]) => void
