@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v1.4.2
+- Feat: Don't auto-connect to MetaMask if it's locked #185
+
 ## v1.4.1
 - Fix VueDappModal styles
 
