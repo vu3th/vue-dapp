@@ -230,7 +230,7 @@ const vdModalPadding = computed(() => {
 		</Modal>
 
 		<Modal v-if="!hideConnectingModal" :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
-			<div class="vd-loading-modal" v-if="status === 'connecting'">
+			<div id="vd-loading-modal" v-if="status === 'connecting'">
 				<p>Connecting...</p>
 				<p class="mt-4">Approve or reject request using your wallet</p>
 
@@ -283,18 +283,18 @@ const vdModalPadding = computed(() => {
 
 /* =============== Modal for connecting =============== */
 
-#vd-modal .vd-loading-modal {
+#vd-loading-modal {
 	width: 20rem;
 	padding: 2.5rem;
 	text-align: center;
 }
 
-#vd-modal .vd-loading-modal > p:first-child {
+#vd-loading-modal > p:first-child {
 	font-size: 1.25rem;
 }
 
 /* =============== cancel button for connecting modal (start) =============== */
-#vd-modal .vd-cancel-btn {
+#vd-loading-modal .vd-cancel-btn {
 	margin-top: 15px;
 
 	border-radius: 8px;
@@ -307,32 +307,32 @@ const vdModalPadding = computed(() => {
 	transition: border-color 0.25s;
 }
 
-#vd-modal .vd-cancel-btn:focus,
-#vd-modal .vd-cancel-btn:focus-visible {
+#vd-loading-modal .vd-cancel-btn:focus,
+#vd-loading-modal .vd-cancel-btn:focus-visible {
 	outline: 0px auto -webkit-focus-ring-color;
 }
 
 /* cancel-btn light */
-#vd-modal .vd-cancel-btn:not(.vd-cancel-btn--dark) {
+#vd-loading-modal .vd-cancel-btn:not(.vd-cancel-btn--dark) {
 	border: gray 1px solid;
 	background-color: rgba(236, 237, 239, 0.737);
 	color: #1a1a1a;
 }
 
 /* cancel-btn light hover */
-#vd-modal .vd-cancel-btn:not(.vd-cancel-btn--dark):hover {
+#vd-loading-modal .vd-cancel-btn:not(.vd-cancel-btn--dark):hover {
 	background-color: rgba(142, 142, 142, 0.1);
 }
 
 /* cancel-btn dark  */
-#vd-modal .vd-cancel-btn.vd-cancel-btn--dark {
+#vd-loading-modal .vd-cancel-btn.vd-cancel-btn--dark {
 	border: inherit 1px solid;
 	background-color: #101a20;
 	color: rgba(236, 237, 239, 0.737);
 }
 
 /* cancel-btn dark hover */
-#vd-modal .vd-cancel-btn.vd-cancel-btn--dark:hover {
+#vd-loading-modal .vd-cancel-btn.vd-cancel-btn--dark:hover {
 	border: white 1px solid;
 	background-color: #101a20;
 }
@@ -345,12 +345,12 @@ const vdModalPadding = computed(() => {
 		grid-template-columns: repeat(1, minmax(0, 1fr));
 	}
 
-	#vd-modal .vd-loading-modal {
+	#vd-loading-modal {
 		width: 95vw;
 		padding: 1.5rem 5px;
 	}
 
-	#vd-modal .vd-loading-modal > p:first-child {
+	#vd-loading-modal > p:first-child {
 		font-size: 1rem;
 	}
 }
