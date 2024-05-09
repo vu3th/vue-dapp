@@ -3,7 +3,7 @@ import { OnConnectedCB, OnDisconnectedCB } from '../types'
 import { useConnect } from './connect'
 import { assertConnected } from '../utils/assert'
 
-export function listeners(pinia?: any) {
+export function useListeners(pinia?: any) {
 	const { isConnected, address, chainId, wallet } = useConnect(pinia)
 
 	function watchConnected(callback: OnConnectedCB, options?: { immediate: boolean }) {
