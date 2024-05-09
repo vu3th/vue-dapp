@@ -10,12 +10,9 @@ export type ConnWallet = {
 	connector: Connector
 	address: string
 	chainId: number
-	providerInfo: EIP6963ProviderInfo | null // Only available when connectorName is 'BrowserWallet'
 	providerTarget: ProviderTarget | null // Only available when connectorName is 'BrowserWallet'
+	providerInfo: EIP6963ProviderInfo | null // Only available when connectorName is 'BrowserWallet' and providerTarget is 'rdns'
 }
 
 export type OnConnectedCB = (wallet: ConnWallet) => void
-export type OnAccountOrChainIdChangedCB = (wallet: ConnWallet) => void
 export type OnDisconnectedCB = () => void
-
-export type OnWalletUpdatedCB = (wallet: ConnWallet) => void
