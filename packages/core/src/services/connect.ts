@@ -1,13 +1,9 @@
-import { computed, provide, readonly } from 'vue'
+import { computed, readonly } from 'vue'
 import { useStore } from '../store'
-import { ConnectOptions, ConnectorName, ProviderTarget } from '../types'
-import { AutoConnectError, ConnectError, ConnectorNotFoundError } from '../errors'
-import { normalizeChainId } from '../utils'
-import {
-	getLastConnectedBrowserWallet,
-	removeLastConnectedBrowserWallet,
-	setLastConnectedBrowserWallet,
-} from './localStorage'
+import { ConnectOptions, ConnectorName } from '../types'
+import { ConnectError, ConnectorNotFoundError } from '../errors'
+import { isWindowEthereumAvailable, normalizeChainId } from '../utils'
+import { removeLastConnectedBrowserWallet, setLastConnectedBrowserWallet } from './localStorage'
 
 export function useConnect(pinia?: any) {
 	const walletStore = useStore(pinia)
@@ -105,38 +101,6 @@ export function useConnect(pinia?: any) {
 		}
 	}
 
-	const isWindowEthereumAvailable = typeof window !== 'undefined' && !!window.ethereum
-
-	async function autoConnect(target: ProviderTarget) {
-		const browserWallet = walletStore.connectors.find(conn => conn.name === 'BrowserWallet')
-		if (!browserWallet) return
-
-		let options: ConnectOptions<'BrowserWallet'>
-
-		switch (target) {
-			case 'window.ethereum':
-				if (!isWindowEthereumAvailable) return
-				options = {
-					target: 'window.ethereum',
-				}
-				break
-			case 'rdns':
-				const lastRdns = getLastConnectedBrowserWallet()
-				if (!lastRdns) return
-
-				options = { target: 'rdns', rdns: lastRdns }
-				break
-			default:
-				throw new Error('target is required')
-		}
-
-		try {
-			await connectTo('BrowserWallet', options)
-		} catch (err: any) {
-			throw new AutoConnectError(err)
-		}
-	}
-
 	function onDisconnect(callback: (...args: any[]) => void) {
 		walletStore.onDisconnectCallback = callback
 	}
@@ -169,7 +133,6 @@ export function useConnect(pinia?: any) {
 		resetWallet,
 		connectTo,
 		disconnect,
-		autoConnect,
 
 		onDisconnect,
 		onAccountsChanged,

@@ -1,2 +1,4 @@
 export * from './format'
-export * from './check'
+export * from './assert'
+
+export const isWindowEthereumAvailable = typeof window !== 'undefined' && !!window.ethereum

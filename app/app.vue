@@ -22,7 +22,7 @@ useHead({
 	},
 })
 
-const { addConnectors, watchConnect, watchDisconnect } = useVueDapp()
+const { addConnectors, watchConnect, watchDisconnect, onDisconnect, onAccountsChanged } = useVueDapp()
 if (process.client) {
 	addConnectors([
 		new BrowserWalletConnector(),
@@ -46,6 +46,11 @@ if (process.client) {
 		// 	jsonRpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
 		// }),
 	])
+}
+if (process.client) {
+	onAccountsChanged(() => {
+		console.log('Disconnected')
+	})
 }
 
 const { setWallet, resetWallet } = useEthers()
@@ -79,7 +84,7 @@ const { darkMode } = storeToRefs(useAppStore())
 
 			<NuxtPage />
 
-			<VueDappModal :dark="darkMode" :hideConnectingModal="hideConnectingModal"> </VueDappModal>
+			<VueDappModal :dark="darkMode" :hideConnectingModal="hideConnectingModal" />
 		</NuxtLayout>
 	</n-config-provider>
 </template>
