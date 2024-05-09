@@ -90,6 +90,45 @@ connectTo("BrowserWallet", {
 ```
 
 
+## Listeners
 
+You have two ways to listen to wallet events. If you want to directly listen to EIP-1193 events, you can use the following functions. However, please note that these 3 functions are preferably called once in an app. If called a second time, they will overwrite the previous callback.
 
+```ts
+const { onDisconnect, onAccountsChanged, onChainChanged } = useVueDapp()
 
+function onDisconnect(callback: (...args: any[]) => void): void
+function onAccountsChanged(callback: (accounts: string[]) => void): void
+function onChainChanged(callback: (chainId: number) => void): void
+```
+
+If you need to call them in multiple components like Vue.js `watch` and automatically clean up after the component is unmounted, you can use the following functions:
+
+```ts
+const { 
+  watchConnected,
+  watchAddressChanged,
+  watchChainIdChanged,
+  watchAddressChainIdChanged,
+  watchWalletChanged,
+  watchDisconnect,
+} = useVueDapp()
+```
+
+The most commonly used one is `watchWalletChanged`. This listener triggers when the wallet connects, the address changes, or the network changes.
+
+If `immediate` is set to true, assuming the wallet is already connected on other pages, it will still execute your program when the component is mounted. For example, if the user has connected on the homepage, when they navigate to other pages, certain programs need to be executed immediately. If `immediate` is not used, switching to another page will not trigger the event because the wallet was already connected on the previous page.
+
+```ts
+watchWalletChanged(() => {
+  // exec...
+})
+
+watchWalletChanged(() => {
+  // exec...
+}, {
+  immediate: true
+})
+```
+
+The prerequisite for the above usage is that you place the listeners at the router-level components (pages/, views/). If you place them in root components (e.g., app.vue, App.vue), you don't need `immediate` to ensure your program runs when the user connects. This is because when the root component is loaded, the user's wallet will definitely transition from `idle` to `connected`, avoiding the scenario where the status is already `connected` when the component is loaded.

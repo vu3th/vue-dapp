@@ -74,3 +74,47 @@ connectTo("BrowserWallet", {
   target: "window.ethereum",
 })
 ```
+
+
+## Listeners
+
+你有兩種方式可以監聽錢包的事件，若你要直接監聽 EIP-1193 的事件，可以使用以下函式，但需要注意的是，這三個函式最好在一個 app 中調用一次，若調用第二次會將之前的 callback 給覆蓋掉。
+
+```ts
+const { onDisconnect, onAccountsChanged, onChainChanged } = useVueDapp()
+
+function onDisconnect(callback: (...args: any[]) => void): void
+function onAccountsChanged(callback: (accounts: string[]) => void): void
+function onChainChanged(callback: (chainId: number) => void): void
+```
+
+若你需要像 Vue.js 的 `watch` 一樣能夠在多個元件中調用，並且在元件 unmounted 後自動清除，那你可以使用下面的函式：
+
+```ts
+const { 
+  watchConnected,
+  watchAddressChanged,
+  watchChainIdChanged,
+  watchAddressChainIdChanged,
+  watchWalletChanged,
+  watchDisconnect,
+} = useVueDapp()
+```
+
+最常被使用到的是 `watchWalletChanged`，當錢包連線時、地址更動時或網路更動時，都會觸發這個監聽器。
+
+若使用 `immediate` 為 true，假設錢包早已在其他頁面連線了，它仍會在元件 mounted 的時候執行你的程式。例如使用者已經在首頁連線了，當他進入其他頁面時，需要立即執行某些程式，假設沒有使用 `immediate`，使用者切換到別頁時就不會觸發，因為錢包早已在上一個頁面連線了。
+
+```ts
+watchWalletChanged(() => {
+  // exec...
+})
+
+watchWalletChanged(() => {
+  // exec...
+}, {
+  immediate: true
+})
+```
+
+上述用法的前提是你將 listener 放在路由層級的元件上（pages/, views/），若你將它們放在根元件（ex. app.vue, App.vue），則不需要 `immediate` 就能確保使用者連線時會執行你的程式，原因在於當根元件被載入時，使用者的錢包一定會從未連線轉換成已連線，不會有當元件載入時狀態就已經是 `connected` 的情況發生。
