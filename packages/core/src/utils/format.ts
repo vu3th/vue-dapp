@@ -6,8 +6,9 @@ export function toHex(n: number): string {
 	return '0x' + hexValue
 }
 
-export function shortenAddress(address: string): string {
-	return address.slice(0, 6) + '...' + address.slice(-4)
+export function shortenAddress(address: string, startLength = 6, endLength = 4): string {
+	if (typeof address !== 'string' || !address) return ''
+	return address.slice(0, startLength) + '...' + address.slice(-endLength)
 }
 
 export function normalizeChainId(chainId: string | number | bigint) {
