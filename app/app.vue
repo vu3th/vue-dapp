@@ -2,8 +2,9 @@
 import { BrowserWalletConnector, useVueDapp, type ConnWallet } from '@vue-dapp/core'
 import { VueDappModal } from '@vue-dapp/modal'
 import '@vue-dapp/modal/dist/style.css'
-// import { WalletConnectConnector } from '@vue-dapp/walletconnect'
-// import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
+import { WalletConnectConnector } from '@vue-dapp/walletconnect'
+import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
+import { INFURA_ID } from './constants'
 
 import { darkTheme, lightTheme, type GlobalThemeOverrides } from 'naive-ui'
 import { useAppStore } from './stores/appStore'
@@ -26,25 +27,25 @@ const { addConnectors, watchWalletChanged, watchDisconnect, onDisconnect, onAcco
 if (process.client) {
 	addConnectors([
 		new BrowserWalletConnector(),
-		// new WalletConnectConnector({
-		// 	projectId: 'd1e65611568666138126d315c0bafd7d',
-		// 	chains: [1],
-		// 	showQrModal: true,
-		// 	qrModalOptions: {
-		// 		themeMode: 'light',
-		// 		themeVariables: undefined,
-		// 		desktopWallets: undefined,
-		// 		walletImages: undefined,
-		// 		mobileWallets: undefined,
-		// 		enableExplorer: true,
-		// 		privacyPolicyUrl: undefined,
-		// 		termsOfServiceUrl: undefined,
-		// 	},
-		// }),
-		// new CoinbaseWalletConnector({
-		// 	appName: 'Vue Dapp',
-		// 	jsonRpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
-		// }),
+		new WalletConnectConnector({
+			projectId: 'd1e65611568666138126d315c0bafd7d',
+			chains: [1],
+			showQrModal: true,
+			qrModalOptions: {
+				themeMode: 'light',
+				themeVariables: undefined,
+				desktopWallets: undefined,
+				walletImages: undefined,
+				mobileWallets: undefined,
+				enableExplorer: true,
+				privacyPolicyUrl: undefined,
+				termsOfServiceUrl: undefined,
+			},
+		}),
+		new CoinbaseWalletConnector({
+			appName: 'Vue Dapp',
+			jsonRpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
+		}),
 	])
 }
 if (process.client) {

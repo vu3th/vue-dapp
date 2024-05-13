@@ -23,10 +23,11 @@ export default defineConfig({
 		},
 		outDir: 'dist',
 		rollupOptions: {
-			external: ['@walletconnect/ethereum-provider'],
+			external: ['@walletconnect/ethereum-provider', 'vue'],
 			output: {
 				globals: {
 					'@walletconnect/ethereum-provider': 'EthereumProvider',
+					vue: 'vue',
 				},
 			},
 		},
