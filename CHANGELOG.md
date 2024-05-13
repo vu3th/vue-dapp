@@ -1,5 +1,8 @@
 # CHANGELOG
 
+- Fix modal style on mobile
+- Fix hot reload issue when importing walletconnect or coinbase. issue#162 pr#187
+
 ## v1.4.3
 - Update `shortenAddress`
 
