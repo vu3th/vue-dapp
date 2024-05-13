@@ -22,5 +22,13 @@ export default defineConfig({
 			fileName: name,
 		},
 		outDir: 'dist',
+		rollupOptions: {
+			external: ['vue'],
+			output: {
+				globals: {
+					vue: 'vue',
+				},
+			},
+		},
 	},
 })
