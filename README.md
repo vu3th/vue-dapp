@@ -45,10 +45,7 @@
 
 <img src="https://github.com/vu3th/vue-dapp/blob/main/app/public/images/overview.png" alt="Vue Dapp Overview" style="max-width:100%;" width="800">
 
-
-## Getting Started
-
-### SPA with Vite
+## Installation
 
 ```bash
 npm install pinia @vue-dapp/core @vue-dapp/modal
@@ -58,6 +55,18 @@ npm install pinia @vue-dapp/core @vue-dapp/modal
 import { createPinia } from 'pinia'
 app.use(createPinia())
 ```
+
+### Nuxt
+
+```bash
+npm install pinia @pinia/nuxt @vue-dapp/core @vue-dapp/nuxt @vue-dapp/modal
+```
+
+```ts
+modules: ['@pinia/nuxt', '@vue-dapp/nuxt']
+```
+
+## Getting Started
 
 ```vue
 <script lang="ts" setup>
@@ -91,16 +100,6 @@ function onClickConnectButton() {
 </template>
 ```
 
-### SSR with Nuxt 3
-
-```bash
-npm install pinia @pinia/nuxt @vue-dapp/core @vue-dapp/nuxt @vue-dapp/modal
-```
-
-```ts
-modules: ['@pinia/nuxt', '@vue-dapp/nuxt']
-```
-
 ## Examples
 
 - [vue-dapp-starter](https://github.com/vu3th/vue-dapp-starter) 
@@ -108,12 +107,14 @@ modules: ['@pinia/nuxt', '@vue-dapp/nuxt']
 
 ## Development
 
-```
-pnpm i
+```bash
+pnpm install
 pnpm build
 pnpm -F core watch
 pnpm -F modal watch
 pnpm dev
+pnpm build
+pnpm build:app
 ```
 
 

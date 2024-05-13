@@ -4,7 +4,6 @@ import { VueDappModal } from '@vue-dapp/modal'
 import '@vue-dapp/modal/dist/style.css'
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
 import { CoinbaseWalletConnector } from '@vue-dapp/coinbase'
-import { INFURA_ID } from './constants'
 
 import { darkTheme, lightTheme, type GlobalThemeOverrides } from 'naive-ui'
 import { useAppStore } from './stores/appStore'
@@ -23,7 +22,7 @@ useHead({
 	},
 })
 
-const { addConnectors, watchWalletChanged, watchDisconnect, onDisconnect, onAccountsChanged } = useVueDapp()
+const { addConnectors, watchWalletChanged, watchDisconnect } = useVueDapp()
 if (process.client) {
 	addConnectors([
 		new BrowserWalletConnector(),
@@ -44,26 +43,16 @@ if (process.client) {
 		}),
 		new CoinbaseWalletConnector({
 			appName: 'Vue Dapp',
-			jsonRpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
+			jsonRpcUrl: 'https://ethereum-rpc.publicnode.com',
 		}),
 	])
-}
-if (process.client) {
-	onAccountsChanged(() => {
-		console.log('Disconnected')
-	})
 }
 
 const { setWallet, resetWallet } = useEthers()
 
-watchWalletChanged(
-	async (wallet: ConnWallet) => {
-		setWallet(wallet.provider)
-	},
-	{
-		immediate: true,
-	},
-)
+watchWalletChanged(async (wallet: ConnWallet) => {
+	setWallet(wallet.provider)
+})
 
 watchDisconnect(() => {
 	resetWallet()

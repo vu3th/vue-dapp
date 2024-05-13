@@ -20,7 +20,7 @@ const contract = new ethers.Contract(contractAddress, iface, defaultProvider)
 
 // ======================== Wallet ========================
 
-const { isConnected, wallet, error: ConnectError } = useVueDapp()
+const { isConnected, wallet, error: connectError } = useVueDapp()
 
 onMounted(() => {
 	fetchData()
@@ -165,7 +165,7 @@ const isReady = computed(() => isConnected.value && !showSwitchButton.value)
 			</n-button>
 		</div>
 
-		<div class="text-red-500">{{ error || ConnectError }}</div>
+		<div class="text-red-500">{{ error || connectError }}</div>
 
 		<!-- Event logs -->
 		<div>

@@ -39,7 +39,7 @@ const contract = new ethers.Contract(contractAddress, iface, defaultProvider)
 
 // ======================== Wallet ========================
 
-const { isConnected, wallet, error: ConnectError } = useVueDapp()
+const { isConnected, wallet, error: connectError } = useVueDapp()
 
 onMounted(() => {
 	fetchData()

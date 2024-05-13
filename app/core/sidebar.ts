@@ -17,6 +17,17 @@ export const sidebarMenu = [
 			h(
 				NuxtLink,
 				{
+					to: '/installation',
+				},
+				{ default: () => 'Installation' },
+			),
+		key: '/installation',
+	},
+	{
+		label: () =>
+			h(
+				NuxtLink,
+				{
 					to: '/eip-6963',
 				},
 				{ default: () => 'EIP-6963' },
