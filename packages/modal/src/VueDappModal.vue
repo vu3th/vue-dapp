@@ -139,10 +139,8 @@ const vdModalPadding = computed(() => {
 		<Modal :modalOpen="modalOpen" @close="closeModal" :dark="dark">
 			<div
 				id="vd-modal"
+				class="vd-modal-column"
 				:style="{
-					'grid-template-columns': `repeat(${columnAmount}, minmax(0, 1fr))`,
-					width: isOneColumn ? '300px' : '450px',
-					height: isOneColumn ? '80px' : 'auto',
 					padding: vdModalPadding,
 				}"
 				v-click-outside="closeModal"
@@ -188,10 +186,10 @@ const vdModalPadding = computed(() => {
 				>
 					<img
 						class="vd-logo"
-						src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTI4IDU2YzE1LjQ2NCAwIDI4LTEyLjUzNiAyOC0yOFM0My40NjQgMCAyOCAwIDAgMTIuNTM2IDAgMjhzMTIuNTM2IDI4IDI4IDI4WiIgZmlsbD0iIzFCNTNFNCIvPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNyAyOGMwIDExLjU5OCA5LjQwMiAyMSAyMSAyMXMyMS05LjQwMiAyMS0yMVMzOS41OTggNyAyOCA3IDcgMTYuNDAyIDcgMjhabTE3LjIzNC02Ljc2NmEzIDMgMCAwIDAtMyAzdjcuNTMzYTMgMyAwIDAgMCAzIDNoNy41MzNhMyAzIDAgMCAwIDMtM3YtNy41MzNhMyAzIDAgMCAwLTMtM2gtNy41MzNaIiBmaWxsPSIjZmZmIi8+PC9zdmc+"
-						alt="Coinbase Wallet"
+						src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTQiIGN5PSIxNCIgcj0iMTQiIGZpbGw9IiMwMDUyRkYiLz48cGF0aCBkPSJNMTQuMDM3IDE4LjkyNmMtMi43NSAwLTQuOTA3LTIuMjA1LTQuOTA3LTQuOTI2IDAtMi43MiAyLjIzLTQuOTI2IDQuOTA3LTQuOTI2YTQuODY2IDQuODY2IDAgMCAxIDQuODMzIDQuMTE4aDQuOTgyYy0uNDQ2LTUuMDczLTQuNjg0LTkuMDQ0LTkuODE1LTkuMDQ0QzguNjEgNC4xNDggNC4xNDkgOC41NiA0LjE0OSAxNHM0LjM4NyA5Ljg1MiA5Ljg5IDkuODUyYzUuMjA0IDAgOS4zNjgtMy45NyA5LjgxNC05LjA0M0gxOC44N2E0Ljg2NiA0Ljg2NiAwIDAgMS00LjgzMyA0LjExN1oiIGZpbGw9IiNmZmYiLz48L3N2Zz4="
+						alt="Coinbase"
 					/>
-					<div>Coinbase Wallet</div>
+					<div>Coinbase</div>
 				</div>
 
 				<slot v-if="isNoWalletFound && $slots['no-wallet-found']" name="no-wallet-found"></slot>
@@ -222,6 +220,19 @@ const vdModalPadding = computed(() => {
 #vd-modal {
 	display: grid;
 	gap: 5px;
+	height: auto;
+}
+
+#vd-modal.vd-modal-column {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	width: 450px;
+}
+
+@media (max-width: 460px) {
+	#vd-modal.vd-modal-column {
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+		width: 95vw;
+	}
 }
 
 #vd-modal .vd-wallet-block {
@@ -310,11 +321,6 @@ const vdModalPadding = computed(() => {
 /* =============== cancel button for connecting modal (end) =============== */
 
 @media (max-width: 460px) {
-	#vd-modal {
-		width: 95vw;
-		grid-template-columns: repeat(1, minmax(0, 1fr));
-	}
-
 	#vd-loading-modal {
 		width: 95vw;
 		padding: 1.5rem 5px;
