@@ -1,3 +1,4 @@
+import { ProviderRpcError, RpcError } from '../errors'
 import { Connector, ConnectorName, ProviderTarget } from './connector'
 import { EIP1193Provider } from './eip1193'
 import { EIP6963ProviderInfo } from './eip6963'
@@ -6,7 +7,7 @@ export type ConnectionStatus = 'idle' | 'connecting' | 'connected'
 
 export type Wallet = {
 	status: ConnectionStatus
-	error: string | null
+	error: ProviderRpcError | string | null
 	connectorName: ConnectorName | null
 	provider: EIP1193Provider | null
 	connector: Connector | null

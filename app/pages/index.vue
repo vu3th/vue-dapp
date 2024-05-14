@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { shortenAddress, useVueDapp } from '@vue-dapp/core'
+import { shortenAddress, useVueDapp, type ConnWallet, type ProviderRpcError } from '@vue-dapp/core'
 import { useVueDappModal } from '@vue-dapp/modal'
-import type { ConnWallet } from '@vue-dapp/core'
 import { ethers } from 'ethers'
 import type { Header, Item } from 'vue3-easy-data-table'
 
@@ -84,6 +83,14 @@ const items = computed<Item[]>(() => [
 		value: ensLoading.value ? 'Loading...' : ensName.value || 'N/A',
 	},
 ])
+
+const connectError = computed(() => {
+	// Ignore the error if the user rejected the connection request
+	if ((<ProviderRpcError>wallet.error)?.code === 4001) {
+		return null
+	}
+	return wallet.error
+})
 </script>
 
 <template>
@@ -105,7 +112,7 @@ const items = computed<Item[]>(() => [
 				<p v-if="wallet.status === 'connected'">Disconnect</p>
 			</n-button>
 
-			<p class="text-red-500 text-center" v-if="wallet.error">{{ wallet.error }}</p>
+			<p class="text-red-500 text-center" v-if="connectError">{{ connectError }}</p>
 
 			<ClientOnly>
 				<Vue3EasyDataTable
