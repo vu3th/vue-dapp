@@ -1,7 +1,7 @@
-import { computed, readonly } from 'vue'
+import { computed, markRaw, readonly } from 'vue'
 import { useStore } from '../store'
 import { ConnectOptions, ConnectorName } from '../types'
-import { ConnectError, ConnectorNotFoundError } from '../errors'
+import { ConnectorNotFoundError } from '../errors'
 import { isWindowEthereumAvailable, normalizeChainId } from '../utils'
 import { removeLastConnectedBrowserWallet, setLastConnectedBrowserWallet } from './localStorage'
 
@@ -46,8 +46,8 @@ export function useConnect(pinia?: any) {
 			if (info?.rdns) setLastConnectedBrowserWallet(info.rdns)
 		} catch (err: any) {
 			await disconnect() // will resetWallet()
-			walletStore.wallet.error = err.message
-			throw new ConnectError(err)
+			walletStore.wallet.error = markRaw(err)
+			throw err
 		}
 
 		// ============================= listen EIP-1193 events =============================

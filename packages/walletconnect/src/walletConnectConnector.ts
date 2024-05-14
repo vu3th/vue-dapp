@@ -5,18 +5,19 @@ import {
 	SwitchChainError,
 	SwitchChainNotSupportedError,
 	UserRejectedRequestError,
+	ProviderRpcError,
 } from '@vue-dapp/core'
 import {
 	EthereumProviderOptions,
 	EthereumProvider as IEthereumProvider,
 } from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
 import { EthereumProvider } from '@walletconnect/ethereum-provider'
-import { ProviderRpcError, IProviderEvents } from '@walletconnect/ethereum-provider/dist/types/types'
+import { IProviderEvents } from '@walletconnect/ethereum-provider/dist/types/types'
 
 export class WalletConnectConnector extends Connector<IEthereumProvider, EthereumProviderOptions> {
 	readonly name = 'WalletConnect'
 	#provider?: IEthereumProvider
-	#onDisconnectHandler?: (args: ProviderRpcError) => void
+	#onDisconnectHandler?: (err: ProviderRpcError<unknown>) => void
 	#onAccountsChangedHandler?: (accounts: string[]) => void
 	#onChainChangedHandler?: (chainId: number) => void
 
@@ -25,14 +26,24 @@ export class WalletConnectConnector extends Connector<IEthereumProvider, Ethereu
 	}
 
 	async connect() {
-		const provider: any = await this.getProvider()
+		const provider = await this.getProvider()
 		this.#provider = provider
-		const accounts = await provider.enable()
+
+		let accounts: string[]
+
+		try {
+			accounts = await provider.enable()
+		} catch (err: any) {
+			if (err.message === 'Connection request reset. Please try again.') {
+				throw new ProviderRpcError(4001, err.message)
+			}
+			throw err
+		}
+
 		const account = accounts[0]
 
 		// EthereumProvider's public state: https://github.com/WalletConnect/walletconnect-monorepo/blob/91af38edc2d2a99bae0b5b32f92607d221b74364/providers/ethereum-provider/src/EthereumProvider.ts#L221C10-L221C17
 		const chainId = provider.chainId
-
 		return {
 			provider,
 			account,
@@ -45,17 +56,11 @@ export class WalletConnectConnector extends Connector<IEthereumProvider, Ethereu
 			...this.options,
 		})
 
-		provider.on('disconnect', (args: any) => {
+		provider.on('disconnect', (err: any) => {
 			if (!provider.connected) {
-				throw new UserRejectedRequestError(args.message)
+				throw new UserRejectedRequestError(err.message)
 			}
 		})
-
-		try {
-			await provider.enable()
-		} catch (err: any) {
-			throw new Error(err)
-		}
 
 		return provider
 	}
@@ -66,7 +71,7 @@ export class WalletConnectConnector extends Connector<IEthereumProvider, Ethereu
 		this.#provider = undefined
 	}
 
-	onDisconnect(handler: (args: ProviderRpcError) => void) {
+	onDisconnect(handler: (err: ProviderRpcError<unknown>) => void) {
 		if (!this.#provider) throw new ProviderNotFoundError()
 		if (this.#onDisconnectHandler) {
 			this.#removeListener('disconnect', this.#onDisconnectHandler)

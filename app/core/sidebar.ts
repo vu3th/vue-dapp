@@ -100,11 +100,11 @@ export const sidebarMenu = [
 			h(
 				NuxtLink,
 				{
-					to: '/common-errors',
+					to: '/errors',
 				},
-				{ default: () => 'Common Errors' },
+				{ default: () => 'Errors' },
 			),
-		key: '/common-errors',
+		key: '/errors',
 	},
 	{
 		label: () =>
