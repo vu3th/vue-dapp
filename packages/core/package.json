@@ -48,7 +48,7 @@
 		"vite-plugin-dts": "^3.7.2",
 		"vitest": "1.2.2",
 		"vue": "^3.4.21",
-		"vue-tsc": "^0.29.8"
+		"vue-tsc": "^2.0.19"
 	},
 	"peerDependencies": {
 		"pinia": "^2.1.7",
