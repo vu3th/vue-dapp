@@ -156,13 +156,13 @@ importers:
       '@coinbase/wallet-sdk':
         specifier: latest
         version: 3.7.2(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
+      '@vue-dapp/core':
+        specifier: '*'
+        version: 1.4.3(pinia@2.1.7(typescript@5.4.5)(vue@3.4.23(typescript@5.4.5)))(vue@3.4.23(typescript@5.4.5))
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: 5.0.3
         version: 5.0.3(vite@5.2.9(@types/node@20.11.9)(sass@1.70.0)(terser@5.27.0))(vue@3.4.23(typescript@5.4.5))
-      '@vue-dapp/core':
-        specifier: ^1.4.3
-        version: 1.4.3(pinia@2.1.7(typescript@5.4.5)(vue@3.4.23(typescript@5.4.5)))(vue@3.4.23(typescript@5.4.5))
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -198,13 +198,14 @@ importers:
         version: 2.0.19(typescript@5.4.5)
 
   packages/modal:
+    dependencies:
+      '@vue-dapp/core':
+        specifier: '*'
+        version: 1.4.3(pinia@2.1.7(typescript@5.4.5)(vue@3.4.21(typescript@5.4.5)))(vue@3.4.21(typescript@5.4.5))
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.0.3
         version: 5.0.3(vite@5.2.9(@types/node@20.11.9)(sass@1.70.0)(terser@5.27.0))(vue@3.4.21(typescript@5.4.5))
-      '@vue-dapp/core':
-        specifier: ^1.4.3
-        version: 1.4.3(pinia@2.1.7(typescript@5.4.5)(vue@3.4.21(typescript@5.4.5)))(vue@3.4.21(typescript@5.4.5))
       pinia:
         specifier: ^2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@3.4.21(typescript@5.4.5))
@@ -268,6 +269,9 @@ importers:
 
   packages/walletconnect:
     dependencies:
+      '@vue-dapp/core':
+        specifier: '*'
+        version: 1.4.3(pinia@2.1.7(typescript@5.4.5)(vue@3.4.23(typescript@5.4.5)))(vue@3.4.23(typescript@5.4.5))
       '@walletconnect/ethereum-provider':
         specifier: latest
         version: 2.11.0(bufferutil@4.0.8)(encoding@0.1.13)(react@18.2.0)(utf-8-validate@5.0.10)
@@ -275,9 +279,6 @@ importers:
       '@vitejs/plugin-vue':
         specifier: 5.0.3
         version: 5.0.3(vite@5.2.9(@types/node@20.11.9)(sass@1.70.0)(terser@5.27.0))(vue@3.4.23(typescript@5.4.5))
-      '@vue-dapp/core':
-        specifier: ^1.4.3
-        version: 1.4.3(pinia@2.1.7(typescript@5.4.5)(vue@3.4.23(typescript@5.4.5)))(vue@3.4.23(typescript@5.4.5))
       '@walletconnect/types':
         specifier: ^2.9.0
         version: 2.11.0
