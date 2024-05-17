@@ -57,6 +57,7 @@ watch(
 }
 
 #vd-modal-base .modal-inner {
+	max-width: 100%;
 	display: flex;
 	background: #ffffff;
 	border-radius: 1rem;

@@ -231,7 +231,7 @@ const vdModalPadding = computed(() => {
 @media (max-width: 460px) {
 	#vd-modal.vd-modal-column {
 		grid-template-columns: repeat(1, minmax(0, 1fr));
-		width: 95vw;
+		width: 100%;
 	}
 }
 
