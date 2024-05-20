@@ -3,7 +3,7 @@ import { useConnect } from './services/connect'
 import { ConnectOptions, ProviderTarget, RdnsEnum } from './types'
 import { useConnectors } from './services/connectors'
 import { getLastConnectedBrowserWallet } from './services/localStorage'
-import { isWindowEthereumAvailable } from './utils'
+import { isMobileBrowser, isWindowEthereumAvailable } from './utils'
 import { useEIP6963 } from './services/eip6963'
 
 export function useAutoConnect(pinia?: any) {
@@ -16,7 +16,7 @@ export function useAutoConnect(pinia?: any) {
 	onMounted(async () => {
 		try {
 			isAutoConnecting.value = true
-			if (isMobileAppBrowser()) {
+			if (isMobileBrowser()) {
 				await autoConnect('window.ethereum')
 			} else {
 				await autoConnect('rdns')
@@ -83,24 +83,4 @@ export function useAutoConnect(pinia?: any) {
 	}
 
 	return { isAutoConnecting, error }
-}
-
-/**
- * Check whether the browser is within a mobile app (such as a WebView) rather than a standalone mobile browser like Chrome App
- * @returns boolean
- */
-export function isMobileAppBrowser() {
-	const userAgent = navigator.userAgent
-
-	// for ios
-	if (!userAgent.includes('Safari/') && userAgent.includes('Mobile/')) {
-		return true
-	}
-
-	// for android
-	if (userAgent.includes('wv') || userAgent.includes('WebView')) {
-		return true
-	}
-
-	return false
 }

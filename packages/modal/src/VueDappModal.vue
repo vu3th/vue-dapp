@@ -2,7 +2,7 @@
 import { Ref, computed, ref, watch } from 'vue'
 import Modal from './components/Modal.vue'
 import WalletConnectIcon from './components/logos/WalletConnectIcon.vue'
-import { useVueDapp, useAutoConnect, ConnectorName, ConnectOptions, isMobileAppBrowser } from '@vue-dapp/core'
+import { useVueDapp, useAutoConnect, ConnectorName, ConnectOptions, isMobileBrowser } from '@vue-dapp/core'
 import { useVueDappModal } from './store'
 
 const props = withDefaults(
@@ -55,8 +55,8 @@ if (props.autoConnect) {
 }
 
 watch(modalOpen, async () => {
-	// ============================ feat: connect to window.ethereum in the mobile app browser ============================
-	if (modalOpen.value && providerDetails.value.length === 0 && isMobileAppBrowser()) {
+	// ============================ feat: connect to window.ethereum in the mobile browser ============================
+	if (modalOpen.value && isMobileBrowser()) {
 		if (isWindowEthereumAvailable) {
 			await onClickWallet('BrowserWallet', {
 				target: 'window.ethereum',
@@ -66,7 +66,7 @@ watch(modalOpen, async () => {
 	}
 
 	// ============================ feat: auto click BrowserWallet if it's the only connector ============================
-	if (props.autoConnectBrowserWalletIfSolo && modalOpen.value) {
+	if (modalOpen.value && props.autoConnectBrowserWalletIfSolo) {
 		if (
 			connectors.value.length === 1 && // only one connector
 			providerDetails.value.length === 1 && // only one browser provider

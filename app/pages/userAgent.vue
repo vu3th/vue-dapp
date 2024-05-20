@@ -1,22 +1,24 @@
 <script setup lang="ts">
+import { isMobileBrowser } from '@vue-dapp/core'
+
 const userAgent = ref('')
 
 onMounted(() => {
 	userAgent.value = navigator.userAgent
 })
-
-function alertUserAgent() {
-	alert(navigator.userAgent)
-}
 </script>
 
 <template>
-	<div>
+	<div class="p-5">
 		<div>
 			{{ userAgent }}
 		</div>
 
-		<button @click="alertUserAgent">Alert userAgent</button>
+		<hr />
+
+		<ClientOnly>
+			<div>isMobileBrowser: {{ isMobileBrowser() }}</div>
+		</ClientOnly>
 	</div>
 </template>
 
