@@ -54,6 +54,7 @@
 		"@nuxt/schema": "^3.9.0",
 		"@nuxt/test-utils": "^3.11.0",
 		"@types/node": "^20.10.6",
+		"@vue-dapp/core": "workspace:*",
 		"changelogen": "^0.5.5",
 		"eslint": "^8.56.0",
 		"typescript": "^5.4.5",
