@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.5.1
+
+- Fix mobile browser detection for Rainbow mobile wallet #190
+  - Rename and update `isMobileAppBrowser` with `isMobileBrowser`
+
 
 ## v1.5.0
 
