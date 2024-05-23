@@ -2,7 +2,7 @@ import type { EIP1193Provider } from '@vue-dapp/core'
 import { ethers } from 'ethers'
 import { defineStore } from 'pinia'
 
-export const useEthers = defineStore('useEthers', () => {
+export const useEthersStore = defineStore('ethers', () => {
 	const provider = ref<ethers.BrowserProvider | null>(null)
 	const signer = ref<ethers.JsonRpcSigner | null>(null)
 
@@ -24,3 +24,12 @@ export const useEthers = defineStore('useEthers', () => {
 		resetWallet,
 	}
 })
+
+export function useEthers() {
+	const ethersStore = useEthersStore()
+
+	return {
+		...useEthersStore(),
+		...storeToRefs(ethersStore),
+	}
+}

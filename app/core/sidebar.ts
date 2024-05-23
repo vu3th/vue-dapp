@@ -96,6 +96,17 @@ export const sidebarMenu = [
 		],
 	},
 	{
+		label: 'Apps',
+		key: '/apps',
+		children: [
+			{
+				label: () => h(NuxtLink, { to: 'app/donate-with-message' }, { default: () => 'Donate with Message' }),
+				key: 'app/donate-with-message',
+			},
+		],
+	},
+
+	{
 		label: () =>
 			h(
 				NuxtLink,

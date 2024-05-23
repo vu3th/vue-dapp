@@ -72,7 +72,7 @@ const { darkMode } = storeToRefs(useAppStore())
 		<NuxtLayout>
 			<NuxtLoadingIndicator />
 
-			<NuxtPage />
+			<NuxtPage class="break-words" />
 
 			<VueDappModal
 				:dark="darkMode"
