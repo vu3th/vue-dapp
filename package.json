@@ -14,7 +14,8 @@
 		"build:app": "pnpm -F app build",
 		"format": "prettier --write \"**/*.{vue,ts,js,json}\"",
 		"publish": "pnpm lerna publish --no-private --force-publish",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"typecheck": "pnpm -F core typecheck && pnpm -F modal typecheck && pnpm -F app typecheck"
 	},
 	"devDependencies": {
 		"eslint": "^8.56.0",
