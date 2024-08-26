@@ -106,15 +106,15 @@ export const sidebarMenu = [
 			),
 		key: '/eips',
 	},
-	// {
-	// 	label: () =>
-	// 		h(
-	// 			NuxtLink,
-	// 			{
-	// 				to: '/donate',
-	// 			},
-	// 			{ default: () => 'Donate' },
-	// 		),
-	// 	key: '/donate',
-	// },
+	{
+		label: () =>
+			h(
+				NuxtLink,
+				{
+					to: '/donations',
+				},
+				{ default: () => 'Donations' },
+			),
+		key: '/donations',
+	},
 ]
