@@ -120,7 +120,8 @@ pnpm build:app
 
 ## Support 🙏
 
-0x9D75F4EbcB8e7669E59dcc27CBadC698E0F77187
+- 0x9D75F4EbcB8e7669E59dcc27CBadC698E0F77187
+- [Donation history](https://vuedapp.xyz/donations)
 
 ## Credits
 
