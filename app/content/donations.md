@@ -8,7 +8,7 @@ head:
 
 # Donations
 
-Donation Address: 0x9D75F4EbcB8e7669E59dcc27CBadC698E0F77187
+- 0x9D75F4EbcB8e7669E59dcc27CBadC698E0F77187
 
 
 ## 2024
@@ -24,3 +24,7 @@ Donation Address: 0x9D75F4EbcB8e7669E59dcc27CBadC698E0F77187
 
 ## Early
 - Total fund received: $174
+
+## How were these funds used?
+
+These grants have been pivotal in sustaining [my open-source work](https://github.com/johnson86tw){:target="_blank"}, effectively serving as my primary source of income. They enable me to dedicate the necessary time and resources to actively engage in the web3 industry.
