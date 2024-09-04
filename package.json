@@ -8,10 +8,12 @@
 	"homepage": "https://github.com/vu3th/vue-dapp#readme",
 	"author": "Johnson Chen <https://twitter.com/johnson86tw>",
 	"license": "MIT",
+	"packageManager": "pnpm@9.0.0",
 	"scripts": {
 		"dev": "pnpm -F app dev",
 		"build": "pnpm -F core build && pnpm -F modal build && pnpm -F nuxt build && pnpm -F walletconnect build && pnpm -F coinbase build",
 		"build:app": "pnpm -F app build",
+		"start": "node app/.output/server/index.mjs",
 		"format": "prettier --write \"**/*.{vue,ts,js,json}\"",
 		"publish": "pnpm lerna publish --no-private --force-publish",
 		"prepare": "husky install",

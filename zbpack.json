@@ -1,0 +1,5 @@
+{
+	"build_command": "pnpm build && pnpm build:app",
+	"start_command": "pnpm run start",
+	"app_dir": "/"
+}
