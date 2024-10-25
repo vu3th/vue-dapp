@@ -144,15 +144,15 @@ watch(
 
 <template>
 	<n-layout content-class="flex flex-col" position="absolute">
-		<!-- <AppBanner id="gitcoin-grants" to="https://explorer.gitcoin.co/#/round/42161/27/19">
+		<AppBanner id="gitcoin-grants" to="https://explorer.gitcoin.co/#/round/42161/609/21">
 			<div class="flex items-center gap-2">
 				<Icon name="i-streamline-blood-donate-drop" class="w-5 h-5 flex-shrink-0 pointer-events-none" />
 				<span>
-					DONATIONS OPEN April 23rd - May 7th | <span class="font-semibold italic">Gitcoin Grants 20</span> is
-					live!
+					DONATIONS OPEN October 23rd - November 7th |
+					<span class="font-semibold italic">Gitcoin Grants 22</span> is live!
 				</span>
 			</div>
-		</AppBanner> -->
+		</AppBanner>
 
 		<n-layout-header bordered class="grid grid-cols-2">
 			<div class="flex items-center">
