@@ -144,7 +144,7 @@ watch(
 
 <template>
 	<n-layout content-class="flex flex-col" position="absolute">
-		<AppBanner id="gitcoin-grants" to="https://explorer.gitcoin.co/#/round/42161/609/21">
+		<!-- <AppBanner id="gitcoin-grants" to="https://explorer.gitcoin.co/#/round/42161/609/21">
 			<div class="flex items-center gap-2">
 				<Icon name="i-streamline-blood-donate-drop" class="w-5 h-5 flex-shrink-0 pointer-events-none" />
 				<span>
@@ -152,7 +152,7 @@ watch(
 					<span class="font-semibold italic">Gitcoin Grants 22</span> is live!
 				</span>
 			</div>
-		</AppBanner>
+		</AppBanner> -->
 
 		<n-layout-header bordered class="grid grid-cols-2">
 			<div class="flex items-center">
