@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Ref, computed, ref, watch } from 'vue'
+import { ConnectOptions, ConnectorName, isMobileBrowser, useAutoConnect, useVueDapp } from '@vue-dapp/core'
+import { Ref, computed, watch } from 'vue'
 import Modal from './components/Modal.vue'
 import WalletConnectIcon from './components/logos/WalletConnectIcon.vue'
-import { useVueDapp, useAutoConnect, ConnectorName, ConnectOptions, isMobileBrowser } from '@vue-dapp/core'
 import { useVueDappModal } from './store'
 
 const props = withDefaults(
@@ -115,36 +115,24 @@ const vClickOutside = {
 	},
 }
 
-const columnAmount = computed(() => {
-	let total = providerDetails.value.length
-	if (hasConnector('WalletConnect')) total++
-	if (hasConnector('CoinbaseWallet')) total++
-	if (total < 2) return 1
-	return 2
-})
+// const columnAmount = computed(() => {
+// 	let total = providerDetails.value.length
+// 	if (hasConnector('WalletConnect')) total++
+// 	if (hasConnector('CoinbaseWallet')) total++
+// 	if (total < 2) return 1
+// 	return 2
+// })
 
-const isOneColumn = computed(() => columnAmount.value === 1)
+// const isOneColumn = computed(() => columnAmount.value === 1)
 const isNoWalletFound = computed(
 	() => providerDetails.value.length === 0 && !hasConnector('WalletConnect') && !hasConnector('CoinbaseWallet'),
 )
-
-const vdModalPadding = computed(() => {
-	if (isOneColumn.value) return '10px 10px'
-	return '15px 15px'
-})
 </script>
 
 <template>
 	<div>
 		<Modal :modalOpen="modalOpen" @close="closeModal" :dark="dark">
-			<div
-				id="vd-modal"
-				class="vd-modal-column"
-				:style="{
-					padding: vdModalPadding,
-				}"
-				v-click-outside="closeModal"
-			>
+			<div id="vd-modal" class="vd-modal-column" v-click-outside="closeModal">
 				<div
 					v-for="detail in providerDetails"
 					:key="detail.info.uuid"
@@ -193,7 +181,7 @@ const vdModalPadding = computed(() => {
 				</div>
 
 				<slot v-if="isNoWalletFound && $slots['no-wallet-found']" name="no-wallet-found"></slot>
-				<div id="vd-no-wallet-found" v-else-if="isNoWalletFound">No wallet provider found 😔</div>
+				<div id="vd-no-wallet-found" v-else-if="isNoWalletFound">No wallet provider found.</div>
 			</div>
 		</Modal>
 
@@ -218,20 +206,21 @@ const vdModalPadding = computed(() => {
 
 <style scoped>
 #vd-modal {
-	display: grid;
-	gap: 5px;
+	display: flex;
+	flex-direction: column;
+	gap: 0px;
 	height: auto;
+	min-height: 150px;
+	padding: 20px 15px;
 }
 
 #vd-modal.vd-modal-column {
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	width: 450px;
+	width: 320px;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 320px) {
 	#vd-modal.vd-modal-column {
-		grid-template-columns: repeat(1, minmax(0, 1fr));
-		width: 100%;
+		width: 80vw;
 	}
 }
 

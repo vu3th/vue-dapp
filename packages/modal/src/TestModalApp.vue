@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { BrowserWalletConnector, useVueDapp } from '@vue-dapp/core'
+import { onMounted, ref } from 'vue'
 import VueDappModal from './VueDappModal.vue'
 
 const isModalOpen = ref(false)
@@ -13,6 +13,25 @@ function onClickConnectButton() {
 	if (!isConnected.value) isModalOpen.value = true
 	else disconnect()
 }
+
+// emit fake erc-6963 provider
+onMounted(() => {
+	for (let i = 0; i < 3; i++) {
+		window.dispatchEvent(
+			new CustomEvent('eip6963:announceProvider', {
+				detail: {
+					info: {
+						uuid: 'test-wallet-' + Math.random(),
+						name: 'Test Wallet',
+						icon: 'https://placehold.co/150',
+						rdns: 'com.test.wallet',
+					},
+					provider: window.ethereum,
+				},
+			}),
+		)
+	}
+})
 </script>
 
 <template>
