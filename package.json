@@ -15,7 +15,7 @@
 		"build:app": "pnpm -F app build",
 		"start": "node app/.output/server/index.mjs",
 		"format": "prettier --write \"**/*.{vue,ts,js,json}\"",
-		"publish": "pnpm lerna publish --no-private --force-publish",
+		"publish": "pnpm run build && pnpm lerna publish --no-private --force-publish",
 		"prepare": "husky install",
 		"typecheck": "pnpm -F core typecheck && pnpm -F modal typecheck && pnpm -F app typecheck"
 	},
