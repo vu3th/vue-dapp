@@ -5,7 +5,7 @@ import VueDappModal from './VueDappModal.vue'
 
 const isModalOpen = ref(false)
 
-const { error, isConnected, address, chainId, disconnect, addConnector } = useVueDapp()
+const { error, isConnected, address, chainId, disconnect, addConnector, providerDetails } = useVueDapp()
 
 addConnector(new BrowserWalletConnector())
 
@@ -16,7 +16,7 @@ function onClickConnectButton() {
 
 // emit fake erc-6963 provider
 onMounted(() => {
-	for (let i = 0; i < 3; i++) {
+	for (let i = 0; i < 1; i++) {
 		window.dispatchEvent(
 			new CustomEvent('eip6963:announceProvider', {
 				detail: {

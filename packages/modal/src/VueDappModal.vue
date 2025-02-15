@@ -227,6 +227,7 @@ const isNoWalletFound = computed(
 }
 
 #vd-modal .vd-wallet-block {
+	height: 100%;
 	padding: 10px 20px;
 	display: flex;
 	flex-direction: row;
