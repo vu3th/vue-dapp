@@ -91,10 +91,6 @@ async function onClickWallet<T extends ConnectorName>(connName: T, options?: Con
 	}
 }
 
-function onClickCancelConnecting() {
-	disconnect()
-}
-
 const vClickOutside = {
 	beforeMount: (el: any, binding: any) => {
 		el.clickOutsideEvent = (event: MouseEvent) => {
@@ -188,18 +184,8 @@ const isNoWalletFound = computed(
 		</Modal>
 
 		<Modal v-if="!hideConnectingModal" :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
-			<div id="vd-loading-modal" v-if="status === 'connecting'">
+			<div id="vd-loading-modal" v-if="status === 'connecting'" v-click-outside="() => disconnect()">
 				<p>Connecting...</p>
-
-				<button
-					class="vd-cancel-btn"
-					:class="{
-						'vd-cancel-btn--dark': dark,
-					}"
-					@click="onClickCancelConnecting"
-				>
-					Cancel
-				</button>
 			</div>
 		</Modal>
 	</div>
@@ -256,26 +242,13 @@ const isNoWalletFound = computed(
 /* =============== Modal for connecting =============== */
 
 #vd-loading-modal {
-	width: 320px;
+	width: 240px;
 	padding: 2.5rem;
 	text-align: center;
 }
 
 #vd-loading-modal > p:first-child {
-	font-size: 1.25rem;
-}
-
-/* =============== cancel button for connecting modal (start) =============== */
-#vd-loading-modal .vd-cancel-btn {
-	margin-top: 0px;
-	border-radius: 8px;
-	border: 1px solid rgba(128, 128, 128, 0.2);
-	padding: 0.4em 0.8em;
-	font-size: 1em;
-	/* font-weight: 500; */
-	font-family: inherit;
-	cursor: pointer;
-	transition: border-color 0.25s;
+	font-size: 1.1rem;
 }
 
 @media (max-width: 420px) {
@@ -288,38 +261,6 @@ const isNoWalletFound = computed(
 		font-size: 1rem;
 	}
 }
-
-#vd-loading-modal .vd-cancel-btn:focus,
-#vd-loading-modal .vd-cancel-btn:focus-visible {
-	outline: 0px auto -webkit-focus-ring-color;
-}
-
-/* cancel-btn light */
-#vd-loading-modal .vd-cancel-btn:not(.vd-cancel-btn--dark) {
-	border: rgba(128, 128, 128, 0.2) 1px solid;
-	background-color: #f9f9f9;
-	color: #1a1a1a;
-}
-
-/* cancel-btn light hover */
-#vd-loading-modal .vd-cancel-btn:not(.vd-cancel-btn--dark):hover {
-	background-color: rgba(142, 142, 142, 0.1);
-}
-
-/* cancel-btn dark  */
-#vd-loading-modal .vd-cancel-btn.vd-cancel-btn--dark {
-	border: inherit 1px solid;
-	background-color: #101a20;
-	color: rgba(236, 237, 239, 0.737);
-}
-
-/* cancel-btn dark hover */
-#vd-loading-modal .vd-cancel-btn.vd-cancel-btn--dark:hover {
-	border: rgb(77, 77, 77) 1px solid;
-	background-color: #101a20;
-}
-
-/* =============== cancel button for connecting modal (end) =============== */
 
 #vd-modal .vd-line {
 	border-color: rgba(236, 237, 239, 0.737);
