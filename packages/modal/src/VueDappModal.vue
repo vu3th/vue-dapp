@@ -36,9 +36,11 @@ function closeModal() {
 
 const modalOpen = computed(() => props.modelValue ?? store.isModalOpen)
 
-const { isWindowEthereumAvailable, connectors, connectTo, status, providerDetails, hasConnector, disconnect } =
+const { providerDetails, isWindowEthereumAvailable, connectors, connectTo, status, hasConnector, disconnect } =
 	useVueDapp()
 
+// for test "No wallet provider found."
+// const providerDetails = computed(() => [])
 // ============================ feat: autoConnect ============================
 
 let isAutoConnecting: Ref<boolean>
@@ -335,6 +337,7 @@ const isNoWalletFound = computed(
 }
 
 #vd-modal #vd-no-wallet-found {
+	height: 100%;
 	color: rgb(86, 91, 104);
 	display: flex;
 	justify-content: center;
