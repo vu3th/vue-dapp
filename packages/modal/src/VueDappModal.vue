@@ -190,7 +190,6 @@ const isNoWalletFound = computed(
 		<Modal v-if="!hideConnectingModal" :modalOpen="status === 'connecting' && !isAutoConnecting" :dark="dark">
 			<div id="vd-loading-modal" v-if="status === 'connecting'">
 				<p>Connecting...</p>
-				<p class="mt-4">Approve or reject request using your wallet</p>
 
 				<button
 					class="vd-cancel-btn"
@@ -220,9 +219,9 @@ const isNoWalletFound = computed(
 	width: 320px;
 }
 
-@media (max-width: 320px) {
+@media (max-width: 420px) {
 	#vd-modal.vd-modal-column {
-		width: 80vw;
+		width: 85vw;
 	}
 }
 
@@ -257,7 +256,7 @@ const isNoWalletFound = computed(
 /* =============== Modal for connecting =============== */
 
 #vd-loading-modal {
-	width: 20rem;
+	width: 320px;
 	padding: 2.5rem;
 	text-align: center;
 }
@@ -268,16 +267,26 @@ const isNoWalletFound = computed(
 
 /* =============== cancel button for connecting modal (start) =============== */
 #vd-loading-modal .vd-cancel-btn {
-	margin-top: 15px;
-
+	margin-top: 0px;
 	border-radius: 8px;
-	border: 1px solid transparent;
+	border: 1px solid rgba(128, 128, 128, 0.2);
 	padding: 0.4em 0.8em;
 	font-size: 1em;
-	font-weight: 500;
+	/* font-weight: 500; */
 	font-family: inherit;
 	cursor: pointer;
 	transition: border-color 0.25s;
+}
+
+@media (max-width: 420px) {
+	#vd-loading-modal {
+		width: 85vw;
+		padding: 1.5rem 0.8em;
+	}
+
+	#vd-loading-modal > p:first-child {
+		font-size: 1rem;
+	}
 }
 
 #vd-loading-modal .vd-cancel-btn:focus,
@@ -287,8 +296,8 @@ const isNoWalletFound = computed(
 
 /* cancel-btn light */
 #vd-loading-modal .vd-cancel-btn:not(.vd-cancel-btn--dark) {
-	border: gray 1px solid;
-	background-color: rgba(236, 237, 239, 0.737);
+	border: rgba(128, 128, 128, 0.2) 1px solid;
+	background-color: #f9f9f9;
 	color: #1a1a1a;
 }
 
@@ -306,22 +315,11 @@ const isNoWalletFound = computed(
 
 /* cancel-btn dark hover */
 #vd-loading-modal .vd-cancel-btn.vd-cancel-btn--dark:hover {
-	border: white 1px solid;
+	border: rgb(77, 77, 77) 1px solid;
 	background-color: #101a20;
 }
 
 /* =============== cancel button for connecting modal (end) =============== */
-
-@media (max-width: 460px) {
-	#vd-loading-modal {
-		width: 95vw;
-		padding: 1.5rem 5px;
-	}
-
-	#vd-loading-modal > p:first-child {
-		font-size: 1rem;
-	}
-}
 
 #vd-modal .vd-line {
 	border-color: rgba(236, 237, 239, 0.737);
@@ -339,7 +337,7 @@ const isNoWalletFound = computed(
 
 #vd-modal #vd-no-wallet-found {
 	height: 100%;
-	color: rgb(86, 91, 104);
+	color: rgb(133, 133, 133);
 	display: flex;
 	justify-content: center;
 	align-items: center;

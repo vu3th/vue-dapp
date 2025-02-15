@@ -23,7 +23,7 @@ onMounted(() => {
 					info: {
 						uuid: 'test-wallet-' + Math.random(),
 						name: 'Test Wallet',
-						icon: 'https://placehold.co/150',
+						icon: 'https://placehold.co/200',
 						rdns: 'com.test.wallet',
 					},
 					provider: window.ethereum,
