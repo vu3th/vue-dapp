@@ -29,7 +29,8 @@
 	"exports": {
 		".": {
 			"import": "./dist/walletconnect.js",
-			"require": "./dist/walletconnect.umd.cjs"
+			"require": "./dist/walletconnect.umd.cjs",
+			"types": "./dist/index.d.ts"
 		}
 	},
 	"publishConfig": {

@@ -28,7 +28,8 @@
 	"exports": {
 		".": {
 			"import": "./dist/modal.mjs",
-			"require": "./dist/modal.umd.js"
+			"require": "./dist/modal.umd.js",
+			"types": "./dist/index.d.ts"
 		},
 		"./dist/style.css": "./dist/style.css"
 	},

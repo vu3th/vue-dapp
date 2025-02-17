@@ -29,7 +29,8 @@
 	"exports": {
 		".": {
 			"import": "./dist/coinbase.js",
-			"require": "./dist/coinbase.umd.cjs"
+			"require": "./dist/coinbase.umd.cjs",
+			"types": "./dist/index.d.ts"
 		}
 	},
 	"publishConfig": {
